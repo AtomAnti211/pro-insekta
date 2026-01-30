@@ -14,9 +14,7 @@ from .serializers import (
     JobReadSerializer, JobWriteSerializer
 )
 
-# ---------------------------------------------------------
 # OWNER (READ + UPDATE)
-# ---------------------------------------------------------
 
 @api_view(["GET", "PUT"])
 def ownerData(request):
@@ -34,9 +32,7 @@ def ownerData(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ---------------------------------------------------------
 # ACTIVITY CRUD
-# ---------------------------------------------------------
 
 @api_view(["GET", "POST"])
 def activityListCreate(request):
@@ -75,10 +71,7 @@ def activityDetail(request, id):
         activity.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-# ---------------------------------------------------------
 # Note CRUD
-# ---------------------------------------------------------
 
 @api_view(["GET", "POST"])
 def noteListCreate(request):
@@ -118,9 +111,7 @@ def noteDetail(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ---------------------------------------------------------
 # CUSTOMER CRUD
-# ---------------------------------------------------------
 
 @api_view(["GET", "POST"])
 def customerListCreate(request):
@@ -160,9 +151,7 @@ def customerDetail(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ---------------------------------------------------------
 # LOCATION CRUD
-# ---------------------------------------------------------
 
 @api_view(["GET", "POST"])
 def locationListCreate(request):
@@ -202,9 +191,7 @@ def locationDetail(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ---------------------------------------------------------
 # SERVICE CRUD
-# ---------------------------------------------------------
 
 @api_view(["GET", "POST"])
 def serviceListCreate(request):
@@ -243,10 +230,7 @@ def serviceDetail(request, id):
         service.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-# ---------------------------------------------------------
 # CONTRACT CRUD
-# ---------------------------------------------------------
 
 @api_view(["GET", "POST"])
 def contractListCreate(request):
@@ -285,10 +269,7 @@ def contractDetail(request, id):
         contract.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-# ---------------------------------------------------------
 # JOB CRUD
-# ---------------------------------------------------------
 
 @api_view(["GET", "POST"])
 def jobListCreate(request):

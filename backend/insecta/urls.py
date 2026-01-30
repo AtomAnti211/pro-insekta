@@ -5,9 +5,7 @@ from . import views
 
 urlpatterns = [
 
-    # -----------------------------------------------------
     # PUBLIC ENDPOINTS (no auth required)
-    # -----------------------------------------------------
     
     # Activities (public)
     path('activities/', views.activityListCreate),
@@ -18,9 +16,7 @@ urlpatterns = [
     path('notes/<int:id>/', views.noteDetail),
 
 
-    # -----------------------------------------------------
     # ADMIN ENDPOINTS (will require JWT auth)
-    # -----------------------------------------------------
 
     # Owner
     path('owner/', views.ownerData),

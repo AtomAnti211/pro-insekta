@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
 
-
-# Create your models here.
 class Activity(models.Model):
   activityName=models.CharField(max_length=120)
   activityURL = models.ImageField(upload_to="images/", default =' ')
