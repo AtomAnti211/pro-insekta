@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { getOwner } from './api/owner'
 import './App.css'
+import type { Owner } from './types/owner';
 
 function App() {
-  const [owner, setOwner] = useState<any>(null);
+  const [owner, setOwner] = useState<Owner | null>(null);
 
   useEffect(() => {
     getOwner()
