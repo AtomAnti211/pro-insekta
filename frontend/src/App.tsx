@@ -1,26 +1,12 @@
-import { useEffect, useState } from 'react'
-import { getOwner } from './api/owner'
-import './App.css'
-import type { Owner } from './types/owner';
+import ActivitiesPage from "./pages/ActivitiesPage";
 
 function App() {
-  const [owner, setOwner] = useState<Owner | null>(null);
-
-  useEffect(() => {
-    getOwner()
-      .then(data => { console.log("OWNER DATA:", data); setOwner(data); }) .catch(err => { console.error("FETCH ERROR:", err); }); }, []);
-
   return (
-      <div style={{ padding: 20}}>
-        <h1>Owner data</h1>
-
-        {!owner && <p>Loading...</p>}
-        
-        {owner && (
-        <pre>{JSON.stringify(owner, null, 2)}</pre>
-        )}
-      </div>
+    <div>
+      <ActivitiesPage />
+    </div>
   );
 }
 
-export default App
+export default App;
+
