@@ -40,6 +40,7 @@ export default function NotesPage() {
         >
           <h2>{note.noteName}</h2>
           <p><strong>Activity ID:</strong> {note.noteActivity.id}</p>
+          <p><strong>Activity Name:</strong> {note.noteActivity.activityName}</p>
           <p><strong>Phone:</strong> {note.notePhone}</p>
           <p><strong>Address:</strong> {note.noteAddress}</p>
           <p><strong>Created:</strong> {new Date(note.noteCreated).toLocaleString()}</p>
