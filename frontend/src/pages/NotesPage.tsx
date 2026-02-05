@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getNotes } from "../api/note";
 import type { Note } from "../types/note";
+import "./NotesPage.css";
 
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -19,32 +20,36 @@ export default function NotesPage() {
   }, []);
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Notes</h1>
+    <div className="page">
+      <h1 className="page-title">Notes</h1>
 
       {loading && <p>Loading...</p>}
-
-      {!loading && notes.length === 0 && (
-        <p>No notes found.</p>
-      )}
+      {!loading && notes.length === 0 && <p>No notes found.</p>}
 
       {notes.map(note => (
-        <div 
-          key={note.id} 
-          style={{
-            marginBottom: 20,
-            padding: 10,
-            border: "1px solid #ccc",
-            borderRadius: 8
-          }}
-        >
-          <h2>{note.noteName}</h2>
-          <p><strong>Activity ID:</strong> {note.noteActivity.id}</p>
-          <p><strong>Activity Name:</strong> {note.noteActivity.activityName}</p>
-          <p><strong>Phone:</strong> {note.notePhone}</p>
-          <p><strong>Address:</strong> {note.noteAddress}</p>
-          <p><strong>Created:</strong> {new Date(note.noteCreated).toLocaleString()}</p>
-          <p><strong>Finished:</strong> {note.noteFinished ? "Yes" : "No"}</p>
+        <div key={note.id} className="note-card">
+          <h2 className="note-title">{note.noteName}</h2>
+
+          <div className="note-row">
+            <strong>Activity:</strong> {note.noteActivity.activityName}
+          </div>
+
+          <div className="note-row">
+            <strong>Phone:</strong> {note.notePhone}
+          </div>
+
+          <div className="note-row">
+            <strong>Address:</strong> {note.noteAddress}
+          </div>
+
+          <div className="note-row">
+            <strong>Created:</strong>{" "}
+            {new Date(note.noteCreated).toLocaleString()}
+          </div>
+
+          <div className="note-row">
+            <strong>Finished:</strong> {note.noteFinished ? "Yes" : "No"}
+          </div>
         </div>
       ))}
     </div>

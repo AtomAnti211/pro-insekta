@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getActivities } from "../api/activity";
 import type { Activity } from "../types/activity";
+import "./ActivitiesPage.css";
 
 export default function ActivitiesPage() {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -19,26 +20,26 @@ export default function ActivitiesPage() {
   }, []);
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Activities</h1>
+    <div className="page">
+      <h1 className="page-title">Activities</h1>
 
       {loading && <p>Loading...</p>}
+      {!loading && activities.length === 0 && <p>No activities found.</p>}
 
-      {!loading && activities.length === 0 && (
-        <p>No activities found.</p>
-      )}
-
-      {activities.map(act => (
-        <div key={act.id} style={{ marginBottom: 20 }}>
-          <h2>{act.activityName}</h2>
-          <img 
-            src={act.activityURL} 
-            alt={act.activityName} 
-            style={{ width: 200, borderRadius: 8 }} 
-          />
-          <p>{act.activityDescr}</p>
-        </div>
-      ))}
+      <div className="grid">
+        {activities.map(act => (
+          <div key={act.id} className="card">
+            <img
+              src={act.activityURL}
+              alt={act.activityName}
+              className="card-image"
+            />
+            <h2 className="card-title">{act.activityName}</h2>
+            <p className="card-text">{act.activityDescr}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
+
