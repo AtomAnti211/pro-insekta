@@ -1,8 +1,10 @@
+import "./HomePage.css";
+
 export default function HomePage() {
   return (
-    <div>
-      <h1>Welcome to Insecta Admin</h1>
-      <p>Válassz a bal oldali menüből.</p>
+    <div className="home-container">
+      <h1 className="home-title">Insecta Admin</h1>
+      <p className="home-subtitle">Válassz a bal oldali menüből.</p>
     </div>
   );
 }
