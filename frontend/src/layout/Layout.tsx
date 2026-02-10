@@ -1,26 +1,49 @@
+import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
+import "./Layout.css";
 
 export default function Layout() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div style={{ display: "flex" }}>
       
       {/* Sidebar */}
-      <nav style={{
-        width: 220,
-        background: "#222",
-        color: "white",
-        padding: 20
-      }}>
-        <h2>Insecta Admin</h2>
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          <li><Link to="/" style={{ color: "white" }}>Home</Link></li>
-          <li><Link to="/activities" style={{ color: "white" }}>Activities</Link></li>
-          <li><Link to="/notes" style={{ color: "white" }}>Notes</Link></li>
+      <nav className={`sidebar ${open ? "expanded" : "collapsed"}`}>
+        
+        <button 
+          className="sidebar-toggle"
+          onClick={() => setOpen(!open)}
+        >
+          ☰
+        </button>
+
+        <ul className="sidebar-menu">
+          <li>
+            <Link to="/">
+              <span className="icon">🏠</span>
+              {open && <span>Home</span>}
+            </Link>
+          </li>
+
+          <li>
+            <Link to="/activities">
+              <span className="icon">🐞</span>
+              {open && <span>Activities</span>}
+            </Link>
+          </li>
+
+          <li>
+            <Link to="/notes">
+              <span className="icon">📝</span>
+              {open && <span>Notes</span>}
+            </Link>
+          </li>
         </ul>
       </nav>
 
       {/* Main content */}
-      <main style={{ flex: 1, padding: 20 }}>
+      <main className="main-content">
         <Outlet />
       </main>
     </div>
