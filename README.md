@@ -1,5 +1,18 @@
 # pro-insekta
 
+indítás windows-on:
+
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+
+cd frontend
+npm install
+npm start
+
+
 ### Publikus végpontok 
 - `GET /activities/` 
 - `POST /activities/` 
