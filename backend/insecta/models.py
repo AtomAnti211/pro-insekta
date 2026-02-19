@@ -73,6 +73,7 @@ class Contract(models.Model):
       return f"{self.contractLocationName} - {self.contractStart}"
   
 class Job(models.Model): 
+    jobcontractId = models.ForeignKey(Contract,on_delete=models.CASCADE)
     jobLocationName = models.ForeignKey(Location, on_delete=models.CASCADE)
     jobServiceName = models.ForeignKey(Service, on_delete=models.CASCADE)
     jobPrice = models.IntegerField()
