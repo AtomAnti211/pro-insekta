@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getActivities } from "../api/activity";
+import { sendContactMessage } from "../api/contact";
 import "./LandingPage.css";
 
 type Activity = {
@@ -11,23 +13,24 @@ type Activity = {
 
 export default function LandingPage() {
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingActivities, setLoadingActivities] = useState(true);
+
+  // CONTACT FORM STATE-EK
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [activityId, setActivityId] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/activities/")
-      .then(res => res.json())
+    getActivities()
       .then(data => {
-        // képek teljes URL-re javítása
-        const fixed = data.map((item: any) => ({
-          ...item,
-          activityURL: "http://localhost:8000" + item.activityURL
-        }));
-        setActivities(fixed);
-        setLoading(false);
+        setActivities(data);
+        setLoadingActivities(false);
       })
       .catch(err => {
         console.error("ACTIVITY FETCH ERROR:", err);
-        setLoading(false);
+        setLoadingActivities(false);
       });
   }, []);
 
@@ -36,20 +39,19 @@ export default function LandingPage() {
 
       {/* HERO */}
       <section className="hero">
-        <h1>Professzionális rovarirtás Magyarországon</h1>
-        <p>Gyors, biztonságos és engedéllyel végzett kártevőirtás lakossági és üzleti ügyfeleknek.</p>
-
+        <h1>Kártevőirtás gyorsan és biztonságosan</h1>
+        <p>Professzionális rovar- és rágcsálóirtás lakossági és üzleti ügyfeleknek, több mint 20 év tapasztalattal.</p>
         <div className="hero-buttons">
-          <Link to="/login" className="btn-primary">Ügyfél belépés</Link>
+          <a href="#contact" className="btn-primary">Kapcsolatfelvétel</a>
         </div>
       </section>
 
-      {/* ACTIVITY LISTA */}
+      {/* TEVÉKENYSÉGEK */}
       <section className="services">
         <h2>Tevékenységeink</h2>
 
-        {loading && <p>Betöltés…</p>}
-        {!loading && activities.length === 0 && (
+        {loadingActivities && <p>Betöltés…</p>}
+        {!loadingActivities && activities.length === 0 && (
           <p>Jelenleg nincsenek felvitt tevékenységek.</p>
         )}
 
@@ -57,7 +59,7 @@ export default function LandingPage() {
           {activities.map(act => (
             <Link
               key={act.id}
-              to={`/admin/activities?id=${act.id}`}
+              to={`/activity/${act.id}`}
               className="service-card-link"
             >
               <div className="service-card">
@@ -83,28 +85,88 @@ export default function LandingPage() {
         <h2>Miért válasszon minket?</h2>
 
         <ul>
-          <li>✔ 20+ év szakmai tapasztalat</li>
+          <li>✔ Több mint 20 év szakmai tapasztalat</li>
           <li>✔ Engedéllyel rendelkező szakemberek</li>
           <li>✔ Környezetbarát technológiák</li>
           <li>✔ Gyors kiszállás és garancia</li>
         </ul>
       </section>
 
-      {/* KAPCSOLAT */}
-      <section className="contact">
+      {/* KAPCSOLATFELVÉTEL */}
+      <section className="contact" id="contact">
         <h2>Kapcsolatfelvétel</h2>
 
         <form
           className="contact-form"
-          onSubmit={e => {
+          onSubmit={async e => {
             e.preventDefault();
-            alert("A kapcsolatfelvételi backend még nincs bekötve.");
+
+            const payload = {
+              name,
+              email,
+              phone,
+              activity: activityId,
+              message,
+            };
+
+            try {
+              await sendContactMessage(payload);
+              alert("Üzenet elküldve!");
+
+              setName("");
+              setEmail("");
+              setPhone("");
+              setActivityId("");
+              setMessage("");
+            } catch (err) {
+              alert("Hiba történt az üzenet küldésekor.");
+              console.error(err);
+            }
           }}
         >
-          <input type="text" placeholder="Név" required />
-          <input type="email" placeholder="Email" required />
-          <input type="tel" placeholder="Telefonszám" required />
-          <textarea placeholder="Üzenet" rows={4}></textarea>
+          <input
+            type="text"
+            placeholder="Név"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            required
+          />
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
+
+          <input
+            type="tel"
+            placeholder="Telefonszám"
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
+            required
+          />
+
+          <select
+            value={activityId}
+            onChange={e => setActivityId(e.target.value)}
+            required
+          >
+            <option value="">Válasszon tevékenységet…</option>
+            {activities.map(act => (
+              <option key={act.id} value={act.id}>
+                {act.activityName}
+              </option>
+            ))}
+          </select>
+
+          <textarea
+            placeholder="Üzenet"
+            rows={4}
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+          ></textarea>
 
           <button type="submit" className="btn-primary">Üzenet küldése</button>
         </form>
@@ -117,3 +179,4 @@ export default function LandingPage() {
     </div>
   );
 }
+

@@ -4,6 +4,7 @@ import Layout from "./layout/Layout";
 import HomePage from "./pages/HomePage";
 import ActivitiesPage from "./pages/ActivitiesPage";
 import NotesPage from "./pages/NotesPage";
+import ActivityDetailPage from "./pages/ActivityDetailPage";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
 
         {/* NYILVÁNOS NYITÓOLDAL */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/activity/:id" element={<ActivityDetailPage />} />
 
         {/* ADMIN FELÜLET */}
         <Route path="/admin" element={<Layout />}>

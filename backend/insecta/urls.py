@@ -10,10 +10,10 @@ urlpatterns = [
     # Activities (public)
     path('activities/', views.activityListCreate),
     path('activities/<int:id>/', views.activityDetail),
-
-    # Notes (public)
     path('notes/', views.noteListCreate),
-    path('notes/<int:id>/', views.noteDetail),
+    path('notes/<int:id>/', views.noteDetail),   
+    path('contact/', views.contactMessageCreate),
+
 
 
     # ADMIN ENDPOINTS (will require JWT auth)

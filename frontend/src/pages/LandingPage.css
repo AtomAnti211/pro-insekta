@@ -1,11 +1,16 @@
-/* Alap stílus */
+/* ===========================
+   ALAP STÍLUSOK
+=========================== */
 .landing {
   font-family: Arial, sans-serif;
   color: #222;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* HERO */
+/* ===========================
+   HERO SZEKCIÓ
+=========================== */
 .hero {
   text-align: center;
   padding: 80px 20px;
@@ -23,12 +28,6 @@
   margin-bottom: 30px;
 }
 
-.hero-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
 .btn-primary {
   padding: 12px 24px;
   border-radius: 6px;
@@ -43,7 +42,9 @@
   background: #145317;
 }
 
-/* SERVICES / ACTIVITY GRID */
+/* ===========================
+   ACTIVITY GRID
+=========================== */
 .services {
   padding: 60px 20px;
   text-align: center;
@@ -80,11 +81,11 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 }
 
-/* KÉPEK EGYSÉGESÍTÉSE */
+/* Egységes kép méret */
 .service-image {
   width: 100%;
-  height: 180px;          /* egységes magasság */
-  object-fit: cover;      /* cropolja a képet, nem torzít */
+  height: 180px;
+  object-fit: cover;
   display: block;
 }
 
@@ -99,7 +100,9 @@
   color: #444;
 }
 
-/* WHY US */
+/* ===========================
+   WHY US
+=========================== */
 .why-us {
   padding: 60px 20px;
   background: #f5f5f5;
@@ -122,7 +125,9 @@
   margin: 10px 0;
 }
 
-/* CONTACT */
+/* ===========================
+   CONTACT FORM
+=========================== */
 .contact {
   padding: 60px 20px;
   text-align: center;
@@ -144,10 +149,96 @@
   font-size: 1rem;
 }
 
-/* FOOTER */
+/* ===========================
+   FOOTER
+=========================== */
 .footer {
   text-align: center;
   padding: 20px;
   background: #eee;
   margin-top: 40px;
 }
+
+/* ===========================
+   RESZPONZÍV FINOMHANGOLÁS
+=========================== */
+
+/* ---- TABLET (max 900px) ---- */
+@media (max-width: 900px) {
+  .hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+  }
+
+  .service-image {
+    height: 160px;
+  }
+}
+
+/* ---- MOBIL (max 600px) ---- */
+@media (max-width: 600px) {
+  .hero {
+    padding: 60px 15px;
+  }
+
+  .hero h1 {
+    font-size: 1.9rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .btn-primary {
+    width: 100%;
+    text-align: center;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-image {
+    height: 150px;
+  }
+
+  .service-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .service-card p {
+    font-size: 0.9rem;
+  }
+
+  .why-us ul {
+    font-size: 1rem;
+  }
+}
+
+/* ---- EXTRA SMALL (max 400px) ---- */
+@media (max-width: 400px) {
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .hero p {
+    font-size: 0.9rem;
+  }
+
+  .service-image {
+    height: 130px;
+  }
+}
+
+.contact-form select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+}
+

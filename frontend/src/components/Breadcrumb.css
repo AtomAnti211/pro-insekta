@@ -1,0 +1,34 @@
+.breadcrumb {
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: #555;
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.separator {
+  color: #888;
+}
+
+.current {
+  color: #333;
+  font-weight: bold;
+}
+
+/* Mobil finomhangolás */
+@media (max-width: 600px) {
+  .breadcrumb {
+    font-size: 0.85rem;
+  }
+}

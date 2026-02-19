@@ -13,3 +13,12 @@ export async function getActivities() {
     activityURL: MEDIA_URL + item.activityURL
   }));
 }
+
+export async function getActivity(id: number | string) {
+  const res = await api.get(`/activities/${id}/`);
+  return {
+    ...res.data,
+    activityURL: MEDIA_URL + res.data.activityURL
+  };
+}
+

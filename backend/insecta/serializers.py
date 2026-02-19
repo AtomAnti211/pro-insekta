@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Activity, Note, Owner,Customer,Location,Service,Contract,Job
+from .models import Activity, Note, Owner,Customer,Location,Service,Contract,Job,ContactMessage
 
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,3 +67,8 @@ class JobWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
         fields ='__all__'            
+        
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = "__all__"
