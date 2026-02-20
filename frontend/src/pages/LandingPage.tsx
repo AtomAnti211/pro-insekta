@@ -15,7 +15,7 @@ export default function LandingPage() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loadingActivities, setLoadingActivities] = useState(true);
 
-  // CONTACT FORM STATE-EK
+  // CONTACT FORM STATE
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -41,8 +41,10 @@ export default function LandingPage() {
       <section className="hero">
         <h1>Kártevőirtás gyorsan és biztonságosan</h1>
         <p>Professzionális rovar- és rágcsálóirtás lakossági és üzleti ügyfeleknek, több mint 20 év tapasztalattal.</p>
+
         <div className="hero-buttons">
           <a href="#contact" className="btn-primary">Kapcsolatfelvétel</a>
+          <Link to="/admin" className="btn-admin">Admin</Link>
         </div>
       </section>
 
@@ -179,4 +181,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
 
