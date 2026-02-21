@@ -7,6 +7,14 @@
   margin-bottom: 20px;
 }
 
+.admin-table thead th {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+}
+
+
 .admin-add-btn {
   background: #4caf50;
   color: white;
@@ -102,4 +110,34 @@
   margin-top: 4px; 
   border-radius: 6px; 
   border: 1px solid #ccc; 
+}
+
+/* Mobilbarát táblázat */
+@media (max-width: 600px) {
+  .admin-table th,
+  .admin-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  /* A műveletek oszlop ne törjön meg */
+  .admin-actions {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    min-width: 100px; /* megakadályozza a törést */
+  }
+
+  .edit-btn,
+  .delete-btn {
+    width: 100%; /* mobilon szépen kitölti a cellát */
+    max-width: 120px;
+  }
+
+  /* A kép legyen kisebb mobilon */
+  .admin-thumb {
+    width: 45px;
+    height: 45px;
+  }
 }

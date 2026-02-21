@@ -1,8 +1,10 @@
+/* --- LAYOUT ALAP --- */
 .layout-container {
   display: flex;
   min-height: 100vh;
 }
 
+/* --- SIDEBAR --- */
 .sidebar {
   background: #1e1e1e;
   color: white;
@@ -23,6 +25,7 @@
   width: 220px;
 }
 
+/* --- MOBIL SIDEBAR --- */
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -30,11 +33,13 @@
     top: 0;
     transform: translateX(-100%);
   }
+
   .sidebar.expanded {
     transform: translateX(0);
   }
 }
 
+/* --- SIDEBAR TOGGLE --- */
 .sidebar-toggle {
   width: 100%;
   text-align: center;
@@ -47,6 +52,7 @@
   padding: 8px 0;
 }
 
+/* --- MENU --- */
 .sidebar-menu {
   list-style: none;
   padding: 0;
@@ -75,6 +81,7 @@
   border-radius: 6px;
 }
 
+/* Tooltip collapsed módban */
 .sidebar.collapsed .sidebar-menu a:hover::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -94,7 +101,23 @@
   font-size: 20px;
 }
 
+/* --- MAIN CONTENT --- */
 .main-content {
   flex: 1;
   padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* --- MOBIL LAYOUT FIX (TISZTA, ÁTLÁTHATÓ) --- */
+@media (max-width: 768px) {
+  /* A tartalom mindig teljes szélességű alapból */
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Ha a sidebar nyitva van → a tartalom tolódjon jobbra */
+  .sidebar.expanded ~ .main-content {
+    margin-left: 220px; /* ugyanannyi, mint a sidebar expanded szélessége */
+  }
 }
