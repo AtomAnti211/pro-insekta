@@ -19,9 +19,18 @@ export default function Layout() {
 
         <ul className="sidebar-menu">
 
+          {/* Landing page */}
+          <li>
+            <Link to="/" data-tooltip="Landing Page">
+              <span className="icon">🏡</span>
+              {open && <span>Landing</span>}
+            </Link>
+          </li>
+
+          {/* Dashboard */}
           <li>
             <Link to="/admin/dashboard" data-tooltip="Dashboard">
-              <span className="icon">🏠</span>
+              <span className="icon">📊</span>
               {open && <span>Dashboard</span>}
             </Link>
           </li>

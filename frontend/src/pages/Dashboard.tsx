@@ -57,6 +57,13 @@ export default function Dashboard() {
           <p>Üzemeltetői adatok.</p>
         </Link>
 
+        {/* ÚJ: LandingPage kártya */}
+        <Link to="/" className="dash-card">
+          <span className="dash-icon">🏡</span>
+          <h3>Landing Page</h3>
+          <p>Vissza a publikus főoldalra.</p>
+        </Link>
+
       </div>
     </div>
   );
