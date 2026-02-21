@@ -1,9 +1,7 @@
-import axios from "axios";
+import { api } from "./core/api";
 import type { Note } from "../types/note";
 
-const BASE_URL = "http://localhost:8000/api";
-
 export async function getNotes(): Promise<Note[]> {
-  const res = await axios.get<Note[]>(`${BASE_URL}/notes/`);
+  const res = await api.get<Note[]>("/notes/");
   return res.data;
 }

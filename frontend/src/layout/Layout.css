@@ -1,33 +1,54 @@
-/* Sidebar container */
+/* Layout container */
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
 .sidebar {
   background: #1e1e1e;
   color: white;
-  height: 100vh;
-  transition: width 0.3s ease;
-  overflow: hidden;
+  width: 70px;
+  transition: width 0.3s ease, transform 0.3s ease;
+  overflow: visible; /* FONTOS: tooltip miatt */
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding-top: 20px;
-}
-
-/* Collapsed / expanded widths */
-.sidebar.collapsed {
-  width: 70px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 2000; /* tooltip fölé kerül */
 }
 
 .sidebar.expanded {
   width: 220px;
 }
 
+/* Mobile slide-in */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(-100%);
+  }
+  .sidebar.expanded {
+    transform: translateX(0);
+  }
+}
+
 /* Toggle button */
 .sidebar-toggle {
+  width: 100%;
+  text-align: center;
   background: none;
   border: none;
   color: white;
-  font-size: 24px;
+  font-size: 26px;
   cursor: pointer;
-  margin-left: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  padding: 8px 0;
 }
 
 /* Menu items */
@@ -35,10 +56,11 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  width: 100%;
 }
 
 .sidebar-menu li {
-  margin: 15px 0;
+  margin: 2px 0;
 }
 
 .sidebar-menu a {
@@ -47,8 +69,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 15px;
+  padding: 10px 15px;
   transition: background 0.2s;
+  font-size: 15px;
+  position: relative; /* tooltip miatt */
 }
 
 .sidebar-menu a:hover {
@@ -56,7 +80,30 @@
   border-radius: 6px;
 }
 
-/* Icon placeholder */
+/* Tooltip (only collapsed) */
+.sidebar.collapsed .sidebar-menu a::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 75px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 3000;
+  pointer-events: none;
+  opacity: 0;                 /* fade-in alap */
+  transition: opacity 0.2s ease;
+}
+
+.sidebar.collapsed .sidebar-menu a:hover::after {
+  opacity: 1;                 /* fade-in aktiválódik */
+}
+
+
+/* Icon */
 .icon {
   font-size: 20px;
 }
@@ -65,4 +112,6 @@
 .main-content {
   flex: 1;
   padding: 20px;
+  position: relative;
+  z-index: 1;
 }

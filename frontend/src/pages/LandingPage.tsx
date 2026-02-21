@@ -2,14 +2,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getActivities } from "../api/activity";
 import { sendContactMessage } from "../api/contact";
+import type { ContactMessagePayload } from "../types/contactMessage";
+import type { Activity } from "../types/activity";
 import "./LandingPage.css";
-
-type Activity = {
-  id: number;
-  activityName: string;
-  activityDescr: string;
-  activityURL: string;
-};
 
 export default function LandingPage() {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -19,7 +14,8 @@ export default function LandingPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [activityId, setActivityId] = useState("");
+  const [address, setAddress] = useState("");
+  const [activityId, setActivityId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -34,13 +30,41 @@ export default function LandingPage() {
       });
   }, []);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const payload: ContactMessagePayload = {
+      name,
+      email,
+      phone,
+      address,
+      activity: activityId,
+      message,
+    };
+
+    try {
+      await sendContactMessage(payload);
+      alert("Üzenet elküldve!");
+
+      setName("");
+      setEmail("");
+      setPhone("");
+      setAddress("");
+      setActivityId(null);
+      setMessage("");
+    } catch (err) {
+      alert("Hiba történt az üzenet küldésekor.");
+      console.error(err);
+    }
+  };
+
   return (
     <div className="landing">
 
       {/* HERO */}
       <section className="hero">
         <h1>Kártevőirtás gyorsan és biztonságosan</h1>
-        <p>Professzionális rovar- és rágcsálóirtás lakossági és üzleti ügyfeleknek, több mint 20 év tapasztalattal.</p>
+        <p>Professzionális rovar- és rágcsálóirtás lakossági és üzleti ügyfeleknek.</p>
 
         <div className="hero-buttons">
           <a href="#contact" className="btn-primary">Kapcsolatfelvétel</a>
@@ -98,34 +122,7 @@ export default function LandingPage() {
       <section className="contact" id="contact">
         <h2>Kapcsolatfelvétel</h2>
 
-        <form
-          className="contact-form"
-          onSubmit={async e => {
-            e.preventDefault();
-
-            const payload = {
-              name,
-              email,
-              phone,
-              activity: activityId,
-              message,
-            };
-
-            try {
-              await sendContactMessage(payload);
-              alert("Üzenet elküldve!");
-
-              setName("");
-              setEmail("");
-              setPhone("");
-              setActivityId("");
-              setMessage("");
-            } catch (err) {
-              alert("Hiba történt az üzenet küldésekor.");
-              console.error(err);
-            }
-          }}
-        >
+        <form className="contact-form" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Név"
@@ -150,9 +147,17 @@ export default function LandingPage() {
             required
           />
 
+          <input
+            type="text"
+            placeholder="Cím"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            required
+          />
+
           <select
-            value={activityId}
-            onChange={e => setActivityId(e.target.value)}
+            value={activityId ?? ""}
+            onChange={e => setActivityId(Number(e.target.value))}
             required
           >
             <option value="">Válasszon tevékenységet…</option>
@@ -175,11 +180,9 @@ export default function LandingPage() {
       </section>
 
       <footer className="footer">
-        <p>© 2026 Insecta – Minden jog fenntartva.</p>
+        <p>© Insecta – Minden jog fenntartva.</p>
       </footer>
 
     </div>
   );
 }
-
-
