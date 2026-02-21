@@ -2,6 +2,8 @@
 .layout-container {
   display: flex;
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* --- SIDEBAR --- */
@@ -10,14 +12,13 @@
   color: white;
   width: 70px;
   transition: width 0.3s ease, transform 0.3s ease;
-  overflow: visible;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
+  height: 100vh;
   position: sticky;
   top: 0;
-  height: 100vh;
   z-index: 2000;
 }
 
@@ -25,8 +26,12 @@
   width: 220px;
 }
 
-/* --- MOBIL SIDEBAR --- */
+/* --- MOBIL SIDEBAR (slide-in) --- */
 @media (max-width: 768px) {
+  .layout-container {
+    flex-direction: row;
+  }
+
   .sidebar {
     position: fixed;
     left: 0;
@@ -105,19 +110,12 @@
 .main-content {
   flex: 1;
   padding: 20px;
-  transition: margin-left 0.3s ease;
 }
 
-/* --- MOBIL LAYOUT FIX (TISZTA, ÁTLÁTHATÓ) --- */
+/* --- MOBIL MAIN CONTENT FIX (egységben a sidebar-ral) --- */
 @media (max-width: 768px) {
-  /* A tartalom mindig teljes szélességű alapból */
   .main-content {
-    margin-left: 0;
     width: 100%;
-  }
-
-  /* Ha a sidebar nyitva van → a tartalom tolódjon jobbra */
-  .sidebar.expanded ~ .main-content {
-    margin-left: 220px; /* ugyanannyi, mint a sidebar expanded szélessége */
+    padding: 20px;
   }
 }
