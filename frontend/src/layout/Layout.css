@@ -1,16 +1,14 @@
-/* Layout container */
 .layout-container {
   display: flex;
   min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
   background: #1e1e1e;
   color: white;
   width: 70px;
   transition: width 0.3s ease, transform 0.3s ease;
-  overflow: visible; /* FONTOS: tooltip miatt */
+  overflow: visible;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,14 +16,13 @@
   position: sticky;
   top: 0;
   height: 100vh;
-  z-index: 2000; /* tooltip fölé kerül */
+  z-index: 2000;
 }
 
 .sidebar.expanded {
   width: 220px;
 }
 
-/* Mobile slide-in */
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -38,7 +35,6 @@
   }
 }
 
-/* Toggle button */
 .sidebar-toggle {
   width: 100%;
   text-align: center;
@@ -51,7 +47,6 @@
   padding: 8px 0;
 }
 
-/* Menu items */
 .sidebar-menu {
   list-style: none;
   padding: 0;
@@ -72,7 +67,7 @@
   padding: 10px 15px;
   transition: background 0.2s;
   font-size: 15px;
-  position: relative; /* tooltip miatt */
+  position: relative;
 }
 
 .sidebar-menu a:hover {
@@ -80,8 +75,7 @@
   border-radius: 6px;
 }
 
-/* Tooltip (only collapsed) */
-.sidebar.collapsed .sidebar-menu a::after {
+.sidebar.collapsed .sidebar-menu a:hover::after {
   content: attr(data-tooltip);
   position: absolute;
   left: 75px;
@@ -94,24 +88,13 @@
   white-space: nowrap;
   z-index: 3000;
   pointer-events: none;
-  opacity: 0;                 /* fade-in alap */
-  transition: opacity 0.2s ease;
 }
 
-.sidebar.collapsed .sidebar-menu a:hover::after {
-  opacity: 1;                 /* fade-in aktiválódik */
-}
-
-
-/* Icon */
 .icon {
   font-size: 20px;
 }
 
-/* Main content */
 .main-content {
   flex: 1;
   padding: 20px;
-  position: relative;
-  z-index: 1;
 }

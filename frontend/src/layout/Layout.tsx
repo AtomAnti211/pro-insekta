@@ -20,63 +20,63 @@ export default function Layout() {
         <ul className="sidebar-menu">
 
           <li>
-            <Link to="/" data-tooltip="Dashboard">
+            <Link to="/admin/dashboard" data-tooltip="Dashboard">
               <span className="icon">🏠</span>
               {open && <span>Dashboard</span>}
             </Link>
           </li>
 
           <li>
-            <Link to="/notes" data-tooltip="Notes">
+            <Link to="/admin/notes" data-tooltip="Notes">
               <span className="icon">📝</span>
               {open && <span>Notes</span>}
             </Link>
           </li>
 
           <li>
-            <Link to="/jobs" data-tooltip="Jobs">
+            <Link to="/admin/jobs" data-tooltip="Jobs">
               <span className="icon">🧰</span>
               {open && <span>Jobs</span>}
             </Link>
           </li>
 
           <li>
-            <Link to="/contracts" data-tooltip="Contracts">
+            <Link to="/admin/contracts" data-tooltip="Contracts">
               <span className="icon">📄</span>
               {open && <span>Contracts</span>}
             </Link>
           </li>
 
           <li>
-            <Link to="/locations" data-tooltip="Locations">
+            <Link to="/admin/locations" data-tooltip="Locations">
               <span className="icon">📍</span>
               {open && <span>Locations</span>}
             </Link>
           </li>
 
           <li>
-            <Link to="/customers" data-tooltip="Customers">
+            <Link to="/admin/customers" data-tooltip="Customers">
               <span className="icon">👥</span>
               {open && <span>Customers</span>}
             </Link>
           </li>
 
           <li>
-            <Link to="/services" data-tooltip="Services">
+            <Link to="/admin/services" data-tooltip="Services">
               <span className="icon">🧪</span>
               {open && <span>Services</span>}
             </Link>
           </li>
 
           <li>
-            <Link to="/activities" data-tooltip="Activities">
+            <Link to="/admin/activities" data-tooltip="Activities">
               <span className="icon">🐞</span>
               {open && <span>Activities</span>}
             </Link>
           </li>
 
           <li>
-            <Link to="/owner" data-tooltip="Owner">
+            <Link to="/admin/owner" data-tooltip="Owner">
               <span className="icon">👤</span>
               {open && <span>Owner</span>}
             </Link>
