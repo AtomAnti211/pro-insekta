@@ -3,9 +3,9 @@ import Layout from "./layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import Notes from "./pages/NotesPage";
 import Activities from "./pages/ActivitiesPage";
-import Owner from "./pages/OwnerPage";
 import LandingPage from "./pages/LandingPage";
 import ActivitiesPage from "./features/activities/ActivitiesAdminPage";
+import OwnerAdminPage from "./features/owner/OwnerAdminPage";
 
 export default function App() {
   return (
@@ -24,7 +24,7 @@ export default function App() {
           <Route path="admin/dashboard" element={<Dashboard />} />
           <Route path="admin/notes" element={<Notes />} />
           <Route path="admin/activities" element={<ActivitiesPage />} />
-          <Route path="admin/owner" element={<Owner />} />
+          <Route path="admin/owner" element={<OwnerAdminPage />} />
         </Route>
 
       </Routes>

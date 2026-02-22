@@ -29,7 +29,7 @@ export default function ActivityForm({ initial, onSubmit, onCancel }: Props) {
     }
   }, [initial]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const form = new FormData();
