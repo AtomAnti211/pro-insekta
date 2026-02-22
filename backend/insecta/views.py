@@ -259,6 +259,7 @@ def contractDetail(request, id):
         serializer = ContractReadSerializer(contract)
         return Response(serializer.data)
 
+
     if request.method == "PUT":
         serializer = ContractWriteSerializer(contract, data=request.data)
         if serializer.is_valid():

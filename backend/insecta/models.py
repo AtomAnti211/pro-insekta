@@ -117,6 +117,12 @@ class Contract(models.Model):
         null=True,
         blank=True
     )
+    contractCustomerName = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     contractPrice = models.IntegerField(default=0)
     contractStart = models.DateField(default=now)
     contractValid = models.BooleanField(default=True)
@@ -155,11 +161,31 @@ class Job(models.Model):
     jobPrice = models.IntegerField(default=0)
     jobStart = models.DateField(default=now)
     jobURL = models.ImageField(upload_to="images/", default=" ", blank=True)
-    jobRemark = models,models.CharField(max_length=300, blank=True, default="")
+    jobRemark = models.CharField(max_length=300, blank=True, default="")
+    
+    def save(self, *args, **kwargs):
+          
+        # Ha a Contract ki van választva → automatikusan töltsük a többit
+        if self.jobcontractId:
+
+            # 1. Location automatikusan a Contract alapján
+            if not self.jobLocationName:
+                self.jobLocationName = self.jobcontractId.contractLocationName
+
+            # 2. Service automatikusan a Contract alapján
+            if not self.jobServiceName:
+                self.jobServiceName = self.jobcontractId.contractServiceName
+
+            # 3. Ha Customer mezőt is szeretnél:
+                self.jobCustomer = self.jobcontractId.contractLocationName.locationCustomer
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.jobLocationName} - {self.jobStart.year} - {self.jobStart.month} - {self.jobStart.day}"
-
+    
+    class Meta:
+        ordering = ["jobLocationName", "-jobStart"]
 
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)

@@ -10,12 +10,16 @@ class JobAdminForm(forms.ModelForm):
         model = Job
         fields = "__all__"
         widgets = {
-            "jobcontractId": forms.Select(attrs={"class": "admin-select2"}),
+            "jobLocationName": forms.Select(attrs={"disabled": True}),
+            "jobCustomer": forms.Select(attrs={"disabled": True}),
+            "jobServiceName": forms.Select(attrs={"disabled": True}),
         }
+
 
 class JobAdmin(admin.ModelAdmin):
     form = JobAdminForm
-    readonly_fields = ("jobLocationName", "jobCustomer", "jobServiceName")
+    #readonly_fields = ("jobLocationName", "jobCustomer", "jobServiceName")
+    readonly_fields = ()
 
     class Media:
         css = {
@@ -27,7 +31,11 @@ class JobAdmin(admin.ModelAdmin):
             "admin/js/autocomplete.js",
             "js/job_admin.js",   # saját JS fájl
         )
- 
+class JobAdmin(admin.ModelAdmin):
+    form = JobAdminForm
+
+    class Media:
+        js = ("insecta/js/job_admin.js",)
  
   # Register your models here.
 admin.site.register(Activity)

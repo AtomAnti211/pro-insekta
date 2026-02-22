@@ -14,16 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(`/admin/ajax/contract/${contractId}/`)
             .then(response => response.json())
             .then(data => {
-                // Location mező kitöltése
                 locationField.value = data.location_id;
-
-                // Customer mező kitöltése
                 customerField.value = data.customer_id;
-
-                // Service mező kitöltése
                 serviceField.value = data.service_id;
-
-                // Ár kitöltése
                 priceField.value = data.price;
             });
     });

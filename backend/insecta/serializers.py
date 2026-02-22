@@ -30,12 +30,16 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields ='__all__'  
          
 class LocationWriteSerializer(serializers.ModelSerializer):
-  class Meta:
+    locationCustomer = CustomerSerializer(read_only=True)
+
+    class Meta:
         model = Location
         fields ='__all__'     
   
 class LocationReadSerializer(serializers.ModelSerializer):
-  class Meta:
+    locationCustomer = CustomerSerializer(read_only=True)
+
+    class Meta:
     
         model = Location
         fields ='__all__'  
@@ -47,12 +51,19 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields ='__all__'   
                
 class ContractReadSerializer(serializers.ModelSerializer):
+    contractLocationName = LocationReadSerializer(read_only=True)
+    contractServiceName = ServiceSerializer(read_only=True)
+
+
     class Meta:
         model = Contract
         fields ='__all__'  
         depth = 2  
         
 class ContractWriteSerializer(serializers.ModelSerializer):
+    contractLocationName = LocationReadSerializer(read_only=True)
+    contractServiceName = ServiceSerializer(read_only=True)
+
     class Meta:
         model = Contract
         fields ='__all__'    
