@@ -15,7 +15,6 @@ urlpatterns = [
     path('contact/', views.contactMessageCreate),
 
 
-
     # ADMIN ENDPOINTS (will require JWT auth)
 
     # Owner
@@ -36,6 +35,9 @@ urlpatterns = [
     # Contracts
     path('contracts/', views.contractListCreate),
     path('contracts/<int:id>/', views.contractDetail),
+    
+    #path("admin/ajax/contract/<int:pk>/", views.ajax_contract_details, name="ajax_contract_details"),
+
 
     # Jobs
     path('jobs/', views.jobListCreate),

@@ -14,6 +14,7 @@ python manage.py runserver
 -frontend:
 cd frontend
 npm install
+npm install react-select
 npm run dev
 
 Mappastruktúra:
@@ -66,13 +67,14 @@ src/
     locations/
       LocationsPage.tsx
       LocationForm.tsx
+      
       useLocations.ts
     services/
       ServicesPage.tsx
       ServiceForm.tsx
       useServices.ts
     contracts/
-      ContractsPage.tsx
+      ContractsPage.tsx*
       ContractForm.tsx
       useContracts.ts
     jobs/

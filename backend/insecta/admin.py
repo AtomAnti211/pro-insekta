@@ -1,7 +1,34 @@
 from django.contrib import admin
+from django import forms
+
 
 # Register your models here.
 from .models import Activity, Note, Owner, Customer,Location,Service,Contract,Job,ContactMessage
+ 
+class JobAdminForm(forms.ModelForm):
+    class Meta:
+        model = Job
+        fields = "__all__"
+        widgets = {
+            "jobcontractId": forms.Select(attrs={"class": "admin-select2"}),
+        }
+
+class JobAdmin(admin.ModelAdmin):
+    form = JobAdminForm
+    readonly_fields = ("jobLocationName", "jobCustomer", "jobServiceName")
+
+    class Media:
+        css = {
+            "all": ("admin/css/widgets.css",)
+        }
+        js = (
+            "admin/js/vendor/select2/select2.full.min.js",
+            "admin/js/jquery.init.js",
+            "admin/js/autocomplete.js",
+            "js/job_admin.js",   # saját JS fájl
+        )
+ 
+ 
   # Register your models here.
 admin.site.register(Activity)
 admin.site.register(Note)
@@ -10,7 +37,7 @@ admin.site.register(Customer)
 admin.site.register(Location)
 admin.site.register(Service)
 admin.site.register(Contract)
-admin.site.register(Job)
+admin.site.register(Job,JobAdmin)
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):

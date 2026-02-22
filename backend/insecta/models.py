@@ -6,7 +6,9 @@ class Activity(models.Model):
     activityName = models.CharField(max_length=120)
     activityURL = models.ImageField(upload_to="images/", default=" ", blank=True)
     activityDescr = models.TextField(default=" ")
-
+    activityURL1 = models.ImageField(upload_to="images/", default=" ", blank=True)
+    activityURL2 = models.ImageField(upload_to="images/", default=" ", blank=True)
+    activityURL3 = models.ImageField(upload_to="images/", default=" ", blank=True)
     def __str__(self):
         return self.activityName
 
@@ -131,6 +133,13 @@ class Job(models.Model):
         null=True,
         blank=True
     )
+    jobCustomer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
     jobLocationName = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,
@@ -146,6 +155,7 @@ class Job(models.Model):
     jobPrice = models.IntegerField(default=0)
     jobStart = models.DateField(default=now)
     jobURL = models.ImageField(upload_to="images/", default=" ", blank=True)
+    jobRemark = models,models.CharField(max_length=300, blank=True, default="")
 
     def __str__(self):
         return f"{self.jobLocationName} - {self.jobStart.year} - {self.jobStart.month} - {self.jobStart.day}"
