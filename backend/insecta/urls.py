@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
@@ -10,8 +10,10 @@ urlpatterns = [
     # Activities (public)
     path('activities/', views.activityListCreate),
     path('activities/<int:id>/', views.activityDetail),
+    
     path('notes/', views.noteListCreate),
     path('notes/<int:id>/', views.noteDetail),   
+    
     path('contact/', views.contactMessageCreate),
 
 
@@ -35,12 +37,12 @@ urlpatterns = [
     # Contracts
     path('contracts/', views.contractListCreate),
     path('contracts/<int:id>/', views.contractDetail),
-    
-    #path("admin/ajax/contract/<int:pk>/", views.ajax_contract_details, name="ajax_contract_details"),
-
-
+   
     # Jobs
     path('jobs/', views.jobListCreate),
     path('jobs/<int:id>/', views.jobDetail),
+    
+    # Contract TODO API (Jobs due in X months)
+    path("contracts-todo/", include("contractsTodo.urls")),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
