@@ -83,3 +83,22 @@ class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactMessage
         fields = "__all__"
+# contracts/serializers.py
+from rest_framework import serializers
+from .models import Contract
+
+class ContractDueSerializer(serializers.ModelSerializer):
+    location = serializers.StringRelatedField(source="contractLocationName")
+    service = serializers.StringRelatedField(source="contractServiceName")
+
+
+    class Meta:
+        model = Contract
+        fields = [
+            "contractId", 
+            "contractStart",
+            "contractValid",
+            "contractFrequencyMonth",
+            "location",
+            "service",
+            ]

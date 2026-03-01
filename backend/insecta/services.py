@@ -1,6 +1,6 @@
+from django.db.models import Max
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from django.db.models import Max
 from .models import Contract
 
 def months_between(d1, d2):
@@ -13,7 +13,7 @@ def get_due_contracts(X):
     qs = (
         Contract.objects
         .filter(contractValid=True)
-        .annotate(last_job=Max("jobs__jobStart"))
+        .annotate(last_job=Max("job__JobDoneDate"))
     )
 
     result = []

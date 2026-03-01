@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import  APIView ,api_view
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -12,8 +12,11 @@ from .serializers import (
     OwnerSerializer, CustomerSerializer, LocationReadSerializer,
     LocationWriteSerializer, ServiceSerializer,
     ContractReadSerializer, ContractWriteSerializer,
-    JobReadSerializer, JobWriteSerializer, ContactMessageSerializer
+    JobReadSerializer, JobWriteSerializer, ContactMessageSerializer,
+    ContractDueSerializer
 )
+from .services import get_due_contracts
+
 
 # OWNER (READ + UPDATE)
 
@@ -317,3 +320,14 @@ def contactMessageCreate(request):
         serializer.save()
         return Response({"status": "ok"}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DueContractsView(APIView):
+    def get(self, request):
+        try:
+            X = int(request.query_params.get("months", 1))
+        except ValueError:
+            return Response({"error": "Invalid months parameter"}, status=400)
+
+        contracts = get_due_contracts(X)
+        serializer = ContractDueSerializer(contracts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
