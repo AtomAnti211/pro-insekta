@@ -3,6 +3,28 @@ import { activityAdminApi } from "../../api/activityAdmin";
 import { MEDIA_URL } from "../../api/core/config";
 import type { Activity } from "../../types/activity";
 
+// Segédfüggvény: 4 kép URL normalizálása
+function fixImageUrls(a: Activity): Activity {
+  const fix = (url: string | null | undefined) => {
+    if (!url) return "";
+    let final = url;
+
+    if (!final.startsWith("http")) {
+      final = MEDIA_URL + final;
+    }
+
+    return `${final}?ts=${Date.now()}`;
+  };
+
+  return {
+    ...a,
+    activityURL: fix(a.activityURL),
+    activityURL1: fix(a.activityURL1),
+    activityURL2: fix(a.activityURL2),
+    activityURL3: fix(a.activityURL3),
+  };
+}
+
 export function useActivities() {
   const [items, setItems] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -14,24 +36,7 @@ export function useActivities() {
       setLoading(true);
       const data = await activityAdminApi.list();
 
-      const fixed = data.map((a: Activity) => {
-        let url = a.activityURL;
-
-        // MEDIA_URL hozzáadása, ha kell
-        if (url && !url.startsWith("http")) {
-          url = MEDIA_URL + url;
-        }
-
-        // Cache-busting
-        if (url) {
-          url = `${url}?ts=${Date.now()}`;
-        }
-
-        return {
-          ...a,
-          activityURL: url,
-        };
-      });
+      const fixed = data.map((a: Activity) => fixImageUrls(a));
 
       setItems(fixed);
       setError(null);
@@ -49,17 +54,12 @@ export function useActivities() {
   // Létrehozás
   const createItem = async (form: FormData) => {
     const created = await activityAdminApi.create(form);
+    const fixed = fixImageUrls(created);
 
-    let url = created.activityURL;
-    if (url && !url.startsWith("http")) {
-      url = MEDIA_URL + url;
-    }
-    url = `${url}?ts=${Date.now()}`;
-
-    setItems(prev => [...prev, { ...created, activityURL: url }]);
+    setItems(prev => [...prev, fixed]);
   };
 
-  // Szerkesztés – A LÉNYEG: lokális frissítés, nem load()
+  // Szerkesztés
   const updateItem = async (id: number, form: FormData) => {
     const updated = await activityAdminApi.update(id, form);
 
@@ -67,22 +67,17 @@ export function useActivities() {
       prev.map(item => {
         if (item.id !== id) return item;
 
-        // Ha a backend üres képet ad vissza → megtartjuk a régit
-        let url = updated.activityURL || item.activityURL.replace(/\?ts=.*/, "");
-
-        // MEDIA_URL hozzáadása, ha kell
-        if (url && !url.startsWith("http")) {
-          url = MEDIA_URL + url;
-        }
-
-        // Cache-busting
-        url = `${url}?ts=${Date.now()}`;
-
-        return {
+        // Ha a backend valamelyik képet nem küldi vissza → megtartjuk a régit
+        const merged: Activity = {
           ...item,
           ...updated,
-          activityURL: url,
+          activityURL: updated.activityURL || item.activityURL,
+          activityURL1: updated.activityURL1 || item.activityURL1,
+          activityURL2: updated.activityURL2 || item.activityURL2,
+          activityURL3: updated.activityURL3 || item.activityURL3,
         };
+
+        return fixImageUrls(merged);
       })
     );
   };

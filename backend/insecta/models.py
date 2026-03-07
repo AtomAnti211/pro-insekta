@@ -168,15 +168,15 @@ class Job(models.Model):
         # Ha a Contract ki van választva → automatikusan töltsük a többit
         if self.jobcontractId:
 
-            # 1. Location automatikusan a Contract alapján
+            # Location automatikusan a Contract alapján
             if not self.jobLocationName:
                 self.jobLocationName = self.jobcontractId.contractLocationName
 
-            # 2. Service automatikusan a Contract alapján
+            # Service automatikusan a Contract alapján
             if not self.jobServiceName:
                 self.jobServiceName = self.jobcontractId.contractServiceName
 
-            # 3. Ha Customer mezőt is szeretnél:
+            # Customer mező automatikusan:
                 self.jobCustomer = self.jobcontractId.contractLocationName.locationCustomer
 
         super().save(*args, **kwargs)

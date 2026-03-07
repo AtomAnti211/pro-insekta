@@ -3,14 +3,7 @@ import { useParams } from "react-router-dom";
 import { getActivity } from "../api/activity";
 import Breadcrumb from "../components/Breadcrumb";
 import "./ActivityDetailPage.css";
-
-type Activity = {
-  id: number;
-  activityName: string;
-  activityDescr: string;
-  activityURL: string;
-};
-
+import type { Activity } from "../types/activity";
 export default function ActivityDetailPage() {
   const { id } = useParams();
   const [activity, setActivity] = useState<Activity | null>(null);
@@ -33,6 +26,14 @@ export default function ActivityDetailPage() {
   if (loading) return <p style={{ padding: 20 }}>Betöltés…</p>;
   if (!activity) return <p style={{ padding: 20 }}>Nem található ilyen tevékenység.</p>;
 
+  // Összegyűjtjük a létező képeket
+  const images = [
+    activity.activityURL,
+    activity.activityURL1,
+    activity.activityURL2,
+    activity.activityURL3,
+  ].filter(url => url && url.trim() !== "");
+
   return (
     <div className="detail-container">
 
@@ -46,11 +47,17 @@ export default function ActivityDetailPage() {
 
       <h1 className="detail-title">{activity.activityName}</h1>
 
-      <img
-        src={activity.activityURL}
-        alt={activity.activityName}
-        className="detail-image"
-      />
+      {/* Több kép megjelenítése */}
+      <div className="detail-images">
+        {images.map((img, index) => (
+          <img
+            key={index}
+            src={img}
+            alt={`${activity.activityName} kép ${index + 1}`}
+            className="detail-image"
+          />
+        ))}
+      </div>
 
       <p className="detail-text">{activity.activityDescr}</p>
     </div>

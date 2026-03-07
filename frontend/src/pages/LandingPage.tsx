@@ -85,7 +85,7 @@ export default function LandingPage() {
           {activities.map(act => (
             <Link
               key={act.id}
-              to={`/activity/${act.id}`}
+              to={`/activities/${act.id}`}
               className="service-card-link"
             >
               <div className="service-card">

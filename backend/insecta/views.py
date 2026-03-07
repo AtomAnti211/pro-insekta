@@ -16,6 +16,7 @@ from .serializers import (
     ContractDueSerializer
 )
 from .services import get_due_contracts
+from django.core.mail import send_mail
 
 
 # OWNER (READ + UPDATE)
@@ -316,10 +317,30 @@ def jobDetail(request, id):
 @api_view(["POST"])
 def contactMessageCreate(request):
     serializer = ContactMessageSerializer(data=request.data)
+
     if serializer.is_valid():
-        serializer.save()
+        message = serializer.save()
+
+        # EMAIL KÜLDÉS
+        send_mail(
+            subject=f"Új üzenet érkezett: {message.name}",
+            message=f"""
+Név: {message.name}
+Email: {message.email}
+Telefon: {message.phone}
+
+Üzenet:
+{message.message}
+            """,
+            from_email="noreply@yourdomain.com",
+            recipient_list=["bedit968@gmail.com"],   # IDE ÍRD A SAJÁT EMAILT
+            fail_silently=False,
+        )
+
         return Response({"status": "ok"}, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class DueContractsView(APIView):
     def get(self, request):

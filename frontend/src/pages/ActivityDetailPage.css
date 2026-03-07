@@ -1,24 +1,10 @@
 .detail-container {
-  max-width: 900px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
   color: #222;
   line-height: 1.6;
-}
-
-/* Vissza link */
-.back-link {
-  display: inline-block;
-  margin-bottom: 20px;
-  text-decoration: none;
-  color: #2e7d32;
-  font-weight: bold;
-  transition: color 0.2s;
-}
-
-.back-link:hover {
-  color: #1b5e20;
 }
 
 /* Cím */
@@ -28,13 +14,31 @@
   text-align: center;
 }
 
-/* Kép */
+/* ==== KÉPGALÉRIA ==== */
+/* Desktop: 4 oszlop */
+/* Közepes kijelző: 3 oszlop */
+/* Tablet: 2 oszlop */
+/* Mobil: 1 oszlop */
+
+.detail-images {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* nagy desktop */
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+/* 4:3 arányú, kicsi képek */
 .detail-image {
   width: 100%;
-  height: 320px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 25px;
+  border-radius: 8px;
+  background: #eaeaea;
+  transition: transform 0.25s ease;
+}
+
+.detail-image:hover {
+  transform: scale(1.02);
 }
 
 /* Leírás */
@@ -48,14 +52,21 @@
    RESZPONZÍV FINOMHANGOLÁS
 =========================== */
 
-/* Tablet */
+/* Közepes kijelző – 3 oszlop */
+@media (max-width: 1100px) {
+  .detail-images {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet – 2 oszlop */
 @media (max-width: 900px) {
   .detail-title {
     font-size: 1.7rem;
   }
 
-  .detail-image {
-    height: 260px;
+  .detail-images {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .detail-text {
@@ -63,7 +74,7 @@
   }
 }
 
-/* Mobil */
+/* Mobil – 1 oszlop */
 @media (max-width: 600px) {
   .detail-container {
     padding: 15px;
@@ -73,8 +84,8 @@
     font-size: 1.5rem;
   }
 
-  .detail-image {
-    height: 200px;
+  .detail-images {
+    grid-template-columns: 1fr;
   }
 
   .detail-text {
@@ -86,10 +97,6 @@
 @media (max-width: 400px) {
   .detail-title {
     font-size: 1.3rem;
-  }
-
-  .detail-image {
-    height: 160px;
   }
 }
 
