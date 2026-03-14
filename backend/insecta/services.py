@@ -24,7 +24,7 @@ def get_due_contracts(X):
                 result.append(c)
                 continue
             continue
-        # ha nem volt és 0 a hónap, akkor menjünk atonnal
+        # ha nem volt és 0 a hónap, akkor menjünk azonnal
 
         diff = months_between(c.last_job, future_date)
 

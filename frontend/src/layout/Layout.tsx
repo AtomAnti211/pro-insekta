@@ -50,6 +50,13 @@ export default function Layout() {
           </li>
 
           <li>
+            <Link to="/admin/toDo" data-tooltip="ToDo">
+              <span className="icon">📅</span>
+              {open && <span>ToDo</span>}
+            </Link>
+          </li>
+
+          <li>
             <Link to="/admin/contracts" data-tooltip="Contracts">
               <span className="icon">📄</span>
               {open && <span>Contracts</span>}
@@ -90,7 +97,7 @@ export default function Layout() {
               {open && <span>Owner</span>}
             </Link>
           </li>
-
+        
         </ul>
       </nav>
 

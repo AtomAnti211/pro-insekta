@@ -16,6 +16,5 @@ class DueContractsView(APIView):
         contracts = get_due_contracts(X)
         serializer = ContractDueSerializer(contracts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-from django.shortcuts import render
+#from django.shortcuts import render
 
-# Create your views here.

@@ -18,7 +18,13 @@ export default function Dashboard() {
         <Link to="/admin/jobs" className="dash-card">
           <span className="dash-icon">🧰</span>
           <h3>Jobs</h3>
-          <p>Munkák, kiszállások.</p>
+          <p>Eseti munkák, kiszállások.</p>
+        </Link>
+
+       <Link to="/admin/toDo" className="dash-card">
+          <span className="dash-icon">📅</span>
+          <h3>Jobs by Contract</h3>
+          <p>Szerződéses, jővőbeli esedékes munkák.</p>
         </Link>
 
         <Link to="/admin/contracts" className="dash-card">
@@ -42,7 +48,7 @@ export default function Dashboard() {
         <Link to="/admin/services" className="dash-card">
           <span className="dash-icon">🧪</span>
           <h3>Services</h3>
-          <p>Szolgáltatások és árak.</p>
+          <p>Szolgáltatások, termékek.</p>
         </Link>
 
         <Link to="/admin/activities" className="dash-card">
@@ -51,13 +57,7 @@ export default function Dashboard() {
           <p>Tevékenységek és részletek.</p>
         </Link>
 
-        <Link to="/admin/owner" className="dash-card">
-          <span className="dash-icon">👤</span>
-          <h3>Owner</h3>
-          <p>Üzemeltetői adatok.</p>
-        </Link>
-
-        {/* ÚJ: LandingPage kártya */}
+      {/* ÚJ: LandingPage kártya */}
         <Link to="/" className="dash-card">
           <span className="dash-icon">🏡</span>
           <h3>Landing Page</h3>

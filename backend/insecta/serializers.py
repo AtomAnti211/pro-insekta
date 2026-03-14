@@ -84,8 +84,8 @@ class ContactMessageSerializer(serializers.ModelSerializer):
         model = ContactMessage
         fields = "__all__"
 # contracts/serializers.py
-from rest_framework import serializers
-from .models import Contract
+# to delete from rest_framework import serializers
+# to delete from .models import Contract
 
 class ContractDueSerializer(serializers.ModelSerializer):
     location = serializers.StringRelatedField(source="contractLocationName")
