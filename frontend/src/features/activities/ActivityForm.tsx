@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { Activity } from "../../types/activity";
-import { useRef } from "react";
-
 
 type Props = {
   initial?: Activity | null;
@@ -12,33 +10,58 @@ type Props = {
 export default function ActivityForm({ initial, onSubmit, onCancel }: Props) {
   const [name, setName] = useState("");
   const [descr, setDescr] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+
+  const [images, setImages] = useState<(string | null)[]>(["", "", "", ""]);
+  const [files, setFiles] = useState<(File | null)[]>([null, null, null, null]);
 
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (nameRef.current) {
-      nameRef.current.focus();
-    }
+    nameRef.current?.focus();
   }, []);
 
   useEffect(() => {
     if (initial) {
       setName(initial.activityName);
       setDescr(initial.activityDescr);
+
+      setImages([
+        initial.activityURL,
+        initial.activityURL1,
+        initial.activityURL2,
+        initial.activityURL3
+      ]);
     }
   }, [initial]);
 
-  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleImageChange = (index: number, file: File | null) => {
+    const newFiles = [...files];
+    newFiles[index] = file;
+    setFiles(newFiles);
+
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const newImages = [...images];
+      newImages[index] = reader.result as string;
+      setImages(newImages);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const form = new FormData();
     form.append("activityName", name);
     form.append("activityDescr", descr);
 
-    if (file) {
-      form.append("activityURL", file);
-    }
+    if (files[0]) form.append("activityURL", files[0]);
+    if (files[1]) form.append("activityURL1", files[1]);
+    if (files[2]) form.append("activityURL2", files[2]);
+    if (files[3]) form.append("activityURL3", files[3]);
+
 
     onSubmit(form);
   };
@@ -62,22 +85,33 @@ export default function ActivityForm({ initial, onSubmit, onCancel }: Props) {
           value={descr}
           onChange={e => setDescr(e.target.value)}
           rows={5}
-          style={{ width: "100%" }}
-        />
-
-      </label>
-
-      <label>
-        Kép:
-        <input
-          type="file"
-          accept="image/*"
-          onChange={e => setFile(e.target.files?.[0] || null)}
         />
       </label>
+
+      <div className="image-upload-grid">
+        {[0, 1, 2, 3].map(index => (
+          <div key={index} className="upload-card">
+            <p>{index + 1}. kép</p>
+
+            {images[index] ? (
+              <img src={images[index]!} className="upload-preview" />
+            ) : (
+              <div className="upload-placeholder no-click">Nincs kép</div>
+            )}
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e =>
+                handleImageChange(index, e.target.files?.[0] || null)
+              }
+            />
+          </div>
+        ))}
+      </div>
 
       <div className="form-actions">
-        <button type="submit">Mentés</button>
+        <button type="submit" className="save-btn">Mentés</button>
         <button type="button" onClick={onCancel}>Mégse</button>
       </div>
     </form>

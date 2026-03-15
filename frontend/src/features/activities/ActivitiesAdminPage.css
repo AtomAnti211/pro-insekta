@@ -141,3 +141,58 @@
     height: 45px;
   }
 }
+
+.image-upload-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin: 20px 0;
+}
+
+.upload-card {
+  background: #fff;
+  border: 1px solid #c8e6c9;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.upload-preview {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.upload-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #e8f5e9;
+  border: 2px dashed #4caf50;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2e7d32;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.save-btn {
+  background: #2e7d32;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #1b5e20;
+}
+
+.no-click {
+  pointer-events: none;
+}

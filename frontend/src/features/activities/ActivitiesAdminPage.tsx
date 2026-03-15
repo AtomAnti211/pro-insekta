@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useActivities } from "./useActivities";
 import ActivityForm from "./ActivityForm";
 import "./ActivitiesAdminPage.css";
 
-// Rövidítő segédfüggvény hosszú leírásokhoz
 function truncate(text: string, max: number = 60) {
   if (!text) return "";
   return text.length > max ? text.slice(0, max) + "…" : text;
@@ -15,41 +14,61 @@ export default function ActivitiesAdminPage() {
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
 
+  const formRef = useRef<HTMLDivElement>(null);
+
   const editingItem = items.find(a => a.id === editingId);
+
+  const scrollToForm = () => {
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
+
+  const startAdding = () => {
+    setEditingId(null);
+    setAdding(true);
+    scrollToForm();
+  };
+
+  const startEditing = (id: number) => {
+    setAdding(false);
+    setEditingId(id);
+    scrollToForm();
+  };
 
   return (
     <div className="admin-page">
       <h1 className="admin-title">Activities – Admin</h1>
 
-      <button className="admin-add-btn" onClick={() => setAdding(true)}>
+      <button className="admin-add-btn" onClick={startAdding}>
         + Új Activity
       </button>
 
       {loading && <p>Betöltés...</p>}
       {error && <p className="error">{error}</p>}
 
-      {/* Új activity */}
-      {adding && (
-        <ActivityForm
-          onSubmit={async form => {
-            await create(form);
-            setAdding(false);
-          }}
-          onCancel={() => setAdding(false)}
-        />
-      )}
+      <div ref={formRef}>
+        {adding && (
+          <ActivityForm
+            onSubmit={async form => {
+              await create(form);
+              setAdding(false);
+            }}
+            onCancel={() => setAdding(false)}
+          />
+        )}
 
-      {/* Szerkesztés */}
-      {editingItem && (
-        <ActivityForm
-          initial={editingItem}
-          onSubmit={async form => {
-            await update(editingItem.id, form);
-            setEditingId(null);
-          }}
-          onCancel={() => setEditingId(null)}
-        />
-      )}
+        {editingItem && (
+          <ActivityForm
+            initial={editingItem}
+            onSubmit={async form => {
+              await update(editingItem.id, form);
+              setEditingId(null);   // PANEL BEZÁRÁSA
+            }}
+            onCancel={() => setEditingId(null)}
+          />
+        )}
+      </div>
 
       <table className="admin-table">
         <thead>
@@ -81,7 +100,7 @@ export default function ActivitiesAdminPage() {
               <td className="admin-actions">
                 <button
                   className="edit-btn"
-                  onClick={() => setEditingId(a.id)}
+                  onClick={() => startEditing(a.id)}
                 >
                   Szerkesztés
                 </button>

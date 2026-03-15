@@ -30,14 +30,11 @@ export function useActivities() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Betöltés
   const load = async () => {
     try {
       setLoading(true);
       const data = await activityAdminApi.list();
-
       const fixed = data.map((a: Activity) => fixImageUrls(a));
-
       setItems(fixed);
       setError(null);
     } catch (e: any) {
@@ -55,7 +52,6 @@ export function useActivities() {
   const createItem = async (form: FormData) => {
     const created = await activityAdminApi.create(form);
     const fixed = fixImageUrls(created);
-
     setItems(prev => [...prev, fixed]);
   };
 
@@ -67,7 +63,6 @@ export function useActivities() {
       prev.map(item => {
         if (item.id !== id) return item;
 
-        // Ha a backend valamelyik képet nem küldi vissza → megtartjuk a régit
         const merged: Activity = {
           ...item,
           ...updated,

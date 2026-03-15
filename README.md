@@ -3,7 +3,7 @@
 indítás windows-on:
 
 -backend:
-python -m venv venv
+py -3.12 -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 cd backend
