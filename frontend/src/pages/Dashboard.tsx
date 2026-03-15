@@ -57,6 +57,12 @@ export default function Dashboard() {
           <p>Tevékenységek és részletek.</p>
         </Link>
 
+        <Link to="/admin/owner" className="dash-card">	
+          <span className="dash-icon">👤</span>	
+          <h3>Owner</h3>	
+          <p>Üzemeltetői adatok.</p>	
+        </Link>	
+
       {/* ÚJ: LandingPage kártya */}
         <Link to="/" className="dash-card">
           <span className="dash-icon">🏡</span>
