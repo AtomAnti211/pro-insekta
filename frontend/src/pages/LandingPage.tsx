@@ -18,6 +18,10 @@ export default function LandingPage() {
   const [activityId, setActivityId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
 
+  // HTML TAGS STRIPPER FOR ACTIVITY DESCRIPTIONS
+  const stripHtml = /<[^>]+>/g;
+
+
   useEffect(() => {
     getActivities()
       .then(data => {
@@ -95,11 +99,20 @@ export default function LandingPage() {
                   className="service-image"
                 />
                 <h3>{act.activityName}</h3>
+
+
                 <p>
                   {act.activityDescr.length > 120
                     ? act.activityDescr.slice(0, 120) + "..."
                     : act.activityDescr}
                 </p>
+
+                <p>
+                  {act.activityDescr.replace(stripHtml, "").length > 120
+                  ? act.activityDescr.replace(stripHtml, "").slice(0, 120) + "..."
+                  : act.activityDescr.replace(stripHtml, "")}
+                </p>
+   
               </div>
             </Link>
           ))}

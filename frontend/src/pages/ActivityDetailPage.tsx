@@ -59,7 +59,12 @@ export default function ActivityDetailPage() {
         ))}
       </div>
 
-      <p className="detail-text">{activity.activityDescr}</p>
+      <p
+        className="detail-text"
+        dangerouslySetInnerHTML={{ __html: activity.activityDescr }}>
+      </p>
+
+      
     </div>
   );
 }
