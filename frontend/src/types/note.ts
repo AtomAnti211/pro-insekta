@@ -1,11 +1,17 @@
-import type { Activity } from "./activity"
+export type NoteStatus = "new" | "in_progress" | "done";
 
 export interface Note {
-  id: number
-  noteName: string
-  noteActivity: Activity
-  notePhone: string
-  noteAddress: string
-  noteCreated: string
-  noteFinished: boolean
+  id: number;
+  noteName: string;
+  noteEmail: string | null;
+  notePhone: string;
+  noteAddress: string;
+  noteMessage: string;
+  noteActivity: {
+    id: number;
+    activityName: string;
+  } | null;
+  contact_message: string | null;
+  status: NoteStatus;
+  noteCreated: string;
 }

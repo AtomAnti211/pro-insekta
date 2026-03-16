@@ -1,3 +1,5 @@
+from turtle import write
+
 from rest_framework.decorators import api_view,APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -181,34 +183,47 @@ def noteListCreate(request):
         return Response(serializer.data)
 
     if request.method == "POST":
-        serializer = NoteWriteSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        write = NoteWriteSerializer(data=request.data)
+        if write.is_valid():
+            note = write.save()
+            read = NoteReadSerializer(note)
+            return Response(read.data, status=status.HTTP_201_CREATED)
+        return Response(write.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET", "PUT", "DELETE"])
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def noteDetail(request, id):
     try:
         note = Note.objects.get(id=id)
     except Note.DoesNotExist:
-        return Response({"error": "Note not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == "GET":
+    if request.method == 'GET':
         serializer = NoteReadSerializer(note)
         return Response(serializer.data)
 
-    if request.method == "PUT":
-        serializer = NoteWriteSerializer(note, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PUT':
+        write = NoteWriteSerializer(note, data=request.data)
+        if write.is_valid():
+            note = write.save()
+            read = NoteReadSerializer(note)
+            return Response(read.data)
+        return Response(write.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    if request.method == "DELETE":
+    elif request.method == 'PATCH':
+        write = NoteWriteSerializer(note, data=request.data, partial=True)
+        if write.is_valid():
+            note = write.save()
+            read = NoteReadSerializer(note)
+            return Response(read.data)
+        return Response(write.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
         note.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 
 
 # CUSTOMER CRUD

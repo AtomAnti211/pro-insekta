@@ -6,14 +6,14 @@ export const api = axios.create({
   withCredentials: false,
 });
 
-// JSON GET / POST / PUT / DELETE
+// JSON GET / POST / PUT / DELETE / PATCH
 export const get = (url: string) => api.get(url);
 export const post = (url: string, data: any) => api.post(url, data);
 export const put = (url: string, data: any) => api.put(url, data);
 export const del = (url: string) => api.delete(url);
+export const patch = (url: string, data: any) => api.patch(url, data);
 
-// --- ÚJ: FormData támogatás (kép feltöltéshez) ---
-
+// --- FormData támogatás (kép feltöltéshez) ---
 export const postForm = (url: string, form: FormData) =>
   api.post(url, form, {
     headers: {
@@ -34,6 +34,7 @@ export const apiCore = {
   post,
   put,
   del,
+  patch,      
   postForm,
   putForm,
 };

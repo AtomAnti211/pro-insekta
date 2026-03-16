@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Dashboard from "./pages/Dashboard";
-import Notes from "./pages/NotesPage";
+import Notes from "./features/notes/NotesAdminPage";  
 import Activities from "./pages/ActivitiesPage";
 import LandingPage from "./pages/LandingPage";
 import ActivitiesPage from "./features/activities/ActivitiesAdminPage";
 import OwnerAdminPage from "./features/owner/OwnerAdminPage";
 import ActivityDetailPage from "./pages/ActivityDetailPage";   
+import NotesAdminPage from "./features/notes/NotesAdminPage";
 
 export default function App() {
   return (
@@ -28,7 +29,7 @@ export default function App() {
           <Route path="admin" element={<Navigate to="/admin/dashboard" replace />} />
 
           <Route path="admin/dashboard" element={<Dashboard />} />
-          <Route path="admin/notes" element={<Notes />} />
+          <Route path="admin/notes" element={<NotesAdminPage />} />
           <Route path="admin/activities" element={<ActivitiesPage />} />
           <Route path="admin/owner" element={<OwnerAdminPage />} />
         </Route>
