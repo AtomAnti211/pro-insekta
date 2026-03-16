@@ -1,8 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Dashboard from "./pages/Dashboard";
-import Notes from "./features/notes/NotesAdminPage";  
-import Activities from "./pages/ActivitiesPage";
 import LandingPage from "./pages/LandingPage";
 import ActivitiesPage from "./features/activities/ActivitiesAdminPage";
 import OwnerAdminPage from "./features/owner/OwnerAdminPage";
@@ -16,10 +14,7 @@ export default function App() {
 
         {/* Publikus kezdőoldal */}
         <Route path="/" element={<LandingPage />} />
-
-        {/* Publikus aktivitás lista */}
-        <Route path="activities" element={<Activities />} />
-
+ 
         {/* Publikus aktivitás részletező */}
         <Route path="activities/:id" element={<ActivityDetailPage />} />   
 
