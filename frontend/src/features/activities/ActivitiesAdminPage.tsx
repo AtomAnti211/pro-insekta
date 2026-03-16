@@ -97,6 +97,7 @@ export default function ActivitiesAdminPage() {
 
               <td>{truncate(a.activityDescr, 60)}</td>
 
+              
               <td className="admin-actions">
                 <button
                   className="edit-btn"
