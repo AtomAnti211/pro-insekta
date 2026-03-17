@@ -6,6 +6,7 @@ import ActivitiesPage from "./features/activities/ActivitiesAdminPage";
 import OwnerAdminPage from "./features/owner/OwnerAdminPage";
 import ActivityDetailPage from "./pages/ActivityDetailPage";   
 import NotesAdminPage from "./features/notes/NotesAdminPage";
+import ServicesAdminPage from "./features/services/ServicesAdminPage";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="admin/notes" element={<NotesAdminPage />} />
           <Route path="admin/activities" element={<ActivitiesPage />} />
           <Route path="admin/owner" element={<OwnerAdminPage />} />
+          <Route path="admin/services" element={<ServicesAdminPage />} />
         </Route>
 
       </Routes>
