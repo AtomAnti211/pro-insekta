@@ -1,0 +1,17 @@
+:root {
+  --light-bv: blueviolet;
+  --border-color1: mediumpurple;
+  --primary-color: #4caf50;
+  --primary-dark: #45a049;
+  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --forest-green: #228B22;
+  --medium-sea-green: #3CB371;
+  --green: #008000;
+  --red: #FF0000;
+  --olive: #808000;
+  --olive-drab: #6B8E23;
+
+  --save-btn-bg: #808000;
+  --save-btn-hover-bg:#6B8E23;
+  --save-btn-transition: #008000;
+} 

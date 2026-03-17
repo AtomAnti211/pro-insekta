@@ -18,16 +18,3 @@
   font-size: 15px;
 }
 
-.save-btn {
-  background: #2196f3;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.save-btn:hover {
-  background: #1976d2;
-}

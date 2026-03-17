@@ -1,3 +1,5 @@
+@import './variables.css';
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -70,3 +72,55 @@ button:focus-visible {
 html {
   scroll-behavior: smooth;
 }
+
+.save-btn {
+  background: #111;
+  color: #0ff;
+  padding: 10px 16px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px; background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  transition: all 0.5s ease;
+}
+
+.save-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0,255,255,0.5);
+  background: linear-gradient( 0deg, transparent,  transparent 30%, rgba(0,255,255,0.3));
+
+}
+
+
+.save-btn {
+  width: 200px;
+  height: 40px;
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  transition: all 0.5s ease;
+}
+
+.save-btn h2 {
+  color: #0ff;
+  font-size: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+
+.save-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 15px 15px rgba(0,255,255,0.5);
+  background: linear-gradient(to right, transparent, black 30%,  rgba(0,255,255,0.6)); 
+}
+
