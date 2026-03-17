@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getActivity } from "../api/activity";
+import { getActivity } from "../api/activitiy";
 import Breadcrumb from "../components/Breadcrumb";
 import "./ActivityDetailPage.css";
 import type { Activity } from "../types/activity";

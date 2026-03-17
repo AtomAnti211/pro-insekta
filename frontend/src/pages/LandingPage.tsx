@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getActivities } from "../api/activity";
+import { getActivities } from "../api/activitiy";
 import { sendContactMessage } from "../api/contact";
 import type { ContactMessagePayload } from "../types/contactMessage";
 import type { Activity } from "../types/activity";
