@@ -27,7 +27,7 @@ export default function OwnerForm({ initial, onSubmit }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="admin-form">
-
+      {/* a mezők maradnak */}
       <label>Név</label>
       <input
         value={formState.ownerName}
