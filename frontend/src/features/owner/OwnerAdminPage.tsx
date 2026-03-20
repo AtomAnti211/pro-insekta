@@ -28,10 +28,24 @@ export default function OwnerAdminPage() {
     <div>
       <h1>Owner – Admin</h1>
 
-        {message && <div className="modal success">{message}</div>}
-        {error && <div className="modal error">{error}</div>}
+        {message && (
+          <div className="modal-overlay">
+            <div className="modal-window success">
+             <p>{message}</p>
+             <button className="modal-btn" onClick={() => setMessage(null)}>OK</button>
+            </div>
+         </div>
+        )}
 
-
+        {error && (
+          <div className="modal-overlay">
+           <div className="modal-window error">
+           <p>{error}</p>
+           <button className="modal-btn" onClick={() => setError(null)}>OK</button>
+           </div>
+          </div>
+        )}
+  
       <OwnerForm initial={owner} onSubmit={handleSubmit} />
     </div>
   );

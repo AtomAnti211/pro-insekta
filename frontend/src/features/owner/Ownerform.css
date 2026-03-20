@@ -20,50 +20,80 @@
   font-size: 15px;
 }
 
-/* --- MODAL / ELŐUGRÓ ABLAK --- */
+/* --- MODAL OVERLAY (háttér) --- */
 
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px 30px;
-  border-radius: 8px;
-  font-weight: bold;
-  z-index: 1001;
-  animation: fadeIn 0.3s ease;
-}
-
-/* háttér elsötétítés */
-.modal::before {
-  content: "";
+.modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: -1;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.25s ease;
 }
 
-/* siker */
+/* --- MODAL ABLAK --- */
+
+.modal-window {
+  background: #f2f2f2;
+  padding: 25px 35px;
+  border-radius: 12px;
+  min-width: 280px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  animation: popIn 0.25s ease;
+}
+
+.modal-window p {
+  margin-bottom: 20px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+/* --- MODAL GOMB --- */
+
+.modal-btn {
+  padding: 10px 20px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modal-btn:hover {
+  background: #3b7ac0;
+}
+
+/* --- SIKER / HIBA SZÍNEK --- */
+
 .success {
-  background: #d4edda;
-  color: #155724;
-  border: 2px solid #b7dfb9;
+  border-left: 6px solid #4caf50;
 }
 
-/* hiba */
 .error {
-  background: #f8d7da;
-  color: #721c24;
-  border: 2px solid #f5c6cb;
+  border-left: 6px solid #e53935;
 }
+
+/* --- ANIMÁCIÓK --- */
 
 @keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -45%);
+    transform: scale(0.9);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%);
+    transform: scale(1);
   }
 }
