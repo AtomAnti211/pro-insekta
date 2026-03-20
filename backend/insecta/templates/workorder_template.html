@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        h1, h2, h3 {
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table, th, td {
+            border: 1px solid #444;
+        }
+        th, td {
+            padding: 6px;
+            text-align: left;
+        }
+        .signatures {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .sign-box {
+            width: 40%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+{% for c in contracts %}
+<img src="{{ logo_url }}" style="width: 180px; margin-bottom: 20px;">
+
+<h1>MUNKALAP</h1>
+
+<h2>{{ owner.ownerName }}</h2>
+<p>{{ owner.ownerPostCode }} {{ owner.ownerAddress }}</p>
+<p>Adószám: {{ owner.ownerVat }}</p>
+<p>Tel: {{ owner.ownerPhone }}</p>
+<p>Email: {{ owner.ownerMail }}</p>
+
+<hr><br>
+
+<h3>Megrendelő</h3>
+<p>Név: {{ c.customer.customerName }}</p>
+<p>Cím: {{ c.customer.customerPostCode }} {{ c.customer.customerAddress }}</p>
+<p>Telephely: {{ c.location.locationPostCode }} {{ c.location.locationAddress }}</p>
+
+<h3>Munkát elvégezte</h3>
+<p>{{ owner.ownerWorker }} – {{ owner.ownerPermission }}</p>
+<p>Tel: {{ owner.ownerPhone }}</p>
+
+<table>
+    <tr>
+        <th>Megnevezés</th>
+        <th>Mennyiség</th>
+        <th>Egység</th>
+    </tr>
+    <tr>
+        <td>{{ c.service.serviceName }}</td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+<p>A fenti felsorolt munkák elvégzését igazolom.</p>
+
+<p>{{ c.location.locationAddress }}, {{ date_str }}</p>
+
+
+
+<div class="signatures">
+    <div class="sign-box">
+        ..................................................<br>
+        vállalkozó
+    </div>
+    <div class="sign-box">
+        ..................................................<br>
+        megrendelő
+    </div>
+</div>
+
+{% if not forloop.last %}
+<div style="page-break-after: always;"></div>
+{% endif %}
+
+
+{% endfor %}
+
+</body>
+</html>

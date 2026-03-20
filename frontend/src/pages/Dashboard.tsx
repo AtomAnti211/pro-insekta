@@ -21,7 +21,7 @@ export default function Dashboard() {
           <p>Eseti munkák, kiszállások.</p>
         </Link>
 
-       <Link to="/admin/toDo" className="dash-card">
+       <Link to="/admin/due-contracts" className="dash-card">
           <span className="dash-icon">📅</span>
           <h3>Jobs by Contract</h3>
           <p>Szerződéses, jővőbeli esedékes munkák.</p>

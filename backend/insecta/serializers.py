@@ -102,3 +102,6 @@ class ContractDueSerializer(serializers.ModelSerializer):
             "location",
             "service",
             ]
+
+       
+       

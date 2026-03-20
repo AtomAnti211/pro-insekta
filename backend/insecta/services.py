@@ -1,34 +1,66 @@
-from django.db.models import Max
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from .models import Contract
+from .models import Contract, Job,Owner
+print("SERVICE FUT!!!")
+def get_contracts_due_0_12():
+    today = date.today()
+    results = []
 
-def months_between(d1, d2):
-    r = relativedelta(d2, d1)
-    return r.years * 12 + r.months
+    owner = Owner.objects.first()  # <-- fontos!
 
-def get_due_contracts(X):
-    future_date = date.today() + relativedelta(months=X)
-
-    qs = (
-        Contract.objects
-        .filter(contractValid=True)
-        .annotate(last_job=Max("job__JobDoneDate"))
+    contracts = Contract.objects.filter(contractValid=True).select_related(
+        "contractCustomerName",
+        "contractLocationName",
+        "contractServiceName",
     )
 
-    result = []
+    for c in contracts:
+        last_job = Job.objects.filter(jobcontractId=c).order_by("-jobStart").first()
+        last_job_date = last_job.jobStart if last_job else c.contractStart
 
-    for c in qs:
-        if not c.last_job:
-            if X == 0:
-                result.append(c)
-                continue
-            continue
-        # ha nem volt és 0 a hónap, akkor menjünk azonnal
+        next_due_date = last_job_date
+        while next_due_date < today:
+            next_due_date += relativedelta(months=c.contractFrequencyMonth)
 
-        diff = months_between(c.last_job, future_date)
+        diff = relativedelta(next_due_date, today)
+        months_until_due = diff.years * 12 + diff.months
 
-        if diff % c.contractFrequencyMonth == 0:
-            result.append(c)
+        if 0 <= months_until_due <= 12:
+            results.append({
+                "contractId": c.id,
+                "contractStart": c.contractStart,
+                "contractFrequencyMonth": c.contractFrequencyMonth,
+                "lastJob": last_job_date,
+                "nextDueDate": next_due_date,
+                "monthsUntilDue": months_until_due,
+                "dueNow": 1 if months_until_due == 0 else 0,
 
-    return result
+                # OWNER (globális)
+                "ownerName": owner.ownerName,
+                "ownerVat": owner.ownerVat,
+                "ownerPostCode": owner.ownerPostCode,
+                "ownerAddress": owner.ownerAddress,
+                "ownerWorker": owner.ownerWorker,
+                "ownerPermission": owner.ownerPermission,
+
+                # CUSTOMER
+                "customerId": c.contractCustomerName.id,
+                "customerName": c.contractCustomerName.customerName,
+                "customerVat": c.contractCustomerName.customerVat,
+                "customerPostCode": c.contractCustomerName.customerPostCode,
+                "customerCity": c.contractCustomerName.customerCity,
+                "customerAddress": c.contractCustomerName.customerAddress,
+
+                # LOCATION
+                "locationId": c.contractLocationName.id,
+                "locationPostCode": c.contractLocationName.locationPostCode,
+                "locationCity": c.contractLocationName.locationCity,
+                "locationAddress": c.contractLocationName.locationAddress,
+
+                # SERVICE
+                "serviceId": c.contractServiceName.id,
+                "serviceName": c.contractServiceName.serviceName,
+            })
+
+    return results
+

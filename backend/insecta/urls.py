@@ -1,48 +1,80 @@
-from django.urls import path, include
+from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from . import views
+
+# PUBLIC
+from .views.activity_views import activityListCreate, activityDetail
+from .views.note_views import noteListCreate, noteDetail
+from .views.contact_views import contactMessageCreate
+
+# OWNER
+from .views.owner_views import ownerData
+
+# CUSTOMER
+from .views.customer_views import customerListCreate, customerDetail
+
+# LOCATION
+from .views.location_views import locationListCreate, locationDetail
+
+# SERVICE
+from .views.service_views import serviceListCreate, serviceDetail
+
+# CONTRACT
+from .views.contract_views import contractListCreate, contractDetail
+
+# JOB
+from .views.job_views import jobListCreate, jobDetail
+
+# DUE
+from .views.due_views import contractsDueFull
+
+# PDF
+from .views.pdf_views import workorder_pdf
+
 
 urlpatterns = [
 
-    # PUBLIC ENDPOINTS (no auth required)
-    
-    # Activities (public)
-    path('activities/', views.activityListCreate),
-    path('activities/<int:id>/', views.activityDetail),
-    
-    path('notes/', views.noteListCreate),
-    path('notes/<int:id>/', views.noteDetail),   
-    
-    path('contact/', views.contactMessageCreate),
+    # PUBLIC ENDPOINTS
+    path('activities/', activityListCreate),
+    path('activities/<int:id>/', activityDetail),
 
+    path('notes/', noteListCreate),
+    path('notes/<int:id>/', noteDetail),
 
-    # ADMIN ENDPOINTS (will require JWT auth)
+    path('contact/', contactMessageCreate),
 
-    # Owner
-    path('owner/', views.ownerData),
+    # OWNER
+    path('owner/', ownerData),
 
-    # Customers
-    path('customers/', views.customerListCreate),
-    path('customers/<int:id>/', views.customerDetail),
+    # CUSTOMERS
+    path('customers/', customerListCreate),
+    path('customers/<int:id>/', customerDetail),
 
-    # Locations
-    path('locations/', views.locationListCreate),
-    path('locations/<int:id>/', views.locationDetail),
+    # LOCATIONS
+    path('locations/', locationListCreate),
+    path('locations/<int:id>/', locationDetail),
 
-    # Services
-    path('services/', views.serviceListCreate),
-    path('services/<int:id>/', views.serviceDetail),
+    # SERVICES
+    path('services/', serviceListCreate),
+    path('services/<int:id>/', serviceDetail),
 
-    # Contracts
-    path('contracts/', views.contractListCreate),
-    path('contracts/<int:id>/', views.contractDetail),
+    # CONTRACT DUE
+    path("contracts/due-full/", contractsDueFull),
+
+    # CONTRACTS
+    path('contracts/', contractListCreate),
+    path('contracts/<int:id>/', contractDetail),
+
+    # JOBS
+    path('jobs/', jobListCreate),
+    path('jobs/<int:id>/', jobDetail),
+
+    # PDF
+    path("contracts/workorder-pdf/", workorder_pdf, name="workorder_pdf"),
+]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
    
-    # Jobs
-    path('jobs/', views.jobListCreate),
-    path('jobs/<int:id>/', views.jobDetail),
-    
-    # Contract TODO API (Jobs due in X months)
-    path("contracts-todo/", include("contractsTodo.urls")),
+       
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
