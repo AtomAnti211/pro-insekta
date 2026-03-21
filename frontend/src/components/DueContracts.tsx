@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { getDueFullContracts } from "../services/contractsService";
 import type { Contract } from "../services/contractsService";
-
+import "./Duecontracts.css";
 
 export default function DueContracts() {
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selected, setSelected] = useState<number[]>([]);
+  const [pdfLoading, setPdfLoading] = useState<boolean>(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   // Checkbox váltása
   function toggleSelect(id: number) {
@@ -17,9 +19,11 @@ export default function DueContracts() {
     );
   }
 
-  // PDF generálás meghívása
+  // PDF generálás
   async function handleGeneratePdf() {
     if (selected.length === 0) return;
+
+    setPdfLoading(true);
 
     const response = await fetch("http://localhost:8000/api/contracts/workorder-pdf/", {
       method: "POST",
@@ -34,35 +38,48 @@ export default function DueContracts() {
     a.href = url;
     a.download = "munkalap.pdf";
     a.click();
+
+    setPdfLoading(false);
+
+    // Toast
+    setToast("A PDF elkészült!");
+    setTimeout(() => setToast(null), 3000);
   }
 
   // Szerződések lekérése
   useEffect(() => {
     getDueFullContracts()
       .then((data: Contract[]) => {
-        setContracts(data);
+        const sorted = data.sort(
+          (a, b) =>
+            new Date(a.nextDueDate).getTime() -
+            new Date(b.nextDueDate).getTime()
+        );
+        setContracts(sorted);
         setLoading(false);
       })
-      .catch(err => {
-        console.error("Hiba:", err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
   if (loading) return <p>Betöltés...</p>;
 
   return (
-    <div>
+    <div className="page">
+
+      {toast && <div className="toast">{toast}</div>}
+
       <h2>Esedékes szerződések (0–12 hónap)</h2>
 
       <button
-        disabled={selected.length === 0}
+        disabled={selected.length === 0 || pdfLoading}
         onClick={handleGeneratePdf}
+        className="pdf-button"
       >
-        PDF munkalap készítése
+        {pdfLoading && <div className="spinner"></div>}
+        {pdfLoading ? "PDF készül..." : "PDF munkalap készítése"}
       </button>
 
-      <table>
+      <table className="data-table">
         <thead>
           <tr>
             <th></th>

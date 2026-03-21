@@ -1,7 +1,7 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from .models import Contract, Job,Owner
-print("SERVICE FUT!!!")
+ 
 def get_contracts_due_0_12():
     today = date.today()
     results = []

@@ -34,7 +34,7 @@ export default function App() {
           <Route path="admin/owner" element={<OwnerAdminPage />} />
           <Route path="admin/services" element={<ServicesAdminPage />} />
           <Route path="admin/customers" element={<CustomersAdminPage />} />
-          <Route path="/admin/due-contracts" element={<DueContracts />} />
+          <Route path="/admin/Due-contracts" element={<DueContracts />} />
 
         </Route>
 

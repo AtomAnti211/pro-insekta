@@ -4,62 +4,94 @@
     <meta charset="UTF-8">
 
     <style>
+    
+        @font-face {
+            font-family: 'Montserrat';
+            src: url("{{ font_url }}");
+
+        }
+
         @page {
             size: A5 landscape;
-            margin: 10mm;
+            margin: 2mm 10mm 2mm 10mm;
+        }
+
+        body, table, th, td, p, h1 {
+           font-family: 'Montserrat';
         }
 
         body {
-            font-family: "DejaVu Sans", sans-serif;
-            font-size: 12px;
+            font-size: 16px;
+            line-height: 1.3;
+            margin-top: -4mm;
         }
 
-        h1, h2, h3 {
-            margin: 5px 0;
-            text-align: center;
+        h1 {
+            margin: 5px 0 8px 0;
+            font-size: 22px;
         }
 
-        .header-logo {
-            width: 160px;
-            margin-bottom: 10px;
-        }
-
-        .section-title {
-            margin-top: 15px;
-            font-weight: bold;
-            text-decoration: underline;
+        p {
+            margin: 2px 0;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         th, td {
             border: 1px solid #444;
-            padding: 6px;
-            text-align: left;
+            padding: 2px;
+            font-size: 14px;
         }
 
         .signature-table {
             width: 100%;
-            margin-top: 35px;
+            margin-top: 25px;
             border: none;
         }
 
         .signature-table td {
             border: none;
             text-align: center;
-            padding-top: 25px;
+            padding-top: 5px;
         }
 
         .line {
             border-top: 1px dotted #000;
             width: 80%;
-            margin: 0 auto;
+            margin: 0 auto 3px auto;
             height: 1px;
         }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 0 5px 0;   
+            padding: 0;
+        }
+
+        .header-row h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+        }
+
+
+        .header-logo {
+            width: 1080px;  
+            height: auto;
+            margin: 0;  
+        }
+
+        .header-row h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
     </style>
 </head>
 
@@ -67,52 +99,112 @@
 
 {% for c in contracts %}
 
-<!-- LOGÓ -->
-<img src="{{ logo_url }}" class="header-logo">
-
-<h1>MUNKALAP</h1>
-
-<!-- CÉGADATOK -->
-<h2>{{ owner.ownerName }}</h2>
-<p style="text-align:center;">
-    {{ owner.ownerPostCode }} {{ owner.ownerAddress }}<br>
-    Adószám: {{ owner.ownerVat }}<br>
-    Tel: {{ owner.ownerPhone }}<br>
-    Email: {{ owner.ownerMail }}
-</p>
-
-<hr>
-
-<!-- MEGRENDELŐ -->
-<h3 class="section-title">Megrendelő</h3>
-<p><strong>Név:</strong> {{ c.customer.customerName }}</p>
-<p><strong>Cím:</strong> {{ c.customer.customerPostCode }} {{ c.customer.customerAddress }}</p>
-<p><strong>Telephely:</strong> {{ c.location.locationPostCode }} {{ c.location.locationAddress }}</p>
-
-<!-- MUNKÁT ELVÉGEZTE -->
-<h3 class="section-title">Munkát elvégezte</h3>
-<p>{{ owner.ownerWorker }} – {{ owner.ownerPermission }}</p>
-<p><strong>Tel:</strong> {{ owner.ownerPhone }}</p>
-
-<!-- SZOLGÁLTATÁS TÁBLÁZAT -->
-<table>
+<table style="width: 100%; border: none; margin-top: 2px;">
     <tr>
-        <th>Megnevezés</th>
-        <th>Mennyiség</th>
-        <th>Egység</th>
+        <td style="width: 240px; text-align: left; padding-right: 8px; border: none;">
+            <img src="{{ logo_url }}" style="width: 120px;">
+        </td>
+        <td style="text-align: left; border: none; font-size: 20px; font-weight: bold">MUNKALAP
+        </td>
+    </tr>
+
+    <!-- MEGRENDELŐ -->
+    <tr style="margin-top: -1mm;">
+        <td style="width: 240px; text-align: right; padding-right: 8px; border: none;">
+            Megrendelő neve:
+        </td>
+        <td style="text-align: left; border: none;font-size: 16px;">
+            <strong>{{ c.contractCustomerName.customerName }} </strong>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="text-align: right; padding-right: 8px; border: none;">
+            Cím:
+        </td>
+        <td style="text-align: left; border: none;">
+            <strong>{{ c.contractCustomerName.customerPostCode }} {{ c.contractCustomerName.customerAddress }}</strong>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="text-align: right; padding-right: 8px; border: none;">
+            Telephely:
+        </td>
+        <td style="text-align: left; border: none; font-size: 16px;">
+            <strong>{{ c.contractLocationName.locationName}} </strong>
+        </td>
     </tr>
     <tr>
-        <td>{{ c.service.serviceName }}</td>
-        <td></td>
-        <td></td>
+        <td style="text-align: right; padding-right: 8px; border: none;">
+            Telephely címe:
+        </td>
+        <td style="text-align: left; border: none;">
+            <strong>{{ c.contractLocationName.locationPostCode }} {{ c.contractLocationName.locationCity }} {{ c.contractLocationName.locationAddress }}</strong>
+        </td>
+    </tr>
+    <tr><td colspan="2" style="height: 8px; border: none;"></td></tr>
+
+    <!-- CÉGADATOK -->
+    <tr>
+        <td style="text-align: right; padding-right: 8px; border: none; 16px">Munkavégző neve:
+        </td>
+        <td style="text-align: left; border: none;"><strong>  {{ owner.ownerName }} </strong>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="text-align: right; padding-right: 8px; border: none;">Címe:
+        </td>
+        <td style="text-align: left; border: none;"><strong>{{ owner.ownerPostCode }} {{ owner.ownerAddress }} </strong>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="text-align: right; padding-right: 8px; border: none;">
+            Adószám:
+        </td>
+        <td style="text-align: left; border: none;">
+            <strong> {{ owner.ownerVat }} </strong>
+        </td>
+    </tr>
+<!-- MUNKÁT ELVÉGEZTE -->
+    <tr>
+        <td style="text-align: right; padding-right: 8px; border: none;">
+            A munkát elvégezte:
+        </td>
+        <td style="text-align: left; border: none;">
+           <strong>{{ owner.ownerWorker }} - {{ owner.ownerPermission }} </strong>                         Tel: <strong>{{ owner.ownerPhone }} </strong>
+        </td>
     </tr>
 </table>
 
-<p style="margin-top: 20px;">
+<table>
+     <tr>   
+        <th style="width: 450px; text-align: center; ">Megnevezés</th> 
+        <th style="width: 140px; text-align: center; ">Mennyiség</th>
+        <th style="width: 140px; text-align: center; ">Egység</th>
+    </tr>
+     <tr>
+        <td>{{ c.contractServiceName.serviceName|default:"" }}</td>
+        <td style="padding: 16px;">                        </td>
+        <td>                    </td>
+    </tr>
+    <tr>
+       <td style="padding: 16px;"> </td>
+       <td style="padding: 16px;">                        </td>
+       <td style="padding: 16px;">                    </td>
+    </tr>
+   
+</table>
+
+
+
+<p style="margin-top: 15px;">
     A fenti felsorolt munkák elvégzését igazolom.
 </p>
 
-<p>{{ c.location.locationAddress }}, {{ date_str }}</p>
+<p><strong>{{ c.contractLocationName.locationCity }}, {{ date_str }}</strong></p>
 
 <!-- ALÁÍRÁSOK -->
 <table class="signature-table">

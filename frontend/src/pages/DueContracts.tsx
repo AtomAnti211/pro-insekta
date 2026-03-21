@@ -1,26 +1,17 @@
 import { useEffect, useState } from "react";
+import { getDueFullContracts } from "../services/contractsService";
+import type { Contract } from "../services/contractsService";
+import "./Duecontracts.css";
 
 export default function DueContracts() {
-  const [contracts, setContracts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState([]);
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [pdfLoading, setPdfLoading] = useState<boolean>(false);
+  const [toast, setToast] = useState<string | null>(null);
 
-   // Szerződések lekérése
-  useEffect(() => {
-    fetch("http://localhost:8000/api/contracts/due-full/?format=json")
-      .then(res => res.json())
-      .then(data => {
-        setContracts(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Hiba:", err);
-        setLoading(false);
-      });
-  }, []);
-
-    // Checkbox váltása
-  function toggleSelect(id) {
+  // Checkbox váltása
+  function toggleSelect(id: number) {
     setSelected(prev =>
       prev.includes(id)
         ? prev.filter(x => x !== id)
@@ -31,6 +22,8 @@ export default function DueContracts() {
   // PDF generálás
   async function handleGeneratePdf() {
     if (selected.length === 0) return;
+
+    setPdfLoading(true);
 
     const response = await fetch("http://localhost:8000/api/contracts/workorder-pdf/", {
       method: "POST",
@@ -45,33 +38,51 @@ export default function DueContracts() {
     a.href = url;
     a.download = "munkalap.pdf";
     a.click();
+
+    setPdfLoading(false);
+
+    // Toast
+    setToast("A PDF elkészült!");
+    setTimeout(() => setToast(null), 3000);
   }
+
+  // Szerződések lekérése
+  useEffect(() => {
+    getDueFullContracts()
+      .then((data: Contract[]) => {
+        const sorted = data.sort(
+          (a, b) =>
+            new Date(a.nextDueDate).getTime() -
+            new Date(b.nextDueDate).getTime()
+        );
+        setContracts(sorted);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   if (loading) return <p>Betöltés...</p>;
 
   return (
     <div className="page">
-      <h1>Esedékes szerződések (0–12 hónap)</h1>
- <button
-        onClick={handleGeneratePdf}
-        disabled={selected.length === 0}
-        style={{
-          marginBottom: "15px",
-          padding: "10px 20px",
-          background: selected.length === 0 ? "#ccc" : "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: selected.length === 0 ? "not-allowed" : "pointer"
-        }}
-      >
-        PDF munkalap készítése
-      </button>
 
+      {toast && <div className="toast">{toast}</div>}
+
+      <h2>Esedékes szerződések (0–12 hónap)</h2>
+
+      <button
+        disabled={selected.length === 0 || pdfLoading}
+        onClick={handleGeneratePdf}
+        className="pdf-button"
+      >
+        {pdfLoading && <div className="spinner"></div>}
+        {pdfLoading ? "PDF készül..." : "PDF munkalap készítése"}
+      </button>
 
       <table className="data-table">
         <thead>
           <tr>
+            <th></th>
             <th>ID</th>
             <th>Ügyfél</th>
             <th>Helyszín</th>
@@ -83,14 +94,13 @@ export default function DueContracts() {
         <tbody>
           {contracts.map(c => (
             <tr key={c.contractId}>
-                 <td>
+              <td>
                 <input
                   type="checkbox"
                   checked={selected.includes(c.contractId)}
                   onChange={() => toggleSelect(c.contractId)}
                 />
               </td>
-
               <td>{c.contractId}</td>
               <td>{c.customerName}</td>
               <td>{c.locationCity} – {c.locationAddress}</td>

@@ -1,18 +1,21 @@
 import datetime
 import json
-import locale
 import os
-from io import BytesIO
+import base64
+import tempfile
 
-from django.http import HttpResponse
+from django.http import FileResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+HONAPOK = [
+    "", "január", "február", "március", "április", "május", "június",
+    "július", "augusztus", "szeptember", "október", "november", "december"
+]
 
-from xhtml2pdf import pisa
+from pyhtml2pdf import converter
 
 from ..models import Owner, Contract
-
 
 @csrf_exempt
 def workorder_pdf(request):
@@ -26,26 +29,40 @@ def workorder_pdf(request):
     owner = Owner.objects.first()
 
     today = datetime.date.today()
+    formatted_date = f"{today.year}. {HONAPOK[today.month]}"
 
-    locale.setlocale(locale.LC_TIME, "hu_HU.UTF-8")
-    formatted_date = today.strftime("%Y. %B")
 
-    logo_path = os.path.join(settings.BASE_DIR, "static/images/logo.png")
-    logo_url = f"file:///{logo_path.replace('\\', '/')}"
+    # LOGO BASE64
+    logo_path = os.path.join(settings.BASE_DIR, "insecta/static/images/logo.jpg")
+    with open(logo_path, "rb") as f:
+        logo_data = base64.b64encode(f.read()).decode("utf-8")
+    logo_url = f"data:image/jpeg;base64,{logo_data}"
 
+    # FONT PATH (Chrome támogatja a @font-face-t)
+    font_path = os.path.join(
+        settings.BASE_DIR,
+        "insecta/static/fonts_runtime/Montserrat-Regular.ttf"
+    )
+
+    # HTML render
     html = render_to_string("workorder_template.html", {
         "contracts": contracts,
         "owner": owner,
         "date_str": formatted_date,
         "logo_url": logo_url,
+        "font_path": font_path,
     })
 
-    result = BytesIO()
-    pisa.CreatePDF(html, dest=result)
+    # 1) Ideiglenes HTML fájl
+    with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as html_file:
+        html_file.write(html.encode("utf-8"))
+        html_path = html_file.name
 
-    response = HttpResponse(result.getvalue(), content_type="application/pdf")
-    response["Content-Disposition"] = "attachment; filename=munkalap.pdf"
-    return response
+    # 2) PDF útvonal
+    pdf_path = html_path.replace(".html", ".pdf")
 
+    # 3) PDF generálás Chrome headless segítségével
+    converter.convert(f"file:///{html_path}", pdf_path)
 
-
+    # 4) PDF visszaküldése
+    return FileResponse(open(pdf_path, "rb"), content_type="application/pdf")
