@@ -1,16 +1,29 @@
 import { useEffect, useState } from "react";
 import { getDueFullContracts } from "../services/contractsService";
-import type { Contract } from "../services/contractsService";
+import type { DueContract } from "../types/dueContracts";
+
 import "./Duecontracts.css";
 
+import { Map, Marker } from "pigeon-maps";
+
 export default function DueContracts() {
-  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [contracts, setContracts] = useState<DueContract[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selected, setSelected] = useState<number[]>([]);
   const [pdfLoading, setPdfLoading] = useState<boolean>(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  // Checkbox váltása
+  const [filterCustomers, setFilterCustomers] = useState<string[]>([]);
+  const [filterCities, setFilterCities] = useState<string[]>([]);
+  const [filterMonths, setFilterMonths] = useState<number[]>([]);
+
+  const [mapPoints, setMapPoints] = useState<
+    { id: number; lat: number; lng: number; label: string }[]
+  >([]);
+
+  // -----------------------------
+  // 1) Checkbox váltása
+  // -----------------------------
   function toggleSelect(id: number) {
     setSelected(prev =>
       prev.includes(id)
@@ -19,7 +32,9 @@ export default function DueContracts() {
     );
   }
 
-  // PDF generálás
+  // -----------------------------
+  // 2) PDF generálás
+  // -----------------------------
   async function handleGeneratePdf() {
     if (selected.length === 0) return;
 
@@ -41,15 +56,16 @@ export default function DueContracts() {
 
     setPdfLoading(false);
 
-    // Toast
     setToast("A PDF elkészült!");
     setTimeout(() => setToast(null), 3000);
   }
 
-  // Szerződések lekérése
+  // -----------------------------
+  // 3) Szerződések lekérése
+  // -----------------------------
   useEffect(() => {
     getDueFullContracts()
-      .then((data: Contract[]) => {
+      .then((data: DueContract[]) => {
         const sorted = data.sort(
           (a, b) =>
             new Date(a.nextDueDate).getTime() -
@@ -61,6 +77,41 @@ export default function DueContracts() {
       .catch(() => setLoading(false));
   }, []);
 
+  // -----------------------------
+  // 4) Szűrés
+  // -----------------------------
+  const filtered = contracts.filter(c => {
+    const matchCustomer =
+      filterCustomers.length === 0 || filterCustomers.includes(c.customerName);
+
+    const matchCity =
+      filterCities.length === 0 || filterCities.includes(c.locationCity);
+
+    const matchMonths =
+      filterMonths.length === 0 || filterMonths.includes(c.monthsUntilDue);
+
+    return matchCustomer && matchCity && matchMonths;
+  });
+
+  // -----------------------------
+  // 5) MapPoints frissítése (BACKEND KOORDINÁTÁKKAL)
+  // -----------------------------
+  useEffect(() => {
+    const points = filtered
+      .filter(c => c.locationLat && c.locationLng)
+      .map(c => ({
+        id: c.contractId,
+        lat: c.locationLat!,
+        lng: c.locationLng!,
+        label: `${c.customerName} – ${c.locationCity}`
+      }));
+
+    setMapPoints(points);
+  }, [filtered]);
+
+  // -----------------------------
+  // 6) Render
+  // -----------------------------
   if (loading) return <p>Betöltés...</p>;
 
   return (
@@ -70,6 +121,38 @@ export default function DueContracts() {
 
       <h2>Esedékes szerződések (0–12 hónap)</h2>
 
+      {/* SZŰRŐK */}
+      <div className="filters">
+        <select multiple value={filterCustomers} onChange={(e) =>
+          setFilterCustomers(Array.from(e.target.selectedOptions, o => o.value))
+        }>
+          {[...new Set(contracts.map(c => c.customerName))].map(name => (
+            <option key={name} value={name}>{name}</option>
+          ))}
+        </select>
+
+        <select multiple value={filterCities} onChange={(e) =>
+          setFilterCities(Array.from(e.target.selectedOptions, o => o.value))
+        }>
+          {[...new Set(contracts.map(c => c.locationCity))].map(city => (
+            <option key={city} value={city}>{city}</option>
+          ))}
+        </select>
+
+        <select
+          multiple
+          value={filterMonths.map(String)}
+          onChange={(e) =>
+            setFilterMonths(Array.from(e.target.selectedOptions, o => Number(o.value)))
+          }
+        >
+          {[...Array(13).keys()].map(m => (
+            <option key={m} value={m}>{m} hónap</option>
+          ))}
+        </select>
+      </div>
+
+      {/* PDF GOMB */}
       <button
         disabled={selected.length === 0 || pdfLoading}
         onClick={handleGeneratePdf}
@@ -79,6 +162,21 @@ export default function DueContracts() {
         {pdfLoading ? "PDF készül..." : "PDF munkalap készítése"}
       </button>
 
+      {/* TÉRKÉP */}
+      <div style={{ marginTop: "20px" }}>
+        <Map height={400} defaultCenter={[47.53, 21.63]} defaultZoom={9}>
+          {mapPoints.map(p => (
+            <Marker
+              key={p.id}
+              width={40}
+              anchor={[p.lat, p.lng]}
+              onClick={() => alert(p.label)}
+            />
+          ))}
+        </Map>
+      </div>
+
+      {/* TÁBLÁZAT */}
       <table className="data-table">
         <thead>
           <tr>
@@ -88,11 +186,11 @@ export default function DueContracts() {
             <th>Helyszín</th>
             <th>Szolgáltatás</th>
             <th>Következő esedékesség</th>
-            <th>Hónapok hátra</th>
+            <th>Hátra lévő hónap</th>
           </tr>
         </thead>
         <tbody>
-          {contracts.map(c => (
+          {filtered.map(c => (
             <tr key={c.contractId}>
               <td>
                 <input
@@ -103,7 +201,7 @@ export default function DueContracts() {
               </td>
               <td>{c.contractId}</td>
               <td>{c.customerName}</td>
-              <td>{c.locationCity} – {c.locationAddress}</td>
+              <td>{c.locationPostCode} – {c.locationCity} – {c.locationAddress}</td>
               <td>{c.serviceName}</td>
               <td>{c.nextDueDate}</td>
               <td>{c.monthsUntilDue}</td>
@@ -111,6 +209,7 @@ export default function DueContracts() {
           ))}
         </tbody>
       </table>
+
     </div>
   );
 }

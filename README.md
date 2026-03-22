@@ -20,6 +20,8 @@ cd frontend
 npm install
 npm install react-select
 npm run dev
+npm install leaflet react-leaflet
+
 
 Mappastruktúra:
 src/

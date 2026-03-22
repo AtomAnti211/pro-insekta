@@ -1,14 +1,6 @@
-export interface Contract {
-  contractId: number;
-  customerName: string;
-  locationCity: string;
-  locationAddress: string;
-  serviceName: string;
-  nextDueDate: string;
-  monthsUntilDue: number;
-}
+import type { DueContract } from "../types/dueContracts";
 
-export async function getDueFullContracts(): Promise<Contract[]> {
+export async function getDueFullContracts(): Promise<DueContract[]> {
   const response = await fetch("http://localhost:8000/api/contracts/due-full/?format=json");
 
   if (!response.ok) {

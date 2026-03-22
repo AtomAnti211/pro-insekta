@@ -57,7 +57,8 @@ def get_contracts_due_0_12():
                 "locationPostCode": c.contractLocationName.locationPostCode,
                 "locationCity": c.contractLocationName.locationCity,
                 "locationAddress": c.contractLocationName.locationAddress,
-
+                "locationLat": c.contractLocationName.locationLat,
+                "locationLng": c.contractLocationName.locationLng,
                 # SERVICE
                 "serviceId": c.contractServiceName.id,
                 "serviceName": c.contractServiceName.serviceName,
