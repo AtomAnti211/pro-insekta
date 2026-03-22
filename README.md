@@ -6,6 +6,10 @@ indítás windows-on:
 py -3.12 -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
+
+# playwright -hoz szükslges , csak egyszer kell lefuttatni minden gépen, agol a progekt fut.
+playwright install chromium  
+
 cd backend
 python manage.py makemigrations
 python manage.py migrate

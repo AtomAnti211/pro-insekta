@@ -18,7 +18,5 @@ sqlparse
 tzdata
 tzlocal
 urllib3
-pyhtml2pdf
-selenium
-webdriver-manager
+playwright
 

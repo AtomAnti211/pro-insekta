@@ -7,13 +7,12 @@
     
         @font-face {
             font-family: 'Montserrat';
-            src: url("{{ font_url }}");
-
+            src: url("file://{{ font_path }}");
         }
 
         @page {
             size: A5 landscape;
-            margin: 2mm 10mm 2mm 10mm;
+            margin: 0mm 10mm 2mm 10mm;
         }
 
         body, table, th, td, p, h1 {
@@ -80,7 +79,6 @@
             font-size: 24px;
         }
 
-
         .header-logo {
             width: 1080px;  
             height: auto;
@@ -99,17 +97,19 @@
 
 {% for c in contracts %}
 
-<table style="width: 100%; border: none; margin-top: 2px;">
-    <tr>
-        <td style="width: 240px; text-align: left; padding-right: 8px; border: none;">
-            <img src="{{ logo_url }}" style="width: 120px;">
-        </td>
-        <td style="text-align: left; border: none; font-size: 20px; font-weight: bold">MUNKALAP
-        </td>
-    </tr>
+<table style="width: 100%; border: none; margin-top: 25px;">
+    <tr style="height: 20px;">
+    <td style="width: 240px; text-align: left; padding-right: 8px; border: none;">
+        <img src="{{ logo_url }}" style="width: 90px;">
+    </td>
+    <td style="text-align: left; border: none; font-size: 20px; font-weight: bold">
+        MUNKALAP
+    </td>
+</tr>
 
     <!-- MEGRENDELŐ -->
-    <tr style="margin-top: -1mm;">
+    <table style="width: 100%; border: none; margin-top: -4mm;">
+    <tr>
         <td style="width: 240px; text-align: right; padding-right: 8px; border: none;">
             Megrendelő neve:
         </td>
@@ -117,7 +117,6 @@
             <strong>{{ c.contractCustomerName.customerName }} </strong>
         </td>
     </tr>
-
     <tr>
         <td style="text-align: right; padding-right: 8px; border: none;">
             Cím:
@@ -203,7 +202,7 @@
 <p style="margin-top: 15px;">
     A fenti felsorolt munkák elvégzését igazolom.
 </p>
-
+<br>
 <p><strong>{{ c.contractLocationName.locationCity }}, {{ date_str }}</strong></p>
 
 <!-- ALÁÍRÁSOK -->

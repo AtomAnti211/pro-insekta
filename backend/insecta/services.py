@@ -19,6 +19,8 @@ def get_contracts_due_0_12():
         last_job_date = last_job.jobStart if last_job else c.contractStart
 
         next_due_date = last_job_date
+        
+        print(c,next_due_date)
         while next_due_date < today:
             next_due_date += relativedelta(months=c.contractFrequencyMonth)
 

@@ -1,21 +1,21 @@
 import datetime
 import json
 import os
-import base64
 import tempfile
 
 from django.http import FileResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+
+from playwright.sync_api import sync_playwright
+
+from ..models import Owner, Contract
+
 HONAPOK = [
     "", "január", "február", "március", "április", "május", "június",
     "július", "augusztus", "szeptember", "október", "november", "december"
 ]
-
-from pyhtml2pdf import converter
-
-from ..models import Owner, Contract
 
 @csrf_exempt
 def workorder_pdf(request):
@@ -31,14 +31,11 @@ def workorder_pdf(request):
     today = datetime.date.today()
     formatted_date = f"{today.year}. {HONAPOK[today.month]}"
 
-
-    # LOGO BASE64
+    # LOGO FILE PATH (Playwright támogatja a file:// hivatkozást)
     logo_path = os.path.join(settings.BASE_DIR, "insecta/static/images/logo.jpg")
-    with open(logo_path, "rb") as f:
-        logo_data = base64.b64encode(f.read()).decode("utf-8")
-    logo_url = f"data:image/jpeg;base64,{logo_data}"
+    logo_url = f"file:///{logo_path}"
 
-    # FONT PATH (Chrome támogatja a @font-face-t)
+    # FONT FILE PATH
     font_path = os.path.join(
         settings.BASE_DIR,
         "insecta/static/fonts_runtime/Montserrat-Regular.ttf"
@@ -53,16 +50,27 @@ def workorder_pdf(request):
         "font_path": font_path,
     })
 
-    # 1) Ideiglenes HTML fájl
+    # Ideiglenes HTML fájl
     with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as html_file:
         html_file.write(html.encode("utf-8"))
         html_path = html_file.name
 
-    # 2) PDF útvonal
+    # PDF útvonal
     pdf_path = html_path.replace(".html", ".pdf")
 
-    # 3) PDF generálás Chrome headless segítségével
-    converter.convert(f"file:///{html_path}", pdf_path)
+    # Playwright PDF generálás
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
 
-    # 4) PDF visszaküldése
+        page.goto(f"file:///{html_path}")
+        page.pdf(path=pdf_path,
+                 width="210mm",
+                height="148mm",
+                print_background=True
+        )
+
+        browser.close()
+
     return FileResponse(open(pdf_path, "rb"), content_type="application/pdf")
+
