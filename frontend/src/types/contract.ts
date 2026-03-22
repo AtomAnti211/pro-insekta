@@ -1,12 +1,10 @@
-import type { Location } from "./location"
-import type { Service } from "./service"
-
 export interface Contract {
-  id: number
-  contractLocationName: Location
-  contractServiceName: Service
-  contractPrice: number
-  contractStart: string
-  contractValid: boolean
-  contractFrequencyMonth: number
+  id: number;
+  contractLocationName: any;   // Location object
+  contractServiceName: any;    // Service object
+  contractCustomerName: any;   // Customer object
+  contractPrice: number;
+  contractStart: string;
+  contractValid: boolean;
+  contractFrequencyMonth: number;
 }

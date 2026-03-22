@@ -1,6 +1,6 @@
 // src/features/services/useServices.ts
 import { useEffect, useState } from "react";
-import { ServiceAPI } from "../../api/services";
+import { ServicesAPI } from "../../api/services";
 import { type Service } from "../../types/service";
 
 export function useServices() {
@@ -11,7 +11,7 @@ export function useServices() {
   const load = async () => {
     try {
       setLoading(true);
-      const res = await ServiceAPI.list();
+      const res = await ServicesAPI.list();
       const data = res.data;
 
       // rendezés ID szerint
@@ -30,17 +30,17 @@ export function useServices() {
   }, []);
 
   const create = async (serviceName: string) => {
-    await ServiceAPI.create({ serviceName });
+    await ServicesAPI.create({ serviceName });
     await load();
   };
 
   const update = async (id: number, serviceName: string) => {
-    await ServiceAPI.update(id, { serviceName });
+    await ServicesAPI.update(id, { serviceName });
     await load();
   };
 
   const remove = async (id: number) => {
-    await ServiceAPI.delete(id);
+    await ServicesAPI.delete(id);
     await load();
   };
 

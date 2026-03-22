@@ -1,81 +1,147 @@
 import { useState, useEffect } from "react";
-import Select from "react-select";
-import { getContracts, getContractDetails, createJob } from "../../api/job";
+import type { Job } from "../../types/job";
+import { ContractsAPI } from "../../api/contracts";
 
-export default function JobForm() {
-  const [contracts, setContracts] = useState([]);
-  const [selectedContract, setSelectedContract] = useState(null);
+export default function JobForm({
+  initial,
+  onSubmit,
+  onCancel,
+}: {
+  initial?: Job;
+  onSubmit: (form: FormData) => void;
+  onCancel: () => void;
+}) {
+  const [contracts, setContracts] = useState<any[]>([]);
 
-  const [location, setLocation] = useState(null);
-  const [customer, setCustomer] = useState(null);
-  const [service, setService] = useState(null);
-  const [price, setPrice] = useState(0);
+  const [contractId, setContractId] = useState<number | null>(
+    initial?.jobContractName?.id ?? null
+  );
+
+  const [locationName, setLocationName] = useState(
+    initial?.jobLocationName?.locationName || ""
+  );
+  const [serviceName, setServiceName] = useState(
+    initial?.jobServiceName?.serviceName || ""
+  );
+  const [customerName, setCustomerName] = useState(
+    initial?.jobCustomer?.customerName || ""
+  );
+
+  const [price, setPrice] = useState(initial?.jobPrice ?? 0);
+  const [start, setStart] = useState(initial?.jobStart ?? "");
+  const [remark, setRemark] = useState(initial?.jobRemark ?? "");
+
+  const [preview, setPreview] = useState<string | null>(
+    initial?.jobURL || null
+  );
+  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
-    loadContracts();
+    const load = async () => {
+      const res = await ContractsAPI.list();
+      setContracts(res.data);
+    };
+    load();
   }, []);
 
-  const loadContracts = async () => {
-    const data = await getContracts();
-    setContracts(
-      data.map((c: any) => ({
-        value: c.id,
-        label: `${c.contractLocationName} - ${c.contractServiceName}`,
-      }))
-    );
+  // AUTOMATIKUS MEZŐKITÖLTÉS CONTRACT ALAPJÁN
+  useEffect(() => {
+    if (!contractId) return;
+
+    const c = contracts.find((x) => x.id === contractId);
+    if (!c) return;
+
+    setLocationName(c.contractLocationName.locationName);
+    setServiceName(c.contractServiceName.serviceName);
+    setCustomerName(c.contractCustomerName.customerName);
+    setPrice(c.contractPrice);
+  }, [contractId, contracts]);
+
+  const handleFileChange = (f: File | null) => {
+    setFile(f);
+    if (!f) {
+      setPreview(null);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setPreview(reader.result as string);
+    reader.readAsDataURL(f);
   };
 
-  const handleContractChange = async (option: any) => {
-    setSelectedContract(option);
-
-    const details = await getContractDetails(option.value);
-
-    setLocation(details.location);
-    setCustomer(details.customer);
-    setService(details.service);
-    setPrice(details.price);
-  };
-
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
 
-    await createJob({
-      jobcontractId: selectedContract.value,
-      jobLocationName: location.id,
-      jobCustomer: customer.id,
-      jobServiceName: service.id,
-      jobPrice: price,
-    });
+    const form = new FormData();
+    form.append("jobContractName", String(contractId));
+    form.append("jobPrice", String(price));
+    form.append("jobStart", start);
+    form.append("jobRemark", remark);
 
-    alert("Job created successfully");
+    if (file) form.append("jobURL", file);
+
+    onSubmit(form);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form-container">
+    <form onSubmit={handleSubmit} className="note-form">
 
-      {/* Contract Select2-like */}
-      <label>Contract</label>
-      <Select
-        options={contracts}
-        value={selectedContract}
-        onChange={handleContractChange}
-        isSearchable
+      <select
+        value={contractId ?? ""}
+        onChange={(e) => setContractId(Number(e.target.value))}
+      >
+        <option value="">Válassz szerződést...</option>
+        {contracts.map((c) => (
+          <option key={c.id} value={c.id}>
+            {c.contractLocationName.locationName} – {c.contractServiceName.serviceName}
+          </option>
+        ))}
+      </select>
+
+      <input value={locationName} readOnly />
+      <input value={serviceName} readOnly />
+      <input value={customerName} readOnly />
+
+      <input
+        type="number"
+        placeholder="Ár"
+        value={price}
+        onChange={(e) => setPrice(Number(e.target.value))}
       />
 
-      {/* Auto-filled fields */}
-      <label>Location</label>
-      <input value={location?.name || ""} disabled />
+      <input
+        type="date"
+        value={start}
+        onChange={(e) => setStart(e.target.value)}
+      />
 
-      <label>Customer</label>
-      <input value={customer?.name || ""} disabled />
+      <textarea
+        placeholder="Megjegyzés"
+        value={remark}
+        onChange={(e) => setRemark(e.target.value)}
+      />
 
-      <label>Service</label>
-      <input value={service?.name || ""} disabled />
+      <div className="upload-card">
+        <p>Kép feltöltése</p>
 
-      <label>Price</label>
-      <input value={price} disabled />
+        {preview ? (
+          <img src={preview} className="upload-preview" />
+        ) : (
+          <div className="upload-placeholder">Nincs kép</div>
+        )}
 
-      <button type="submit">Save Job</button>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+        />
+      </div>
+
+      <div className="form-actions">
+        <button type="submit">Mentés</button>
+        <button type="button" onClick={onCancel}>
+          Mégse
+        </button>
+      </div>
     </form>
   );
 }

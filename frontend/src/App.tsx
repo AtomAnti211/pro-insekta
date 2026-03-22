@@ -10,6 +10,8 @@ import ServicesAdminPage from "./features/services/ServicesAdminPage";
 import CustomersAdminPage from "./features/customers/CustomersAminPage";
 import DueContracts from "./pages/DueContracts";
 import LocationsAdminPage from "./features/locations/LocationsAdminPage";
+import ContractsAdminPage from "./features/contracts/ContractsAdminPage";
+import JobsAdminPage from "./features/jobs/JobsAdminPage";
 
 
 
@@ -36,6 +38,8 @@ export default function App() {
           <Route path="admin/services" element={<ServicesAdminPage />} />
           <Route path="admin/customers" element={<CustomersAdminPage />} />
           <Route path="admin/locations" element={<LocationsAdminPage />} />
+          <Route path="admin/contracts" element={<ContractsAdminPage />} />
+          <Route path="admin/jobs" element={<JobsAdminPage />} />
 
           <Route path="/admin/Due-contracts" element={<DueContracts />} />
 

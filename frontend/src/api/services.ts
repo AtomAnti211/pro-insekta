@@ -2,7 +2,7 @@ import { apiCore } from "./core/api";
 
 const BASE = "/services/";
 
-export const ServiceAPI = {
+export const ServicesAPI = {
   list: () => apiCore.get(BASE),
   create: (data: { serviceName: string }) => apiCore.post(BASE, data),
   update: (id: number, data: { serviceName: string }) =>
