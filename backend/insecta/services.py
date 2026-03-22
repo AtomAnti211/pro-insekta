@@ -16,18 +16,17 @@ def get_contracts_due_0_12():
 
     for c in contracts:
         last_job = Job.objects.filter(jobcontractId=c).order_by("-jobStart").first()
-        last_job_date = last_job.jobStart if last_job else c.contractStart
+        last_job_date = last_job.jobStart if last_job else max(c.contractStart,today)
 
-        next_due_date = last_job_date
-        
-        print(c,next_due_date)
-        while next_due_date < today:
-            next_due_date += relativedelta(months=c.contractFrequencyMonth)
-
+        next_due_date = last_job.jobStart+relativedelta(months=c.contractFrequencyMonth) if last_job else max(c.contractStart,today)
+  
+        if  next_due_date < today:
+            next_due_date = today
+            
         diff = relativedelta(next_due_date, today)
-        months_until_due = diff.years * 12 + diff.months
-
-        if 0 <= months_until_due <= 12:
+        months_until_due = diff.years * 12 + diff.months    
+        
+        while months_until_due <= 12 : 
             results.append({
                 "contractId": c.id,
                 "contractStart": c.contractStart,
@@ -63,6 +62,9 @@ def get_contracts_due_0_12():
                 "serviceId": c.contractServiceName.id,
                 "serviceName": c.contractServiceName.serviceName,
             })
+            next_due_date += relativedelta(months=c.contractFrequencyMonth)
+            diff = relativedelta(next_due_date, today)
+            months_until_due = diff.years * 12 + diff.months
 
     return results
 
