@@ -30,11 +30,10 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields ='__all__'  
          
 class LocationWriteSerializer(serializers.ModelSerializer):
-    locationCustomer = CustomerSerializer(read_only=True)
-
     class Meta:
         model = Location
-        fields ='__all__'     
+        fields = "__all__"
+
   
 class LocationReadSerializer(serializers.ModelSerializer):
     locationCustomer = CustomerSerializer(read_only=True)

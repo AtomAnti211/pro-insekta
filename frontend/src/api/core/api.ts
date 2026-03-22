@@ -6,14 +6,37 @@ export const api = axios.create({
   withCredentials: false,
 });
 
-// JSON GET / POST / PUT / DELETE / PATCH
+// -----------------------------
+// JSON alapú kérések
+// -----------------------------
 export const get = (url: string) => api.get(url);
-export const post = (url: string, data: any) => api.post(url, data);
-export const put = (url: string, data: any) => api.put(url, data);
-export const del = (url: string) => api.delete(url);
-export const patch = (url: string, data: any) => api.patch(url, data);
 
-// --- FormData támogatás (kép feltöltéshez) ---
+export const post = (url: string, data: any) =>
+  api.post(url, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+export const put = (url: string, data: any) =>
+  api.put(url, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+export const del = (url: string) => api.delete(url);
+
+export const patch = (url: string, data: any) =>
+  api.patch(url, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+// -----------------------------
+// FormData (képfeltöltés) támogatás
+// -----------------------------
 export const postForm = (url: string, form: FormData) =>
   api.post(url, form, {
     headers: {
@@ -28,13 +51,15 @@ export const putForm = (url: string, form: FormData) =>
     },
   });
 
-// Exportáljuk egységesen
+// -----------------------------
+// Export egységes API objektumként
+// -----------------------------
 export const apiCore = {
   get,
   post,
   put,
   del,
-  patch,      
+  patch,
   postForm,
   putForm,
 };
