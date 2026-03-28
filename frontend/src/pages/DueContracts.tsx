@@ -4,7 +4,7 @@ import type { DueContract } from "../types/dueContracts";
 
 import "./Duecontracts.css";
 
-import { Map, Marker } from "pigeon-maps";
+import { Map, Marker, Overlay } from "pigeon-maps";
 
 type OptionType = { value: string | number; label: string };
 
@@ -34,6 +34,11 @@ export default function DueContracts() {
     { value: 0, label: "0 hónap" },
     { value: 1, label: "1 hónap" }
   ]);
+  const [activeMarker, setActiveMarker] = useState<{
+    lat: number;
+    lng: number;
+    label: string;  
+  } | null>(null);
 
   const [mapPoints, setMapPoints] = useState<
     { id: number; lat: number; lng: number; label: string }[]
@@ -307,9 +312,19 @@ export default function DueContracts() {
               key={p.id}
               width={40}
               anchor={[p.lat, p.lng]}
-              onClick={() => alert(p.label)}
+              onClick={() => setActiveMarker(p)}
             />
           ))}
+
+          {activeMarker && (
+            <Overlay anchor={[activeMarker.lat, activeMarker.lng]}>
+              <div className="popup">
+                <strong>{activeMarker.label}</strong>
+                <br />
+                <button onClick={() => setActiveMarker(null)}>Bezárás</button>
+              </div>
+            </Overlay>
+          )}
         </Map>
       </div>
 
