@@ -141,24 +141,9 @@ export default function DueContracts() {
     setMapPoints(points);
   }, [filtered]);
 
+ 
   // -----------------------------
-  // 6) Térkép frissítése gombbal
-  // -----------------------------
-  function refreshMap() {
-    const points = filtered
-      .filter(c => c.locationLat && c.locationLng)
-      .map(c => ({
-        id: c.contractId,
-        lat: c.locationLat!,
-        lng: c.locationLng!,
-        label: `${c.customerName} – ${c.locationCity}`
-      }));
-
-    setMapPoints(points);
-  }
-
-  // -----------------------------
-  // 7) Render
+  // 6 Render
   // -----------------------------
   if (loading) return <p>Betöltés...</p>;
 
@@ -300,13 +285,6 @@ export default function DueContracts() {
           }}
         >
           Szűrők törlése (0–1 hónap)
-        </button>
-
-        <button
-          className="btn-refresh"
-          onClick={refreshMap}
-        >
-          Térkép és táblázat frissítése
         </button>
 
       </div>

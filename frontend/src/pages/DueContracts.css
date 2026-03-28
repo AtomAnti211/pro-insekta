@@ -156,16 +156,20 @@ input[type="checkbox"] {
 
 .dual-listbox {
   display: flex;
-  gap: 8px;
+  gap: 20px;
   margin-bottom: 20px;
+  width: 100%;              /* <<< teljes szélesség */
 }
 
 .dual-listbox .list {
-  width: 160px;
+  flex: 1;                  /* <<< automatikus szélesség */
+  min-width: 0;             /* <<< fontos: engedi zsugorodni */
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 10px;
   background: #fafafa;
+  display: flex;
+  flex-direction: column;
 }
 
 .dual-listbox label {
@@ -180,6 +184,7 @@ input[type="checkbox"] {
   margin: 0;
   max-height: 200px;
   overflow-y: auto;
+  flex: 1;                  /* <<< kitölti a rendelkezésre álló helyet */
 }
 
 .dual-listbox li {
