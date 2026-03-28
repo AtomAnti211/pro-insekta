@@ -6,6 +6,8 @@ import "./Duecontracts.css";
 
 import { Map, Marker } from "pigeon-maps";
 
+type OptionType = { value: string | number; label: string };
+
 export default function DueContracts() {
   const [contracts, setContracts] = useState<DueContract[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -13,9 +15,25 @@ export default function DueContracts() {
   const [pdfLoading, setPdfLoading] = useState<boolean>(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  const [filterCustomers, setFilterCustomers] = useState<string[]>([]);
-  const [filterCities, setFilterCities] = useState<string[]>([]);
-  const [filterMonths, setFilterMonths] = useState<number[]>([]);
+  // --- Opciók előkészítése ---
+  const customerOptions: OptionType[] = [...new Set(contracts.map(c => c.customerName))]
+    .map(name => ({ value: name, label: name }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  const cityOptions: OptionType[] = [...new Set(contracts.map(c => c.locationCity))]
+    .map(city => ({ value: city, label: city }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  const monthOptions: OptionType[] = [...Array(13).keys()]
+    .map(m => ({ value: m, label: `${m} hónap` }));
+
+  // --- Dual-listbox state-ek ---
+  const [filterCustomers, setFilterCustomers] = useState<OptionType[]>([]);
+  const [filterCities, setFilterCities] = useState<OptionType[]>([]);
+  const [filterMonths, setFilterMonths] = useState<OptionType[]>([
+    { value: 0, label: "0 hónap" },
+    { value: 1, label: "1 hónap" }
+  ]);
 
   const [mapPoints, setMapPoints] = useState<
     { id: number; lat: number; lng: number; label: string }[]
@@ -72,6 +90,17 @@ export default function DueContracts() {
             new Date(b.nextDueDate).getTime()
         );
         setContracts(sorted);
+        // --- DEFAULT: minden vevő és város kiválasztva ---
+         const allCustomers = [...new Set(sorted.map(c => c.customerName))]
+          .map(name => ({ value: name, label: name }))
+          .sort((a, b) => a.label.localeCompare(b.label));
+
+        const allCities = [...new Set(sorted.map(c => c.locationCity))]
+          .map(city => ({ value: city, label: city }))
+          .sort((a, b) => a.label.localeCompare(b.label));
+
+        setFilterCustomers(allCustomers);
+        setFilterCities(allCities);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -82,19 +111,22 @@ export default function DueContracts() {
   // -----------------------------
   const filtered = contracts.filter(c => {
     const matchCustomer =
-      filterCustomers.length === 0 || filterCustomers.includes(c.customerName);
+      filterCustomers.length === 0 ||
+      filterCustomers.some(sel => sel.value === c.customerName);
 
     const matchCity =
-      filterCities.length === 0 || filterCities.includes(c.locationCity);
+      filterCities.length === 0 ||
+      filterCities.some(sel => sel.value === c.locationCity);
 
     const matchMonths =
-      filterMonths.length === 0 || filterMonths.includes(c.monthsUntilDue);
+      filterMonths.length === 0 ||
+      filterMonths.some(sel => sel.value === c.monthsUntilDue);
 
     return matchCustomer && matchCity && matchMonths;
   });
 
   // -----------------------------
-  // 5) MapPoints frissítése (BACKEND KOORDINÁTÁKKAL)
+  // 5) MapPoints frissítése
   // -----------------------------
   useEffect(() => {
     const points = filtered
@@ -110,7 +142,23 @@ export default function DueContracts() {
   }, [filtered]);
 
   // -----------------------------
-  // 6) Render
+  // 6) Térkép frissítése gombbal
+  // -----------------------------
+  function refreshMap() {
+    const points = filtered
+      .filter(c => c.locationLat && c.locationLng)
+      .map(c => ({
+        id: c.contractId,
+        lat: c.locationLat!,
+        lng: c.locationLng!,
+        label: `${c.customerName} – ${c.locationCity}`
+      }));
+
+    setMapPoints(points);
+  }
+
+  // -----------------------------
+  // 7) Render
   // -----------------------------
   if (loading) return <p>Betöltés...</p>;
 
@@ -123,33 +171,144 @@ export default function DueContracts() {
 
       {/* SZŰRŐK */}
       <div className="filters">
-        <select multiple value={filterCustomers} onChange={(e) =>
-          setFilterCustomers(Array.from(e.target.selectedOptions, o => o.value))
-        }>
-          {[...new Set(contracts.map(c => c.customerName))].map(name => (
-            <option key={name} value={name}>{name}</option>
-          ))}
-        </select>
 
-        <select multiple value={filterCities} onChange={(e) =>
-          setFilterCities(Array.from(e.target.selectedOptions, o => o.value))
-        }>
-          {[...new Set(contracts.map(c => c.locationCity))].map(city => (
-            <option key={city} value={city}>{city}</option>
-          ))}
-        </select>
+        {/* VEVŐ */}
+        <div className="dual-listbox">
+          <div className="list selected">
+            <label>Kiválasztott vevők</label>
+            <ul>
+              {filterCustomers.map(item => (
+                <li
+                  key={item.value}
+                  onClick={() =>
+                    setFilterCustomers(prev => prev.filter(x => x.value !== item.value))
+                  }
+                >
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <select
-          multiple
-          value={filterMonths.map(String)}
-          onChange={(e) =>
-            setFilterMonths(Array.from(e.target.selectedOptions, o => Number(o.value)))
-          }
+          <div className="list available">
+            <label>Választható vevők</label>
+            <ul>
+              {customerOptions
+                .filter(opt => !filterCustomers.some(sel => sel.value === opt.value))
+                .map(opt => (
+                  <li
+                    key={opt.value}
+                    onClick={() =>
+                      setFilterCustomers(prev => [...prev, opt])
+                    }
+                  >
+                    {opt.label}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* VÁROS */}
+        <div className="dual-listbox">
+          <div className="list selected">
+            <label>Kiválasztott városok</label>
+            <ul>
+              {filterCities.map(item => (
+                <li
+                  key={item.value}
+                  onClick={() =>
+                    setFilterCities(prev => prev.filter(x => x.value !== item.value))
+                  }
+                >
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="list available">
+            <label>Választható városok</label>
+            <ul>
+              {cityOptions
+                .filter(opt => !filterCities.some(sel => sel.value === opt.value))
+                .map(opt => (
+                  <li
+                    key={opt.value}
+                    onClick={() =>
+                      setFilterCities(prev => [...prev, opt])
+                    }
+                  >
+                    {opt.label}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* HÓNAP */}
+        <div className="dual-listbox">
+          <div className="list selected">
+            <label>Kiválasztott hónapok</label>
+            <ul>
+              {filterMonths.map(item => (
+                <li
+                  key={item.value}
+                  onClick={() =>
+                    setFilterMonths(prev => prev.filter(x => x.value !== item.value))
+                  }
+                >
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="list available">
+            <label>Választható hónapok</label>
+            <ul>
+              {monthOptions
+                .filter(opt => !filterMonths.some(sel => sel.value === opt.value))
+                .map(opt => (
+                  <li
+                    key={opt.value}
+                    onClick={() =>
+                      setFilterMonths(prev => [...prev, opt])
+                    }
+                  >
+                    {opt.label}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      {/* --- GOMBOK BLOKKJA --- */}
+      <div className="filter-buttons">
+
+        <button
+          className="btn-clear"
+          onClick={() => {
+            setFilterCustomers(customerOptions);
+            setFilterCities(cityOptions);
+            setFilterMonths([
+              { value: 0, label: "0 hónap" },
+              { value: 1, label: "1 hónap" }
+            ]);
+          }}
         >
-          {[...Array(13).keys()].map(m => (
-            <option key={m} value={m}>{m} hónap</option>
-          ))}
-        </select>
+          Szűrők törlése (0–1 hónap)
+        </button>
+
+        <button
+          className="btn-refresh"
+          onClick={refreshMap}
+        >
+          Térkép és táblázat frissítése
+        </button>
+
       </div>
 
       {/* PDF GOMB */}

@@ -103,3 +103,94 @@ input[type="checkbox"] {
   90% { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(-10px); }
 }
+.filter-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 20px;
+}
+
+.filter-buttons button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-clear {
+  background: #ddd;
+}
+
+.btn-quick {
+  background: #ffe08a;
+}
+
+.btn-refresh {
+  background: #4caf50;
+  color: white;
+}
+.filters-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  color: #333;
+}
+
+.filters {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.dual-listbox {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.dual-listbox .list {
+  width: 160px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fafafa;
+}
+
+.dual-listbox label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.dual-listbox ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dual-listbox li {
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dual-listbox li:hover {
+  background: #e8f0ff;
+}
