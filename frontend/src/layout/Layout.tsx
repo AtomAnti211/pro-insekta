@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Layout.css";
 /*  globals.css */
 import '../styles/globals.css';  
@@ -7,6 +8,16 @@ import '../styles/globals.css';
 
 export default function Layout() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  /* logout */
+  function handleLogout() {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    navigate("/login");
+  }
+  /* logout */
+
+
 
   return (
     <div className="layout-container">
@@ -100,6 +111,15 @@ export default function Layout() {
               {open && <span>Owner</span>}
             </Link>
           </li>
+     
+          <li className="logout-item" data-tooltip="Logout">
+            <button className="logout-button" onClick={handleLogout}>
+              <span className="icon">🚪</span>
+              {open && <span>Kijelentkezés</span>}
+            </button>
+          </li>
+
+
         
         </ul>
       </nav>

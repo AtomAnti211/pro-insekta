@@ -121,3 +121,35 @@
     padding: 20px;
   }
 }
+.logout-item {
+  list-style: none;
+}
+
+.logout-button {
+  width: 100%;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: inherit;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.logout-button:hover {
+  background: rgba(255, 80, 80, 0.15);
+  transform: translateX(3px);
+}
+
+.logout-button .icon {
+  font-size: 20px;
+  color: #ff4d4d;
+}
+
+.logout-button:hover .icon {
+  color: #ff1a1a;
+}
