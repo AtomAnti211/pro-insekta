@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./Layout.css";
 /*  globals.css */
 import '../styles/globals.css';  
@@ -9,6 +10,12 @@ import '../styles/globals.css';
 export default function Layout() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  function isActive(path: string) {
+    return location.pathname === path ? "active" : "";
+  }
+
   /* logout */
   function handleLogout() {
     localStorage.removeItem("access");
@@ -42,70 +49,70 @@ export default function Layout() {
           </li>
 
           {/* Dashboard */}
-          <li>
+          <li className={isActive("/admin/dashboard")}>
             <Link to="/admin/dashboard" data-tooltip="Dashboard">
               <span className="icon">📊</span>
               {open && <span>Dashboard</span>}
             </Link>
           </li>
 
-          <li>
+          <li className={isActive("/admin/notes")}>
             <Link to="/admin/notes" data-tooltip="Notes">
               <span className="icon">📝</span>
               {open && <span>Notes</span>}
             </Link>
           </li>
 
-          <li>
+          <li className={isActive("/admin/jobs")}>
             <Link to="/admin/jobs" data-tooltip="Jobs">
               <span className="icon">🧰</span>
               {open && <span>Jobs</span>}
             </Link>
           </li>
 
-          <li>
+          <li className={isActive("/admin/due-contracts")}>
             <Link to="/admin/due-contracts" data-tooltip="Due Contracts">
               <span className="icon">📅</span>
               {open && <span>Due Contracts</span>}
             </Link>
           </li>
 
-          <li>
+          <li className={isActive("/admin/contracts")}>
             <Link to="/admin/contracts" data-tooltip="Contracts">
               <span className="icon">📄</span>
               {open && <span>Contracts</span>}
             </Link>
           </li>
 
-          <li>
+          <li className={isActive("/admin/locations")}>
             <Link to="/admin/locations" data-tooltip="Locations">
               <span className="icon">📍</span>
               {open && <span>Locations</span>}
             </Link>
           </li>
 
-          <li>
+          <li className={isActive("/admin/custmers")}>
             <Link to="/admin/customers" data-tooltip="Customers">
               <span className="icon">👥</span>
               {open && <span>Customers</span>}
             </Link>
           </li>
 
-          <li>
+          <li className={isActive("/admin/services")}>
             <Link to="/admin/services" data-tooltip="Services">
               <span className="icon">🧪</span>
               {open && <span>Services</span>}
             </Link>
           </li>
 
-          <li>
+          <li className={isActive("/admin/activities")}>
             <Link to="/admin/activities" data-tooltip="Activities">
               <span className="icon">🐞</span>
               {open && <span>Activities</span>}
             </Link>
           </li>
 
-          <li>
+          <li className={isActive("/admin/owner")}>
             <Link to="/admin/owner" data-tooltip="Owner">
               <span className="icon">👤</span>
               {open && <span>Owner</span>}

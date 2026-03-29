@@ -153,3 +153,17 @@
 .logout-button:hover .icon {
   color: #ff1a1a;
 }
+.sidebar-menu li.active {
+  background: rgba(74, 108, 247, 0.2);
+  border-left: 4px solid #4a6cf7;
+  transform: translateX(3px);
+}
+
+.sidebar-menu li.active .icon {
+  color: #4a6cf7;
+  font-weight: bold;
+}
+
+.sidebar-menu li.active span {
+  font-weight: 600;
+}
