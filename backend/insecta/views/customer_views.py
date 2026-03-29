@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ..models import Customer
-from ..serializers import CustomerSerializer
+from ..insecta_serializers import CustomerSerializer
 
 # CUSTOMER CRUD
 

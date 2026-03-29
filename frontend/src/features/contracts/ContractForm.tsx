@@ -3,6 +3,7 @@ import type { Contract } from "../../types/contract";
 import { LocationsAPI } from "../../api/locations";
 import { ServicesAPI } from "../../api/services";
 import { CustomersAPI } from "../../api/customers";
+import "./ContractForm.css";
 
 export default function ContractForm({
   initial,
@@ -45,7 +46,7 @@ export default function ContractForm({
     load();
   }, []);
 
-  // AUTOMATIKUS CUSTOMER KITÖLTÉS
+  // AUTOMATIKUS CUSTOMER KITÖLTÉS LOCATION ALAPJÁN
   useEffect(() => {
     if (!locationId) return;
 
@@ -58,9 +59,25 @@ export default function ContractForm({
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
+    // FRONTEND VALIDÁCIÓ
+    if (!locationId) {
+      alert("Helyszín kiválasztása kötelező!");
+      return;
+    }
+
+    if (!serviceId) {
+      alert("Szolgáltatás kiválasztása kötelező!");
+      return;
+    }
+
+    if (!customerId) {
+      alert("A helyszínhez nem tartozik ügyfél!");
+      return;
+    }
+
     onSubmit({
       contractLocationName: locationId,
-      contractServiceName: serviceId,
+      contractServiceName:  serviceId,
       contractCustomerName: customerId,
       contractPrice: price,
       contractStart: start,
@@ -72,67 +89,95 @@ export default function ContractForm({
   return (
     <form onSubmit={handleSubmit} className="note-form">
 
-      <select
-        value={locationId ?? ""}
-        onChange={(e) => setLocationId(Number(e.target.value))}
-      >
-        <option value="">Válassz helyszínt...</option>
-        {locations.map((l) => (
-          <option key={l.id} value={l.id}>
-            {l.locationName}
-          </option>
-        ))}
-      </select>
+      {/* HELYSZÍN */}
+      <div className="form-field">
+        <label>Helyszín *</label>
+        <select
+          value={locationId ?? ""}
+          onChange={(e) => setLocationId(Number(e.target.value))}
+        >
+          <option value="">Válassz helyszínt...</option>
+          {locations.map((l) => (
+            <option key={l.id} value={l.id}>
+              {l.locationName}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      <br></br>
 
-      <select
-        value={serviceId ?? ""}
-        onChange={(e) => setServiceId(Number(e.target.value))}
-      >
-        <option value="">Válassz szolgáltatást...</option>
-        {services.map((s) => (
-          <option key={s.id} value={s.id}>
-            {s.serviceName}
-          </option>
-        ))}
-      </select>
+      {/* ÜGYFÉL (AUTOMATIKUS) */}
+      <div className="form-field">
+        <label>Ügyfél (automatikus)</label>
+        <input
+          value={
+            customers.find((c) => c.id === customerId)?.customerName || ""
+          }
+          readOnly
+        />
+      </div>
 
-      {/* AUTOMATIKUS CUSTOMER */}
-      <input
-        value={
-          customers.find((c) => c.id === customerId)?.customerName || ""
-        }
-        readOnly
-      />
+      {/* SZOLGÁLTATÁS */}
+      <div className="form-field">
+        <label>Szolgáltatás *</label>
+        <select
+          value={serviceId ?? ""}
+          onChange={(e) => setServiceId(Number(e.target.value))}
+        >
+          <option value="">Válassz szolgáltatást...</option>
+          {services.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.serviceName}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <input
-        type="number"
-        placeholder="Ár"
-        value={price}
-        onChange={(e) => setPrice(Number(e.target.value))}
-      />
+      {/* ÁR */}
+      <div className="form-field">
+        <label>Ár</label>
+        <input
+          type="number"
+          placeholder="Ár"
+          value={price}
+          onChange={(e) => setPrice(Number(e.target.value))}
+        />
+      </div>
 
-      <input
-        type="date"
-        value={start}
-        onChange={(e) => setStart(e.target.value)}
-      />
+      {/* KEZDŐ DÁTUM */}
+      <div className="form-field">
+        <label>Kezdő dátum</label>
+        <input
+          type="date"
+          value={start}
+          onChange={(e) => setStart(e.target.value)}
+        />
+      </div>
 
-      <label>
+      {/* ÉRVÉNYES */}
+      <div className="checkbox-row">
+        <span>Érvényes</span>
         <input
           type="checkbox"
           checked={valid}
           onChange={(e) => setValid(e.target.checked)}
         />
-        Érvényes
-      </label>
+      </div>
+      <br></br>
 
-      <input
-        type="number"
-        placeholder="Gyakoriság (hónap)"
-        value={freq}
-        onChange={(e) => setFreq(Number(e.target.value))}
-      />
+      {/* GYAKORISÁG */}
+      <div className="form-field">
+        <label>Gyakoriság (hónap)</label>
+        <input
+          type="number"
+          placeholder="Gyakoriság (hónap)"
+          value={freq}
+          onChange={(e) => setFreq(Number(e.target.value))}
+        />
+      </div>
 
+      {/* GOMBOK */}
       <div className="form-actions">
         <button type="submit">Mentés</button>
         <button type="button" onClick={onCancel}>

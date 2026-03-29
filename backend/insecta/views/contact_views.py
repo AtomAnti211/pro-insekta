@@ -5,7 +5,7 @@ from rest_framework import status
 from django.core.mail import EmailMultiAlternatives
 from email.mime.image import MIMEImage
 
-from ..serializers import ContactMessageSerializer
+from ..insecta_serializers import ContactMessageSerializer
 
 
 @api_view(["POST"])

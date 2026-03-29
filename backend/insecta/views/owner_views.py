@@ -8,7 +8,7 @@ from rest_framework import status
 
 from ..models import Owner
 
-from ..serializers import OwnerSerializer
+from ..insecta_serializers import OwnerSerializer
 
 
 # OWNER (READ + UPDATE)

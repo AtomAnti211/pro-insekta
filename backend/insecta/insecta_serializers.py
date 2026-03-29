@@ -48,21 +48,19 @@ class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields ='__all__'   
-               
+ 
+ 
 class ContractReadSerializer(serializers.ModelSerializer):
     contractLocationName = LocationReadSerializer(read_only=True)
     contractServiceName = ServiceSerializer(read_only=True)
-
+    contractCustomerName = CustomerSerializer(read_only=True)
 
     class Meta:
         model = Contract
-        fields ='__all__'  
-        depth = 2  
-        
+        fields = "__all__"
+        depth = 2
+                      
 class ContractWriteSerializer(serializers.ModelSerializer):
-    contractLocationName = LocationReadSerializer(read_only=True)
-    contractServiceName = ServiceSerializer(read_only=True)
-
     class Meta:
         model = Contract
         fields ='__all__'    
@@ -94,7 +92,7 @@ class ContractDueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = [
-            "contractId", 
+            "id", 
             "contractStart",
             "contractValid",
             "contractFrequencyMonth",

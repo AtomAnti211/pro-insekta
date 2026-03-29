@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useContracts } from "./useContracts";
 import ContractForm from "./ContractForm";
+import Modal from "../../components/Modal";
 
 export default function ContractsAdminPage() {
   const { contracts, loading, error, search, create, update, remove } =
@@ -26,20 +27,22 @@ export default function ContractsAdminPage() {
 
       {/* RÉSZLETEK DOBOZ */}
       {detailsItem && (
-        <div className="details-box">
-          <h2>Szerződés részletei</h2>
+        <Modal onClose={closeAll}>
+          <div className="details-box">
+            <h2>Szerződés részletei</h2>
 
-          <p><b>ID:</b> {detailsItem.id}</p>
-          <p><b>Helyszín:</b> {detailsItem.contractLocationName?.locationName}</p>
-          <p><b>Szolgáltatás:</b> {detailsItem.contractServiceName?.serviceName}</p>
-          <p><b>Ügyfél:</b> {detailsItem.contractCustomerName?.customerName}</p>
-          <p><b>Ár:</b> {detailsItem.contractPrice} Ft</p>
-          <p><b>Kezdés:</b> {detailsItem.contractStart}</p>
-          <p><b>Érvényes:</b> {detailsItem.contractValid ? "Igen" : "Nem"}</p>
-          <p><b>Gyakoriság (hónap):</b> {detailsItem.contractFrequencyMonth}</p>
+            <p><b>ID:</b> {detailsItem.id}</p>
+            <p><b>Helyszín:</b> {detailsItem.contractLocationName?.locationName}</p>
+            <p><b>Szolgáltatás:</b> {detailsItem.contractServiceName?.serviceName}</p>
+            <p><b>Ügyfél:</b> {detailsItem.contractCustomerName?.customerName}</p>
+            <p><b>Ár:</b> {detailsItem.contractPrice} Ft</p>
+            <p><b>Kezdés:</b> {detailsItem.contractStart}</p>
+            <p><b>Érvényes:</b> {detailsItem.contractValid ? "Igen" : "Nem"}</p>
+            <p><b>Gyakoriság (hónap):</b> {detailsItem.contractFrequencyMonth}</p>
 
-          <button onClick={closeAll}>Bezárás</button>
-        </div>
+            <button onClick={closeAll}>Bezárás</button>
+          </div>
+        </Modal>
       )}
 
       <h1 className="admin-title">Szerződések – Admin</h1>
@@ -68,20 +71,23 @@ export default function ContractsAdminPage() {
       </div>
 
       {/* ÚJ / SZERKESZTÉS FORM */}
-      {(adding || editingItem) && (
-        <ContractForm
-          initial={editingItem ?? undefined}
-          onSubmit={async (data) => {
-            if (editingItem) {
-              await update(editingItem.id, data);
-            } else {
-              await create(data);
-            }
-            closeAll();
-          }}
-          onCancel={closeAll}
-        />
-      )}
+  {(adding || editingItem) && (
+  <Modal onClose={closeAll}>
+    <ContractForm
+      initial={editingItem ?? undefined}
+      onSubmit={async (data) => {
+        if (editingItem) {
+          await update(editingItem.id, data);
+        } else {
+          await create(data);
+        }
+        closeAll();
+      }}
+      onCancel={closeAll}
+    />
+  </Modal>
+)}
+
 
       {loading && <p>Betöltés...</p>}
       {error && <p className="error">{error}</p>}

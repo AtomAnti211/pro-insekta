@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ..models import Job
-from ..serializers import JobReadSerializer,JobWriteSerializer
+from ..insecta_serializers import JobReadSerializer,JobWriteSerializer
 
 
 # JOB CRUD

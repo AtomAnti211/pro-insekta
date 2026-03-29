@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ..models import Contract
-from ..serializers import ContractReadSerializer,ContractWriteSerializer
+from ..insecta_serializers import ContractReadSerializer,ContractWriteSerializer
 
 
 # CONTRACT CRUD
@@ -17,8 +17,9 @@ def contractListCreate(request):
     if request.method == "POST":
         serializer = ContractWriteSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            contract = serializer.save()
+            read_serializer = ContractReadSerializer(contract)
+            return Response(read_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -37,8 +38,9 @@ def contractDetail(request, id):
     if request.method == "PUT":
         serializer = ContractWriteSerializer(contract, data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+            contract = serializer.save()
+            read_serializer = ContractReadSerializer(contract)
+            return Response(read_serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == "DELETE":
