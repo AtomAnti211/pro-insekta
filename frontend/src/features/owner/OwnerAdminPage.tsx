@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useOwner } from "./useOwner";
 import OwnerForm from "./OwnerForm";
+import { useNavigate } from "react-router-dom";
 
 export default function OwnerAdminPage() {
+  const navigate = useNavigate();
   const { owner, loading, update } = useOwner();
 
   const [message, setMessage] = useState<string | null>(null);
@@ -16,7 +18,12 @@ export default function OwnerAdminPage() {
       await update(form);
       setError(null);
       setMessage("Sikeres mentés!");
-      setTimeout(() => setMessage(null), 3000);
+
+      setTimeout(() => {
+        setMessage(null);
+        navigate("/admin");   // ← ide megy vissza
+      }, 2000);
+
     } catch (err) {
       setMessage(null);
       setError("Hiba történt a mentés során. A backend nem elérhető.");

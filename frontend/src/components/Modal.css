@@ -50,3 +50,12 @@
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0,0,0,0.25);
 }
+.modal-window.success {
+  background: #d4edda;
+  border-left: 6px solid #28a745;
+}
+
+.modal-window.error {
+  background: #f8d7da;
+  border-left: 6px solid #dc3545;
+}
