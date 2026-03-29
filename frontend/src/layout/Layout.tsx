@@ -53,9 +53,9 @@ export default function Layout() {
           </li>
 
           <li>
-            <Link to="/admin/toDo" data-tooltip="ToDo">
+            <Link to="/admin/due-contracts" data-tooltip="Due Contracts">
               <span className="icon">📅</span>
-              {open && <span>ToDo</span>}
+              {open && <span>Due Contracts</span>}
             </Link>
           </li>
 
