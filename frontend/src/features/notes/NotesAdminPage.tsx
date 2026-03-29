@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNotes } from "./useNotes";
 import NoteForm from "./NoteForm";
 import "./NotesAdminPage.css";
+import Modal from "../../components/Modal";
 
 function statusLabel(status: string) {
   switch (status) {
@@ -85,18 +86,22 @@ export default function NotesAdminPage() {
       {error && <p className="error">{error}</p>}
 
       {adding && (
-        <NoteForm
-          onSubmit={handleCreate}
-          onCancel={() => setAdding(false)}
-        />
+        <Modal onClose={() => setAdding(false)}>
+          <NoteForm
+            onSubmit={handleCreate}
+            onCancel={() => setAdding(false)}
+          />
+        </Modal>
       )}
 
       {editingItem && (
-        <NoteForm
-          initial={editingItem}
-          onSubmit={handleUpdate}
-          onCancel={() => setEditingId(null)}
-        />
+        <Modal onClose={() => setEditingId(null)}>
+          <NoteForm
+            initial={editingItem}
+            onSubmit={handleUpdate}
+            onCancel={() => setEditingId(null)}
+          />
+        </Modal>
       )}
 
       <table className="admin-table">
@@ -157,18 +162,21 @@ export default function NotesAdminPage() {
       </table>
 
       {detailItem && (
-        <div className="modal-backdrop" onClick={() => setDetailId(null)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
+        <Modal onClose={() => setDetailId(null)}>
+          <div className="note-details">
             <h2>{detailItem.noteName}</h2>
+
             <p><strong>Email:</strong> {detailItem.noteEmail}</p>
             <p><strong>Telefon:</strong> {detailItem.notePhone}</p>
             <p><strong>Cím:</strong> {detailItem.noteAddress}</p>
+
             <p><strong>Üzenet:</strong></p>
             <p>{detailItem.noteMessage}</p>
+            <p><strong>Státusz</strong></p>   
 
-            <button onClick={() => setDetailId(null)}>Bezárás</button>
+         
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

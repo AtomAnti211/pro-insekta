@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useJobs } from "./useJobs";
 import JobForm from "./JobForm";
+import Modal from "../../components/Modal";
 
 export default function JobsAdminPage() {
   const { jobs, loading, error, search, create, update, remove } = useJobs();
@@ -23,7 +24,8 @@ export default function JobsAdminPage() {
     <div className="admin-page">
 
       {detailsItem && (
-        <div className="details-box">
+        <Modal onClose={closeAll}>
+          <div className="details-box">
           <h2>Munka részletei</h2>
 
           <p><b>ID:</b> {detailsItem.id}</p>
@@ -41,10 +43,9 @@ export default function JobsAdminPage() {
               style={{ width: "200px", marginTop: "10px" }}
             />
           )}
-
-          <button onClick={closeAll}>Bezárás</button>
         </div>
-      )}
+      </Modal>
+    )}
 
       <h1 className="admin-title">Munkák – Admin</h1>
 
@@ -71,19 +72,22 @@ export default function JobsAdminPage() {
       </div>
 
       {(adding || editingItem) && (
-        <JobForm
-          initial={editingItem ?? undefined}
-          onSubmit={async (form) => {
-            if (editingItem) {
-              await update(editingItem.id, form);
-            } else {
-              await create(form);
-            }
-            closeAll();
-          }}
-          onCancel={closeAll}
-        />
+        <Modal onClose={closeAll}>
+          <JobForm
+            initial={editingItem ?? undefined}
+            onSubmit={async (form) => {
+              if (editingItem) {
+                await update(editingItem.id, form);
+              } else {
+                await create(form);
+              }
+              closeAll();
+            }}
+            onCancel={closeAll}
+          />
+        </Modal>
       )}
+
 
       {loading && <p>Betöltés...</p>}
       {error && <p className="error">{error}</p>}
