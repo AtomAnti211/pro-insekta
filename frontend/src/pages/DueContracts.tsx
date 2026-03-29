@@ -44,6 +44,7 @@ export default function DueContracts() {
     { id: number; lat: number; lng: number; label: string }[]
   >([]);
 
+  const [highlightRow, setHighlightRow] = useState<number | null>(null);
   // -----------------------------
   // 1) Checkbox váltása
   // -----------------------------
@@ -55,6 +56,30 @@ export default function DueContracts() {
     );
   }
 
+  function jumpToTable(marker: { lat: number; lng: number; label: string }) {
+    // 1) Az adott markerhez tartozó sorok
+    const rows = filtered.filter(
+      c => c.locationLat === marker.lat && c.locationLng === marker.lng
+    );
+
+    if (rows.length === 0) return;
+
+    // 2) Legkorábbi esedékességű sor
+    const earliest = rows.reduce((a, b) =>
+      new Date(a.nextDueDate).getTime() < new Date(b.nextDueDate).getTime()
+        ? a
+        : b
+    );
+
+    // 3) Sor kiemelése
+    setHighlightRow(earliest.contractId);
+
+    // 4) Scroll a sorhoz
+    setTimeout(() => {
+      const el = document.getElementById(`row-${earliest.contractId}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 50);
+  }
   // -----------------------------
   // 2) PDF generálás
   // -----------------------------
@@ -320,8 +345,20 @@ export default function DueContracts() {
             <Overlay anchor={[activeMarker.lat, activeMarker.lng]}>
               <div className="popup">
                 <strong>{activeMarker.label}</strong>
-                <br />
-                <button onClick={() => setActiveMarker(null)}>Bezárás</button>
+
+                <div
+                  className="jump-icon"
+                  onClick={() => jumpToTable(activeMarker)}
+                >
+              📌 Ugrás a táblázatra
+                </div>
+
+                <button
+                  className="close-popup"
+                  onClick={() => setActiveMarker(null)}
+                >
+                  Bezárás
+                </button>
               </div>
             </Overlay>
           )}
@@ -343,7 +380,11 @@ export default function DueContracts() {
         </thead>
         <tbody>
           {filtered.map(c => (
-            <tr key={c.contractId}>
+            <tr
+              key={c.contractId}
+              id={`row-${c.contractId}`}
+              className={highlightRow === c.contractId ? "highlight" : ""}
+            >
               <td>
                 <input
                   type="checkbox"

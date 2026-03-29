@@ -215,3 +215,30 @@ input[type="checkbox"] {
   font-size: 12px;
   cursor: pointer;
 }
+.highlight {
+  background: #fff3cd !important;
+  transition: background 0.5s ease;
+}
+.jump-icon {
+  margin-top: 8px;
+  cursor: pointer;
+  color: #0077ff;
+  font-size: 14px;
+}
+
+.jump-icon:hover {
+  text-decoration: underline;
+}
+.close-popup {
+  margin-top: 10px;
+  padding: 6px 10px;
+  font-size: 13px;
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-popup:hover {
+  background: #ddd;
+}
