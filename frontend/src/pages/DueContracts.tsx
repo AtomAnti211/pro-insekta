@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { getDueFullContracts } from "../services/contractsService";
 import type { DueContract } from "../types/dueContracts";
+import { useMemo } from "react";
+import { useCallback } from "react";
 
 import "./Duecontracts.css";
 
@@ -15,17 +17,26 @@ export default function DueContracts() {
   const [pdfLoading, setPdfLoading] = useState<boolean>(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  // --- Opciók előkészítése ---
-  const customerOptions: OptionType[] = [...new Set(contracts.map(c => c.customerName))]
-    .map(name => ({ value: name, label: name }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+    // --- Opciók előkészítése ---
+  const customerOptions = useMemo(() => {
+    return [...new Set(contracts.map(c => c.customerName))]
+      .map(name => ({ value: name, label: name }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [contracts]);
 
-  const cityOptions: OptionType[] = [...new Set(contracts.map(c => c.locationCity))]
-    .map(city => ({ value: city, label: city }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+  const cityOptions = useMemo(() => {
+    return [...new Set(contracts.map(c => c.locationCity))]
+      .map(city => ({ value: city, label: city }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [contracts]);
 
-  const monthOptions: OptionType[] = [...Array(13).keys()]
-    .map(m => ({ value: m, label: `${m} hónap` }));
+  const monthOptions = useMemo(() => {
+    return [...Array(13).keys()].map(m => ({
+      value: m,
+      label: `${m} hónap`
+    }));
+}, []);
+
 
   // --- Dual-listbox state-ek ---
   const [filterCustomers, setFilterCustomers] = useState<OptionType[]>([]);
@@ -34,15 +45,36 @@ export default function DueContracts() {
     { value: 0, label: "0 hónap" },
     { value: 1, label: "1 hónap" }
   ]);
+  const addCustomer = useCallback((opt: OptionType) => {
+    setFilterCustomers(prev => [...prev, opt]);
+  }, []);
+
+  const removeCustomer = useCallback((value: string | number) => {
+    setFilterCustomers(prev => prev.filter(x => x.value !== value));
+  }, []);
+
+  const addCity = useCallback((opt: OptionType) => {
+    setFilterCities(prev => [...prev, opt]);
+  }, []);
+
+  const removeCity = useCallback((value: string | number) => {
+    setFilterCities(prev => prev.filter(x => x.value !== value));
+  }, []);
+
+  const addMonth = useCallback((opt: OptionType) => {
+    setFilterMonths(prev => [...prev, opt]);
+  }, []);
+
+  const removeMonth = useCallback((value: number) => {
+    setFilterMonths(prev => prev.filter(x => x.value !== value));
+  }, []);
+
+
   const [activeMarker, setActiveMarker] = useState<{
     lat: number;
     lng: number;
     label: string;  
   } | null>(null);
-
-  const [mapPoints, setMapPoints] = useState<
-    { id: number; lat: number; lng: number; label: string }[]
-  >([]);
 
   const [highlightRow, setHighlightRow] = useState<number | null>(null);
   // -----------------------------
@@ -107,7 +139,6 @@ export default function DueContracts() {
     setToast("A PDF elkészült!");
     setTimeout(() => setToast(null), 3000);
   }
-
   // -----------------------------
   // 3) Szerződések lekérése
   // -----------------------------
@@ -137,29 +168,32 @@ export default function DueContracts() {
   }, []);
 
   // -----------------------------
-  // 4) Szűrés
+  // 4) Szűrés (MEMOIZÁLVA)
   // -----------------------------
-  const filtered = contracts.filter(c => {
-    const matchCustomer =
-      filterCustomers.length === 0 ||
-      filterCustomers.some(sel => sel.value === c.customerName);
+  const filtered = useMemo(() => {
+    return contracts.filter(c => {
+      const matchCustomer =
+        filterCustomers.length === 0 ||
+        filterCustomers.some(sel => sel.value === c.customerName);
 
-    const matchCity =
-      filterCities.length === 0 ||
-      filterCities.some(sel => sel.value === c.locationCity);
+      const matchCity =
+        filterCities.length === 0 ||
+        filterCities.some(sel => sel.value === c.locationCity);
 
-    const matchMonths =
-      filterMonths.length === 0 ||
-      filterMonths.some(sel => sel.value === c.monthsUntilDue);
+      const matchMonths =
+        filterMonths.length === 0 ||
+        filterMonths.some(sel => sel.value === c.monthsUntilDue);
 
-    return matchCustomer && matchCity && matchMonths;
-  });
+      return matchCustomer && matchCity && matchMonths;
+    });
+  }, [contracts, filterCustomers, filterCities, filterMonths]);
 
-  // -----------------------------
-  // 5) MapPoints frissítése
-  // -----------------------------
-  useEffect(() => {
-    const points = filtered
+
+// -----------------------------
+// 5) MapPoints (MEMOIZÁLVA)
+// -----------------------------
+  const mapPoints = useMemo(() => {
+    return filtered
       .filter(c => c.locationLat && c.locationLng)
       .map(c => ({
         id: c.contractId,
@@ -167,11 +201,9 @@ export default function DueContracts() {
         lng: c.locationLng!,
         label: `${c.customerName} – ${c.locationCity}`
       }));
-
-    setMapPoints(points);
   }, [filtered]);
 
- 
+
   // -----------------------------
   // 6 Render
   // -----------------------------
@@ -195,9 +227,7 @@ export default function DueContracts() {
               {filterCustomers.map(item => (
                 <li
                   key={item.value}
-                  onClick={() =>
-                    setFilterCustomers(prev => prev.filter(x => x.value !== item.value))
-                  }
+                  onClick={() => removeCustomer(item.value)}
                 >
                   {item.label}
                 </li>
@@ -213,9 +243,7 @@ export default function DueContracts() {
                 .map(opt => (
                   <li
                     key={opt.value}
-                    onClick={() =>
-                      setFilterCustomers(prev => [...prev, opt])
-                    }
+                    onClick={() => addCustomer(opt)}
                   >
                     {opt.label}
                   </li>
@@ -232,9 +260,7 @@ export default function DueContracts() {
               {filterCities.map(item => (
                 <li
                   key={item.value}
-                  onClick={() =>
-                    setFilterCities(prev => prev.filter(x => x.value !== item.value))
-                  }
+                  onClick={() => removeCity(item.value)}
                 >
                   {item.label}
                 </li>
@@ -250,9 +276,7 @@ export default function DueContracts() {
                 .map(opt => (
                   <li
                     key={opt.value}
-                    onClick={() =>
-                      setFilterCities(prev => [...prev, opt])
-                    }
+                    onClick={() => addCity(opt)}
                   >
                     {opt.label}
                   </li>
@@ -269,9 +293,7 @@ export default function DueContracts() {
               {filterMonths.map(item => (
                 <li
                   key={item.value}
-                  onClick={() =>
-                    setFilterMonths(prev => prev.filter(x => x.value !== item.value))
-                  }
+                  onClick={() => removeMonth(item.value as number)}
                 >
                   {item.label}
                 </li>
@@ -287,9 +309,7 @@ export default function DueContracts() {
                 .map(opt => (
                   <li
                     key={opt.value}
-                    onClick={() =>
-                      setFilterMonths(prev => [...prev, opt])
-                    }
+                    onClick={() => addMonth(opt)}
                   >
                     {opt.label}
                   </li>
