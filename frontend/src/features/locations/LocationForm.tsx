@@ -28,6 +28,13 @@ export default function LocationForm({
   );
   const [file, setFile] = useState<File | null>(null);
 
+  const [locationLat, setLocationLat] = useState<number | "">(
+    initial?.locationLat ?? ""
+  );
+  const [locationLng, setLocationLng] = useState<number | "">(
+    initial?.locationLng ?? ""
+  );
+
   useEffect(() => {
     const loadCustomers = async () => {
       const res = await CustomersAPI.list();
@@ -61,6 +68,9 @@ export default function LocationForm({
 
     if (customer) form.append("locationCustomer", String(customer));
     if (file) form.append("locationtyURL", file);
+
+    if (locationLat !== "") form.append("locationLat", String(locationLat));
+    if (locationLng !== "") form.append("locationLng", String(locationLng));
 
     onSubmit(form);
   };
@@ -128,6 +138,25 @@ export default function LocationForm({
           onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
         />
       </div>
+
+      {/* KOORDINÁTÁK */}
+      <input
+        type="number"
+        placeholder="Szélesség (lat)"
+        value={locationLat}
+        onChange={(e) =>
+          setLocationLat(e.target.value === "" ? "" : Number(e.target.value))
+        }
+      />
+
+      <input
+        type="number"
+        placeholder="Hosszúság (lng)"
+        value={locationLng}
+        onChange={(e) =>
+          setLocationLng(e.target.value === "" ? "" : Number(e.target.value))
+        }
+      />
 
       <div className="form-actions">
         <button type="submit">Mentés</button>

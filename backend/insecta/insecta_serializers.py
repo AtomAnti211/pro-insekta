@@ -39,10 +39,8 @@ class LocationReadSerializer(serializers.ModelSerializer):
     locationCustomer = CustomerSerializer(read_only=True)
 
     class Meta:
-    
         model = Location
         fields ='__all__'  
-        depth = 1
          
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:

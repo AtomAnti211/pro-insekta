@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useLocations } from "./useLocations";
 import LocationForm from "./LocationForm";
+import Modal from "../../components/Modal";
 
 export default function LocationsAdminPage() {
   const { locations, loading, error, search, create, update, remove } = useLocations();
@@ -22,23 +23,6 @@ export default function LocationsAdminPage() {
 
   return (
     <div className="admin-page">
-
-      {/* RÉSZLETEK DOBOZ */}
-      {detailsItem && (
-        <div className="details-box">
-          <h2>Részletek</h2>
-          <p><b>ID:</b> {detailsItem.id}</p>
-          <p><b>Név:</b> {detailsItem.locationName}</p>
-          <p><b>Ügyfél:</b> {detailsItem.locationCustomer?.customerName}</p>
-          <p><b>Irányítószám:</b> {detailsItem.locationPostCode}</p>
-          <p><b>Város:</b> {detailsItem.locationCity}</p>
-          <p><b>Cím:</b> {detailsItem.locationAddress}</p>
-          <p><b>Email:</b> {detailsItem.locationMail}</p>
-          <p><b>Kép:</b> {detailsItem.locationtyURL}</p>
-
-          <button onClick={closeAll}>Bezárás</button>
-        </div>
-      )}
 
       <h1 className="admin-title">Helyszínek – Admin</h1>
 
@@ -65,20 +49,51 @@ export default function LocationsAdminPage() {
         </button>
       </div>
 
-      {/* ÚJ / SZERKESZTÉS FORM */}
-      {(adding || editingItem) && (
-        <LocationForm
-          initial={editingItem ?? undefined}
-          onSubmit={async (data) => {
-            if (editingItem) {
-              await update(editingItem.id, data);
-            } else {
-              await create(data);
-            }
+      {/* ÚJ Locaton FORM */}
+      {adding && (
+        <Modal onClose={closeAll}>
+          <LocationForm
+            onSubmit={async (data) => {
+            await create(data);
             closeAll();
           }}
           onCancel={closeAll}
         />
+      </Modal>
+      )}
+     
+      {/* SZERKESZTÉS */}
+      {editingItem && (
+        <Modal onClose={closeAll}>
+          <LocationForm
+            initial={editingItem}
+            onSubmit={async (data) => {
+              await update(editingItem.id, data);
+              closeAll();
+            }}
+            onCancel={closeAll}
+          />
+        </Modal>
+      )}
+
+      {/* RÉSZLETEK */}
+      {detailsItem && (
+        <Modal onClose={closeAll}>
+          <div className="details-popup">
+            <h2>Részletek</h2>
+            <p><b>ID:</b> {detailsItem.id}</p>
+            <p><b>Név:</b> {detailsItem.locationName}</p>
+            <p><b>Ügyfél:</b> {detailsItem.locationCustomer?.customerName}</p>
+            <p><b>Irányítószám:</b> {detailsItem.locationPostCode}</p>
+            <p><b>Város:</b> {detailsItem.locationCity}</p>
+            <p><b>Cím:</b> {detailsItem.locationAddress}</p>
+            <p><b>Email:</b> {detailsItem.locationMail}</p>
+            <p><b>Kép:</b> {detailsItem.locationtyURL}</p>
+            <p><b>Szélesség</b>{detailsItem.locationLat}</p>
+            <p><b>Hosszúság</b>{detailsItem.locationLng}</p>  
+
+          </div>
+        </Modal>
       )}
 
       {loading && <p>Betöltés...</p>}
