@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useServices } from "./useServices";
 import ServiceForm from "./ServiceForm";
 import "./ServicesAdminPage.css";
+import Modal from "../../components/Modal";
 
 export default function ServicesAdminPage() {
   const { services, loading, error, create, update, remove } = useServices();
@@ -33,24 +34,28 @@ export default function ServicesAdminPage() {
       {error && <p className="error">{error}</p>}
 
       {adding && (
-        <ServiceForm
-          onSubmit={async (name: string) => {
-            await create(name);
-            setAdding(false);
-          }}
-          onCancel={() => setAdding(false)}
-        />
+        <Modal onClose={() => setAdding(false)}>
+          <ServiceForm
+            onSubmit={async (name: string) => {
+              await create(name);
+              setAdding(false);
+            }}
+            onCancel={() => setAdding(false)}
+          />
+        </Modal>
       )}
-
+   
       {editingItem && (
-        <ServiceForm
-          initial={editingItem}
-          onSubmit={async (name: string) => {
-            await update(editingItem.id, name);
-            setEditingId(null);
-          }}
-          onCancel={() => setEditingId(null)}
-        />
+        <Modal onClose={() => setEditingId(null)}>
+          <ServiceForm
+            initial={editingItem}
+            onSubmit={async (name: string) => {
+              await update(editingItem.id, name);
+              setEditingId(null);
+            }}
+            onCancel={() => setEditingId(null)}
+          />
+        </Modal>
       )}
 
       <table className="admin-table">
