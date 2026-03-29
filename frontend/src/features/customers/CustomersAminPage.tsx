@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useCustomers } from "./useCustomers";
 import CustomerForm from "./CustomerForm";
+import Modal from "../../components/Modal";
 
 export default function CustomersAdminPage() {
   const { customers, loading, error, search, create, update, remove } = useCustomers();
@@ -13,21 +14,6 @@ export default function CustomersAdminPage() {
 
   return (
     <div className="admin-page">
-
-      {editingItem && (
-        <div className="details-box">
-          <h2>Részletek</h2>
-          <p><b>ID:</b> {editingItem.id}</p>
-          <p><b>Név:</b> {editingItem.customerName}</p>
-          <p><b>Adószám:</b> {editingItem.customerVat}</p>
-          <p><b>Irányítószám:</b> {editingItem.customerPostCode}</p>
-          <p><b>Város:</b> {editingItem.customerCity}</p>
-          <p><b>Cím:</b> {editingItem.customerAddress}</p>
-          <p><b>Email:</b> {editingItem.customerMail}</p>
-
-          <button onClick={() => setEditingId(null)}>Bezárás</button>
-        </div>
-      )}
 
       <h1 className="admin-title">Ügyfelek – Admin</h1>
 
@@ -54,21 +40,37 @@ export default function CustomersAdminPage() {
         </button>
       </div>
 
-      {/* ÚJ ÜGYFÉL FORM */}
+      {/* ÚJ ÜGYFÉL POPUP */}
       {adding && (
-        <CustomerForm
-          onSubmit={async (data) => {
-            await create(data);
-            setAdding(false);
-          }}
-          onCancel={() => setAdding(false)}
-        />
+        <Modal onClose={() => setAdding(false)}>
+          <CustomerForm
+            onSubmit={async (data) => {
+              await create(data);
+              setAdding(false);
+            }}
+            onCancel={() => setAdding(false)}
+          />
+        </Modal>
+      )}
+
+      {/* SZERKESZTÉS POPUP */}
+      {editingItem && (
+        <Modal onClose={() => setEditingId(null)}>
+          <CustomerForm
+            initial={editingItem}
+            onSubmit={async (data) => {
+              await update(editingItem.id, data);
+              setEditingId(null);
+            }}
+            onCancel={() => setEditingId(null)}
+          />
+        </Modal>
       )}
 
       {loading && <p>Betöltés...</p>}
       {error && <p className="error">{error}</p>}
 
-      {/* EGYSZERŰ TÁBLÁZAT */}
+      {/* TÁBLÁZAT */}
       <table className="admin-table">
         <thead>
           <tr>
