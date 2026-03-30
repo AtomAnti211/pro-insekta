@@ -172,7 +172,12 @@ export default function NotesAdminPage() {
 
             <p><strong>Üzenet:</strong></p>
             <p>{detailItem.noteMessage}</p>
-            <p><strong>Státusz</strong></p>   
+            <p><strong>Státusz:</strong> 
+              <span className={`status-badge status-${detailItem.status}`}>
+              {statusLabel(detailItem.status)}
+              </span>
+            </p>
+  
 
          
           </div>

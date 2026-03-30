@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import "./Layout.css";
 /*  globals.css */
 import '../styles/globals.css';  
+import "./Layout.css";
 
 
 export default function Layout() {
