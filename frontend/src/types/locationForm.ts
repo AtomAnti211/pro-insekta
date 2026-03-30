@@ -5,5 +5,5 @@ export interface LocationFormData {
   locationCity: string;
   locationAddress: string;
   locationMail: string;
-  locationtyURL: string;
+  locationURL: string;
 }

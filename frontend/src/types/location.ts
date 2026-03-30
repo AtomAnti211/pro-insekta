@@ -8,7 +8,7 @@ export interface Location {
   locationCity: string
   locationAddress: string
   locationMail: string
-  locationtyURL: string
+  locationURL: string
   
   locationLat: number | null;   
   locationLng: number | null;   

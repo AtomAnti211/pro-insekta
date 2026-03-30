@@ -91,7 +91,7 @@ class Location(models.Model):
     locationCity = models.CharField(max_length=100, blank=True, default="")
     locationAddress = models.CharField(max_length=100, blank=True, default="")
     locationMail = models.CharField(max_length=50, blank=True, default="")
-    locationtyURL = models.ImageField(upload_to="images/", blank=True, null=True)
+    locationURL = models.ImageField(upload_to="images/", blank=True, null=True)
     locationLat = models.FloatField(null=True, blank=True)
     locationLng = models.FloatField(null=True, blank=True)  
 

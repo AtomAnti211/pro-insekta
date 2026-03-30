@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useLocations } from "./useLocations";
 import LocationForm from "./LocationForm";
 import Modal from "../../components/Modal";
+import { useMemo } from "react";
+import { Map, Marker, Overlay } from "pigeon-maps";
+
 
 export default function LocationsAdminPage() {
   const { locations, loading, error, search, create, update, remove } = useLocations();
@@ -11,6 +14,13 @@ export default function LocationsAdminPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [detailsId, setDetailsId] = useState<number | null>(null);
   const [searchText, setSearchText] = useState("");
+  const [activeMarker, setActiveMarker] = useState<{
+    id: number;
+    lat: number;
+    lng: number;
+    label: string;
+  } | null>(null);
+
 
   const editingItem = locations.find((l) => l.id === editingId);
   const detailsItem = locations.find((l) => l.id === detailsId);
@@ -19,7 +29,19 @@ export default function LocationsAdminPage() {
     setAdding(false);
     setEditingId(null);
     setDetailsId(null);
-  };
+  }
+const mapPoints = useMemo(() => {
+  return locations
+    .filter(l => l.locationLat !== null && l.locationLng !== null)
+    .map(l => ({
+      id: l.id,
+      lat: l.locationLat as number,
+      lng: l.locationLng as number,
+      label: `${l.locationName} – ${l.locationCity}`
+    }));
+}, [locations]);
+
+
 
   return (
     <div className="admin-page">
@@ -54,12 +76,12 @@ export default function LocationsAdminPage() {
         <Modal onClose={closeAll}>
           <LocationForm
             onSubmit={async (data) => {
-            await create(data);
+             await create(data);
             closeAll();
           }}
           onCancel={closeAll}
-        />
-      </Modal>
+          />
+        </Modal>
       )}
      
       {/* SZERKESZTÉS */}
@@ -88,9 +110,9 @@ export default function LocationsAdminPage() {
             <p><b>Város:</b> {detailsItem.locationCity}</p>
             <p><b>Cím:</b> {detailsItem.locationAddress}</p>
             <p><b>Email:</b> {detailsItem.locationMail}</p>
-            <p><b>Kép:</b> {detailsItem.locationtyURL}</p>
-            <p><b>Szélesség</b>{detailsItem.locationLat}</p>
-            <p><b>Hosszúság</b>{detailsItem.locationLng}</p>  
+            <p><b>Kép:</b> {detailsItem.locationURL}</p>
+            <p><b>Szélesség</b> {detailsItem.locationLat}</p>
+            <p><b>Hosszúság</b> {detailsItem.locationLng}</p>  
 
           </div>
         </Modal>
@@ -152,6 +174,33 @@ export default function LocationsAdminPage() {
         </tbody>
       </table>
 
+      <div style={{ marginTop: "20px" }}>
+        <Map height={400} defaultCenter={[47.53, 21.63]} defaultZoom={9}>
+          {mapPoints.map(p => (
+            <Marker
+              key={p.id}
+              width={40}
+              anchor={[p.lat, p.lng]}
+              onClick={() => setActiveMarker(p)}
+            />
+          ))}
+
+          {activeMarker && (
+            <Overlay anchor={[activeMarker.lat, activeMarker.lng]}>
+              <div className="popup">
+                <strong>{activeMarker.label}</strong>
+
+                <button
+                    className="close-popup"
+                    onClick={() => setActiveMarker(null)}
+                  >
+                    Bezárás
+                </button>
+              </div>
+            </Overlay>
+          )}
+        </Map>
+      </div> 
     </div>
   );
 }
