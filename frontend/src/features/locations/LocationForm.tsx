@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import type { Location } from "../../types/location";
 import type { Customer } from "../../types/customer";
 import { CustomersAPI } from "../../api/customers";
+import { Map, Marker } from "pigeon-maps";
+
 
 export default function LocationForm({
   initial,
@@ -13,6 +15,8 @@ export default function LocationForm({
   onCancel: () => void;
 }) {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [lat, setLat] = useState(initial?.locationLat ?? 47.53);
+  const [lng, setLng] = useState(initial?.locationLng ?? 21.63);
 
   const [name, setName] = useState(initial?.locationName || "");
   const [customer, setCustomer] = useState<number | null>(
@@ -24,17 +28,10 @@ export default function LocationForm({
   const [mail, setMail] = useState(initial?.locationMail || "");
 
   const [imagePreview, setImagePreview] = useState<string | null>(
-    initial?.locationtyURL || null
+    initial?.locationURL || null
   );
   const [file, setFile] = useState<File | null>(null);
-
-  const [locationLat, setLocationLat] = useState<number | "">(
-    initial?.locationLat ?? ""
-  );
-  const [locationLng, setLocationLng] = useState<number | "">(
-    initial?.locationLng ?? ""
-  );
-
+ 
   useEffect(() => {
     const loadCustomers = async () => {
       const res = await CustomersAPI.list();
@@ -67,10 +64,10 @@ export default function LocationForm({
     form.append("locationMail", mail);
 
     if (customer) form.append("locationCustomer", String(customer));
-    if (file) form.append("locationtyURL", file);
+    if (file) form.append("locationURL", file);
 
-    if (locationLat !== "") form.append("locationLat", String(locationLat));
-    if (locationLng !== "") form.append("locationLng", String(locationLng));
+    form.append("locationLat", String(lat));
+    form.append("locationLng", String(lng));
 
     onSubmit(form);
   };
@@ -140,23 +137,49 @@ export default function LocationForm({
       </div>
 
       {/* KOORDINÁTÁK */}
+
       <input
         type="number"
-        placeholder="Szélesség (lat)"
-        value={locationLat}
-        onChange={(e) =>
-          setLocationLat(e.target.value === "" ? "" : Number(e.target.value))
-        }
+        value={lat}
+        onChange={(e) => setLat(parseFloat(e.target.value))}
       />
 
       <input
         type="number"
-        placeholder="Hosszúság (lng)"
-        value={locationLng}
-        onChange={(e) =>
-          setLocationLng(e.target.value === "" ? "" : Number(e.target.value))
-        }
+        value={lng}
+        onChange={(e) => setLng(parseFloat(e.target.value))}
       />
+
+      <div style={{ marginTop: "20px" }}>
+        <Map
+          height={300}
+          center={[lat, lng]}
+          defaultZoom={13}
+          onClick={({ latLng }) => {
+            setLat(latLng[0]);
+            setLng(latLng[1]);
+          }}
+        >
+
+          <Marker width={40} anchor={[lat, lng]} />
+        </Map>
+
+        <div style={{ marginTop: "10px" }}>
+          <label>Szélesség (lat):</label>
+          <input
+            type="number"
+            value={lat}
+            onChange={(e) => setLat(parseFloat(e.target.value))}
+          />
+
+          <label>Hosszúság (lng):</label>
+          <input
+            type="number"
+            value={lng}
+            onChange={(e) => setLng(parseFloat(e.target.value))}
+          />
+        </div>
+      </div>
 
       <div className="form-actions">
         <button type="submit">Mentés</button>
