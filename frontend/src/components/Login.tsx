@@ -23,32 +23,42 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-card" onSubmit={formSubmitted}>
-        <h2 className="login-title">Admin Login</h2>
+    <div className="login-page">
+      <div className="login-container">
+        <form className="login-card" onSubmit={formSubmitted}>
+          <img
+            className="login-image"
+            src="/images/login-bg.jpg"
+            alt="Login háttér"
+          />
 
-        {error && <div className="login-error">{error}</div>}
+          <div className="login-card-content">
+            <h2 className="login-title">Admin Login</h2>
 
-        <label className="login-label">Felhasználónév</label>
-        <input
-          className="login-input"
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+            {error && <div className="login-error">{error}</div>}
 
-        <label className="login-label">Jelszó</label>
-        <input
-          className="login-input"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+            <label className="login-label">Felhasználónév</label>
+            <input
+              className="login-input"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
 
-        <button className="login-button" type="submit">
-          Belépés
-        </button>
-      </form>
+            <label className="login-label">Jelszó</label>
+            <input
+              className="login-input"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <button className="login-button" type="submit">
+              Belépés
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

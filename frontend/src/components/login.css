@@ -1,22 +1,65 @@
-.login-container {
-  height: 100vh;
+/* A teljes oldal */
+.login-page {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+  background: #1e1e2f; /* háttérszín a kép alatt */
+}
+
+/* A login doboz */
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  border-radius: 12px;
+  overflow: hidden; /* fontos! a kép szépen lekerekedik */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  animation: fadeIn 0.4s ease;
+  background: #ffffff;
+}
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1e1e2f;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
 }
 
 .login-card {
-  background: #ffffff;
-  padding: 40px 35px;
-  border-radius: 12px;
   width: 100%;
   max-width: 380px;
+  border-radius: 12px;
+  overflow: hidden;
   box-shadow: 0 8px 25px rgba(0,0,0,0.25);
   animation: fadeIn 0.4s ease;
+  background: #ffffff;
 }
 
+/* A kép – teljes egészében, vágás nélkül */
+.login-image {
+  width: 100%;
+  display: block;
+}
+
+/* Tartalom a kép alatt */
+.login-card-content {
+  padding: 40px 35px;
+}
+
+
+/* A login tartalom */
+.login-card-content {
+  padding: 40px 35px;
+}
+
+/* Cím */
 .login-title {
   text-align: center;
   margin-bottom: 25px;
@@ -24,6 +67,7 @@
   color: #333;
 }
 
+/* Label */
 .login-label {
   font-size: 14px;
   margin-bottom: 5px;
@@ -31,6 +75,7 @@
   color: #444;
 }
 
+/* Input */
 .login-input {
   width: 100%;
   padding: 10px 12px;
@@ -47,10 +92,11 @@
   outline: none;
 }
 
+/* Gomb */
 .login-button {
   width: 100%;
   padding: 12px;
-  background: #4a6cf7;
+  background-color: rgb(15, 63, 15);
   color: white;
   border: none;
   border-radius: 6px;
@@ -60,9 +106,10 @@
 }
 
 .login-button:hover {
-  background: #3c59d4;
+  background: rgb(15,127,15);
 }
 
+/* Hiba */
 .login-error {
   background: #ffdddd;
   color: #b30000;
@@ -73,6 +120,7 @@
   font-size: 14px;
 }
 
+/* Animáció */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
