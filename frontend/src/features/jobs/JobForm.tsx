@@ -32,8 +32,10 @@ export default function JobForm({
   const [remark, setRemark] = useState(initial?.jobRemark ?? "");
 
   const [preview, setPreview] = useState<string | null>(
-    initial?.jobURL || null
-  );
+  initial?.jobURL ? `http://localhost:8000${initial.jobURL}` : null
+);
+
+
   const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {

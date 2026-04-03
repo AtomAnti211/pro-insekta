@@ -1,0 +1,251 @@
+/* =========================================
+   GLOBAL RESET – minden lyukforrás megszüntetése
+========================================= */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: auto;
+}
+
+/* Globális p margó nullázás */
+p {
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================
+   ADMIN LAYOUT – nincs középre igazítás, nincs lyuk
+========================================= */
+.admin-page {
+  width: 100%;
+  max-width: 1200px;        /* opcionális, hogy ne legyen túl széles */
+  margin: 0 auto;           /* csak vízszintes középre igazítás */
+  padding: 20px;            /* kompakt belső tér */
+  display: block;           /* fontos: ne legyen flex vagy grid! */
+}
+
+/* =========================================
+   CÍM
+========================================= */
+.admin-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  padding: 0;
+}
+
+/* =========================================
+   FELSŐ SOR – kereső + új gomb
+========================================= */
+.notes-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 12px 0;
+  padding: 0;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  width: 260px;
+}
+
+.admin-add-btn {
+  background: #27ae60;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.admin-add-btn:hover {
+  background: #1e874b;
+}
+
+/* =========================================
+   FORM – kompakt, nem hagy lyukat
+========================================= */
+.note-form {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 0 0 12px 0;
+}
+
+.note-form input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.form-actions button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.form-actions button[type="submit"] {
+  background: #2ecc71;
+  color: white;
+}
+
+.form-actions button[type="button"] {
+  background: #bdc3c7;
+  color: #2c3e50;
+}
+
+/* =========================================
+   TÁBLÁZAT – közvetlenül a kereső alatt
+========================================= */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0; /* LYUK MEGSZÜNTETÉSE */
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+  font-size: 14px;
+}
+
+.admin-table th {
+  background: #f4f6f7;
+  font-weight: 600;
+  border-bottom: 2px solid #dcdcdc;
+}
+
+.admin-table th:nth-child(6),
+.admin-table td:nth-child(6) {
+  width:100px;
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   MŰVELETEK GOMBOK – jól láthatóak
+========================================= */
+.admin-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.admin-actions button {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.admin-actions button:hover {
+  opacity: 0.85;
+}
+
+.admin-actions .delete-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.admin-actions button:not(.delete-btn) {
+  background: #3498db;
+  color: white;
+}
+
+/* =========================================
+   RÉSZLETEK BOX – kompakt, modern
+========================================= */
+.details-row {
+  background: #fafafa;
+}
+
+.details-box {
+  padding: 12px;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.details-box p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* =========================================
+   MOBIL NÉZET – táblázat átalakul
+========================================= */
+@media (max-width: 900px) {
+  .admin-page {
+    padding: 15px;
+  }
+
+  .admin-table,
+  .admin-table thead,
+  .admin-table tbody,
+  .admin-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table tr {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .admin-table td {
+    padding: 6px 0;
+  }
+
+  .admin-table thead {
+    display: none;
+  }
+
+  .admin-actions {
+    margin-top: 8px;
+  }
+}
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #printable-image {
+    visibility: visible !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: auto !important;
+    max-height: 100vh !important;
+    object-fit: contain !important;
+  }
+}

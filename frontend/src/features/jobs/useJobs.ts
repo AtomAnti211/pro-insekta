@@ -8,16 +8,32 @@ export function useJobs() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const sortJobs = (list: Job[]) =>
+    [...list].sort((a, b) => {
+      const locA = a.jobLocationName.locationName;
+      const locB = b.jobLocationName.locationName;
+
+      const byLocation = locA.localeCompare(locB, "hu", {
+        sensitivity: "base",
+        ignorePunctuation: true,
+      });
+
+      if (byLocation !== 0) return byLocation;
+
+      return b.jobStart.localeCompare(a.jobStart);
+   });
+
+
   const load = async () => {
     try {
       setLoading(true);
       const res = await JobsAPI.list();
       const data = res.data;
 
-      data.sort((a: Job, b: Job) => a.id - b.id);
+      const sorted = sortJobs(data);
 
-      setJobs(data);
-      setFiltered(data);
+      setJobs(sorted);
+      setFiltered(sorted);
     } catch (err) {
       setError("Hiba történt a munkák betöltésekor.");
     } finally {
@@ -29,13 +45,35 @@ export function useJobs() {
     load();
   }, []);
 
-  const search = (text: string) => {
-    const t = text.toLowerCase();
-    const result = jobs.filter((j) =>
-      j.jobLocationName.locationName.toLowerCase().includes(t)
-    );
-    setFiltered(result);
-  };
+const search = (text: string, year: string = "") => {
+  const t = text.toLowerCase();
+
+  const result = jobs
+    .filter((j) => {
+      const matchesText =
+        j.jobLocationName.locationName.toLowerCase().includes(t);
+
+      const matchesYear =
+        year === "" || j.jobStart.startsWith(year);
+
+      return matchesText && matchesYear;
+    })
+    .sort((a, b) => {
+    const locA = a.jobLocationName.locationName;
+    const locB = b.jobLocationName.locationName;
+
+    const byLocation = locA.localeCompare(locB, "hu", {
+      sensitivity: "base",
+      ignorePunctuation: true,
+    });
+
+    if (byLocation !== 0) return byLocation;
+
+    return a.jobStart.localeCompare(b.jobStart);
+  });
+
+  setFiltered(result);
+};
 
   const create = async (form: FormData) => {
     await JobsAPI.create(form);

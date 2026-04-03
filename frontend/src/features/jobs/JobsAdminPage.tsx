@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useJobs } from "./useJobs";
 import JobForm from "./JobForm";
 import Modal from "../../components/Modal";
+import "./JobsAdminPage.css";
+import Lightbox from "../../components/Lightbox";
+
 
 export default function JobsAdminPage() {
   const { jobs, loading, error, search, create, update, remove } = useJobs();
@@ -13,6 +16,8 @@ export default function JobsAdminPage() {
 
   const editingItem = jobs.find((j) => j.id === editingId);
   const detailsItem = jobs.find((j) => j.id === detailsId);
+  const [yearFilter, setYearFilter] = useState("");
+  const [zoomImage, setZoomImage] = useState<string | null>(null);
 
   const closeAll = () => {
     setAdding(false);
@@ -22,6 +27,25 @@ export default function JobsAdminPage() {
 
   return (
     <div className="admin-page">
+      <style>
+        {`
+          @media print {
+            body * {
+              visibility: hidden !important;
+            }
+            #printable-image {
+              visibility: visible !important;
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100vw !important;
+              height: auto !important;
+              max-height: 100vh !important;
+              object-fit: contain !important;
+            }
+          }
+        `}
+      </style>  
 
       {detailsItem && (
         <Modal onClose={closeAll}>
@@ -37,10 +61,11 @@ export default function JobsAdminPage() {
           <p><b>Megjegyzés:</b> {detailsItem.jobRemark}</p>
 
           {detailsItem.jobURL && (
-            <img
-              src={detailsItem.jobURL}
+            <img 
+              src={`http://localhost:8000${detailsItem.jobURL}`}
               alt="Job"
-              style={{ width: "200px", marginTop: "10px" }}
+              style={{ width: "200px", marginTop: "10px", cursor: "pointer" }}
+              onClick={() => setZoomImage(`http://localhost:8000${detailsItem.jobURL}`)}
             />
           )}
         </div>
@@ -56,8 +81,18 @@ export default function JobsAdminPage() {
           value={searchText}
           onChange={(e) => {
             setSearchText(e.target.value);
-            search(e.target.value);
+            search(e.target.value, yearFilter);
           }}
+        />  
+        <input
+          className="search-input"
+          placeholder="Év szűrése (pl. 2024)"
+          value={yearFilter}
+          onChange={(e) => {
+            const y = e.target.value;
+            setYearFilter(y);
+            search(searchText, y);   // továbbítjuk az év szűrőt is
+           }}
         />
 
         <button
@@ -88,7 +123,6 @@ export default function JobsAdminPage() {
         </Modal>
       )}
 
-
       {loading && <p>Betöltés...</p>}
       {error && <p className="error">{error}</p>}
 
@@ -97,6 +131,7 @@ export default function JobsAdminPage() {
           <tr>
             <th>ID</th>
             <th>Helyszín</th>
+            <th>Dátum</th>
             <th>Szolgáltatás</th>
             <th>Ügyfél</th>
             <th>Műveletek</th>
@@ -108,9 +143,9 @@ export default function JobsAdminPage() {
             <tr key={j.id}>
               <td>{j.id}</td>
               <td>{j.jobLocationName.locationName}</td>
+              <td>{j.jobStart}</td>
               <td>{j.jobServiceName.serviceName}</td>
               <td>{j.jobCustomer.customerName}</td>
-
               <td className="admin-actions">
                 <button
                   onClick={() => {
@@ -141,7 +176,9 @@ export default function JobsAdminPage() {
           ))}
         </tbody>
       </table>
-
+      {zoomImage && (
+        <Lightbox src={zoomImage} onClose={() => setZoomImage(null)} />
+      )}
     </div>
   );
 }
