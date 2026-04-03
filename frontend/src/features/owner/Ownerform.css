@@ -1,99 +1,104 @@
-/* --- FORM STÍLUSOK --- */
-
-.admin-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 500px;
-}
-
-.admin-form label {
-  font-weight: bold;
-  margin-top: 8px;
-}
-
-.admin-form input,
-.admin-form textarea {
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
-}
-
-/* --- MODAL OVERLAY (háttér) --- */
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(3px);
+.owner-page {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
-  animation: fadeIn 0.25s ease;
+  background: #1e1e2f; 
+  border-radius: 10px;
+}
+.owner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
 }
 
-/* --- MODAL ABLAK --- */
-
-.modal-window {
-  background: #f2f2f2;
-  padding: 25px 35px;
+.owner-card {
+  width: 100%;
+  max-width: 500px;
   border-radius: 12px;
-  min-width: 280px;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-  animation: popIn 0.25s ease;
+  overflow: hidden;
+  background: #ffffff;
 }
 
-.modal-window p {
-  margin-bottom: 20px;
-  font-size: 17px;
-  font-weight: 500;
+.owner-card-content {
+  padding: 10px 15px;
 }
 
-/* --- MODAL GOMB --- */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 12px;
+  row-gap: 16px;
+  margin-bottom: 18px;
+}
 
-.modal-btn {
-  padding: 10px 20px;
-  background: #4a90e2;
+.form-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-field label {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  background: #f7f7f7;
+  font-weight: bold;
+  color: #444;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+}
+
+.form-field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  background-color: rgb(232, 240, 254);
+
+  border: 1px solid #ccc;
+  border-radius: 0 0 10px 10px;
+
+  transition: 0.2s;
+}
+
+.form-field input:focus {
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 2px rgba(74,108,247,0.2);
+  outline: none;
+}
+
+.save-btn {
+  grid-column: span 2;
+  width: 100%;
+  padding: 12px;
+  background-color: rgb(15, 63, 15);
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 15px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: 0.2s;
 }
 
-.modal-btn:hover {
-  background: #3b7ac0;
+.save-btn:hover {
+  background: rgb(15,127,15);
 }
 
-/* --- SIKER / HIBA SZÍNEK --- */
-
-.success {
-  border-left: 6px solid #4caf50;
-}
-
-.error {
-  border-left: 6px solid #e53935;
-}
-
-/* --- ANIMÁCIÓK --- */
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes popIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
+/* --- MOBILON 1 OSZLOP --- */
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
+
+  .save-btn {
+    grid-column: span 1;
   }
+}
+.owner-image {
+  width: 100%;
+  display: block;
+ /* border-radius: 12px;*/
 }

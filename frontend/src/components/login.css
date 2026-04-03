@@ -1,28 +1,20 @@
-/* A teljes oldal */
 .login-page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #1e1e2f; /* háttérszín a kép alatt */
+  background: #1e1e2f; 
+  border-radius: 10px;
 }
 
-/* A login doboz */
 .login-card {
   width: 100%;
   max-width: 380px;
   border-radius: 12px;
-  overflow: hidden; /* fontos! a kép szépen lekerekedik */
+  overflow: hidden; 
   box-shadow: 0 8px 25px rgba(0,0,0,0.25);
   animation: fadeIn 0.4s ease;
   background: #ffffff;
-}
-.login-page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #1e1e2f;
 }
 
 .login-container {
@@ -42,24 +34,19 @@
   background: #ffffff;
 }
 
-/* A kép – teljes egészében, vágás nélkül */
 .login-image {
   width: 100%;
   display: block;
 }
 
-/* Tartalom a kép alatt */
 .login-card-content {
   padding: 40px 35px;
 }
 
-
-/* A login tartalom */
 .login-card-content {
   padding: 40px 35px;
 }
 
-/* Cím */
 .login-title {
   text-align: center;
   margin-bottom: 25px;
@@ -67,22 +54,24 @@
   color: #333;
 }
 
-/* Label */
+.login-label,
+.login-input {
+  width: 90%;
+  font-size: 15px;  
+  border: 1px solid #ccc;
+}
+
 .login-label {
-  font-size: 14px;
-  margin-bottom: 5px;
+  padding: 10px 12px 10px;
+  border-radius: 10px 10px 0px 0px;
   display: block;
   color: #444;
 }
 
-/* Input */
 .login-input {
-  width: 100%;
   padding: 10px 12px;
   margin-bottom: 18px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 15px;
+  border-radius: 0px 0px 10px 10px;
   transition: 0.2s;
 }
 

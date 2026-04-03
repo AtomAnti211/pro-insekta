@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useOwner } from "./useOwner";
 import OwnerForm from "./OwnerForm";
 import { useNavigate } from "react-router-dom";
+import "./OwnerForm.css";
 
 export default function OwnerAdminPage() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function OwnerAdminPage() {
 
       setTimeout(() => {
         setMessage(null);
-        navigate("/admin");   // ← ide megy vissza
+        navigate("/admin");
       }, 2000);
 
     } catch (err) {
@@ -32,29 +33,49 @@ export default function OwnerAdminPage() {
   };
 
   return (
-    <div>
-      <h1>Owner – Admin</h1>
+    <div className="owner-page">
+      <div className="owner-container">
 
-        {message && (
-          <div className="modal-overlay">
-            <div className="modal-window success">
-             <p>{message}</p>
-             <button className="modal-btn" onClick={() => setMessage(null)}>OK</button>
-            </div>
-         </div>
-        )}
+        {/* A KÁRTYA – a kép is BENNE van */}
+        <div className="owner-card">
 
-        {error && (
-          <div className="modal-overlay">
-           <div className="modal-window error">
-           <p>{error}</p>
-           <button className="modal-btn" onClick={() => setError(null)}>OK</button>
-           </div>
+          {/* FELSŐ KÉP */}
+          <img
+            className="owner-image"
+            src="/images/owner-bg.jpg"
+            alt="owner háttér"
+          />
+
+          {/* TARTALOM */}
+          <div className="owner-card-content">
+            <h2 className="owner-title">Owner - Admin</h2>
+
+            {/* SIKER MODAL */}
+            {message && (
+              <div className="modal-overlay">
+                <div className="modal-window success">
+                  <p>{message}</p>
+                  <button className="modal-btn" onClick={() => setMessage(null)}>OK</button>
+                </div>
+              </div>
+            )}
+
+            {/* HIBA MODAL */}
+            {error && (
+              <div className="modal-overlay">
+                <div className="modal-window error">
+                  <p>{error}</p>
+                  <button className="modal-btn" onClick={() => setError(null)}>OK</button>
+                </div>
+              </div>
+            )}
+
+            {/* A FORM */}
+            <OwnerForm initial={owner} onSubmit={handleSubmit} />
           </div>
-        )}
-  
-      <OwnerForm initial={owner} onSubmit={handleSubmit} />
+
+        </div>
+      </div>
     </div>
   );
 }
-
