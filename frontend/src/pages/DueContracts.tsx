@@ -339,19 +339,14 @@ export default function DueContracts() {
 
       </div>
 
-      {/* PDF GOMB */}
-      <button
-        disabled={selected.length === 0 || pdfLoading}
-        onClick={handleGeneratePdf}
-        className="pdf-button"
-      >
-        {pdfLoading && <div className="spinner"></div>}
-        {pdfLoading ? "PDF készül..." : "PDF munkalap készítése"}
-      </button>
-
       {/* TÉRKÉP */}
       <div style={{ marginTop: "20px" }}>
-        <Map height={400} defaultCenter={[47.53, 21.63]} defaultZoom={9}>
+        <Map
+          height={400} 
+          defaultCenter={[47.53, 21.63]} 
+          defaultZoom={7}  
+          minZoom={6}
+          maxZoom={18}>
           {mapPoints.map(p => (
             <Marker
               key={p.id}
@@ -384,6 +379,16 @@ export default function DueContracts() {
           )}
         </Map>
       </div>
+
+      {/* PDF GOMB */}
+      <button
+        disabled={selected.length === 0 || pdfLoading}
+        onClick={handleGeneratePdf}
+        className="pdf-button"
+      >
+        {pdfLoading && <div className="spinner"></div>}
+        {pdfLoading ? "PDF készül..." : "PDF munkalap készítése"}
+      </button>
 
       {/* TÁBLÁZAT */}
       <table className="data-table">
