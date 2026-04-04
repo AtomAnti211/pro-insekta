@@ -8,9 +8,11 @@ export default function CustomersAdminPage() {
 
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [detailId, setDetailId] = useState<number | null>(null);
   const [searchText, setSearchText] = useState("");
 
   const editingItem = customers.find(c => c.id === editingId);
+  const detailItem = customers.find(c => c.id === detailId);
 
   return (
     <div className="admin-page">
@@ -67,6 +69,22 @@ export default function CustomersAdminPage() {
         </Modal>
       )}
 
+      {/* RÉSZLETEK POPUP */}
+      {detailItem && (
+        <Modal onClose={() => setDetailId(null)}>
+          <div className="note-details">
+            <h2>{detailItem.customerName}</h2>
+
+            <p><strong>ID:</strong> {detailItem.id}</p>
+            <p><strong>Név:</strong> {detailItem.customerName}</p>
+            <p><strong>Email:</strong> {detailItem.customerMail}</p>
+            <p><strong>Cím:</strong> {detailItem.customerAddress}</p>
+
+            <button onClick={() => setDetailId(null)}>Bezárás</button>
+          </div>
+        </Modal>
+      )}
+
       {loading && <p>Betöltés...</p>}
       {error && <p className="error">{error}</p>}
 
@@ -86,7 +104,7 @@ export default function CustomersAdminPage() {
               <td>{c.id}</td>
               <td>{c.customerName}</td>
               <td className="admin-actions">
-                <button onClick={() => setEditingId(c.id)}>Részletek</button>
+                <button onClick={() => setDetailId(c.id)}>Részletek</button>
                 <button onClick={() => setEditingId(c.id)}>Szerkesztés</button>
                 <button className="delete-btn" onClick={() => remove(c.id)}>Törlés</button>
               </td>
