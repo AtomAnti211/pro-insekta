@@ -14,7 +14,7 @@ export function useLocations() {
       const res = await LocationsAPI.list();
       const data = res.data;
 
-      data.sort((a: Location, b: Location) => a.id - b.id);
+      /*data.sort((a: Location, b: Location) => a.id - b.id);*/
 
       setLocations(data);
       setFiltered(data);

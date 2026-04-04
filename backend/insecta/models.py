@@ -95,6 +95,9 @@ class Location(models.Model):
     locationLat = models.FloatField(null=True, blank=True)
     locationLng = models.FloatField(null=True, blank=True)  
 
+    class Meta:
+        ordering = ["locationName"]
+        
     def __str__(self):
         return f"{self.locationCustomer} - {self.locationName}"
 

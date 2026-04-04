@@ -127,6 +127,14 @@ export default function LocationForm({
         value={mail}
         onChange={(e) => setMail(e.target.value)}
       />
+      {/* --- GOMBOK --- */}
+      <div className="form-actions">
+        <button type="submit">Mentés</button>
+        <button type="button" onClick={onCancel}>
+          Mégse
+        </button>
+      </div>
+
 
       {/* --- KÉPFELTÖLTÉS (KÖZVETLENÜL A FORM-BAN!) --- */}
       <p>Kép feltöltése</p>
@@ -174,13 +182,15 @@ export default function LocationForm({
         </Map>
       </div>
 
-      {/* --- GOMBOK --- */}
-      <div className="form-actions">
+      {/* --- GOMBOK ÁTHELYEZVE KÖZÉPRE--- */}
+      {/*  <div className="form-actions">
         <button type="submit">Mentés</button>
         <button type="button" onClick={onCancel}>
           Mégse
         </button>
-      </div>
+      </div> */}
+
+
     </form>
   );
 }
