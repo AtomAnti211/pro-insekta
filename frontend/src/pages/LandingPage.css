@@ -109,6 +109,10 @@
 }
 
 .service-card {
+  width: 100%;
+  height: 380px; /* FIX KÁRTYA MAGASSÁG */
+  display: flex;
+  flex-direction: column;
   background: white;
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -123,6 +127,8 @@
 }
 
 .service-image {
+  height: 180px; /* FIX KÉP MAGASSÁG */
+  object-fit: cover;
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
@@ -131,10 +137,13 @@
 
 .service-card h3 {
   font-size: 1.4rem;
-  margin: 18px 0 10px;
+  margin: 12px 0 8px;
 }
 
 .service-card p {
+  flex: 1; /* kitölti a maradék helyet */
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding: 0 18px 22px;
   font-size: 1rem;
   color: #444;
