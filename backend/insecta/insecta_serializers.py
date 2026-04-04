@@ -27,13 +27,19 @@ class ActivitySerializer(serializers.ModelSerializer):
 class CustomerSerializer(serializers.ModelSerializer):
   class Meta:
         model = Customer
-        fields ='__all__'  
-         
+        fields ='__all__'         
+ 
+ 
 class LocationWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = "__all__"
-
+        extra_kwargs = {
+            "locationCustomer": {"required": False, "allow_null": True},
+            "locationMail": {"required": False, "allow_blank": True},
+            "locationLat": {"required": False, "allow_null": True},
+            "locationLng": {"required": False, "allow_null": True},
+        }  
   
 class LocationReadSerializer(serializers.ModelSerializer):
     locationCustomer = CustomerSerializer(read_only=True)

@@ -4,7 +4,6 @@ import type { Customer } from "../../types/customer";
 import { CustomersAPI } from "../../api/customers";
 import { Map, Marker } from "pigeon-maps";
 
-
 export default function LocationForm({
   initial,
   onSubmit,
@@ -27,11 +26,13 @@ export default function LocationForm({
   const [address, setAddress] = useState(initial?.locationAddress || "");
   const [mail, setMail] = useState(initial?.locationMail || "");
 
+  // PREVIEW
   const [imagePreview, setImagePreview] = useState<string | null>(
-    initial?.locationURL || null
+    initial?.locationURL ? `http://localhost:8000${initial.locationURL}` : null
   );
+
   const [file, setFile] = useState<File | null>(null);
- 
+
   useEffect(() => {
     const loadCustomers = async () => {
       const res = await CustomersAPI.list();
@@ -57,14 +58,21 @@ export default function LocationForm({
     e.preventDefault();
 
     const form = new FormData();
+
     form.append("locationName", name);
     form.append("locationPostCode", String(postCode));
     form.append("locationCity", city);
     form.append("locationAddress", address);
     form.append("locationMail", mail);
 
-    if (customer) form.append("locationCustomer", String(customer));
-    if (file) form.append("locationURL", file);
+    if (customer) {
+      form.append("locationCustomer", String(customer));
+    }
+
+    // 🔥 locationURL mezőt csak akkor küldjük, ha tényleg van új file
+    if (file) {
+      form.append("locationURL", file);
+    }
 
     form.append("locationLat", String(lat));
     form.append("locationLng", String(lng));
@@ -75,6 +83,7 @@ export default function LocationForm({
   return (
     <form onSubmit={handleSubmit} className="note-form">
 
+      {/* --- ALAP ADATOK --- */}
       <input
         placeholder="Helyszín neve"
         value={name}
@@ -119,25 +128,26 @@ export default function LocationForm({
         onChange={(e) => setMail(e.target.value)}
       />
 
-      {/* KÉPFELTÖLTÉS */}
-      <div className="upload-card">
-        <p>Kép feltöltése</p>
+      {/* --- KÉPFELTÖLTÉS (KÖZVETLENÜL A FORM-BAN!) --- */}
+      <p>Kép feltöltése</p>
 
-        {imagePreview ? (
-          <img src={imagePreview} className="upload-preview" />
-        ) : (
-          <div className="upload-placeholder">Nincs kép</div>
-        )}
+      {imagePreview ? (
+        <img src={imagePreview} className="upload-preview" />
+      ) : (
+        <div className="upload-placeholder">Nincs kép</div>
+      )}
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
-        />
-      </div>
+      <input
+        type="file"
+        name="locationURL"
+        accept="image/*"
+        onChange={(e) => {
+          const f = e.target.files?.[0] || null;
+          handleFileChange(f);
+        }}
+      />
 
-      {/* KOORDINÁTÁK */}
-
+      {/* --- KOORDINÁTÁK --- */}
       <input
         type="number"
         value={lat}
@@ -160,27 +170,11 @@ export default function LocationForm({
             setLng(latLng[1]);
           }}
         >
-
           <Marker width={40} anchor={[lat, lng]} />
         </Map>
-
-        <div style={{ marginTop: "10px" }}>
-          <label>Szélesség (lat):</label>
-          <input
-            type="number"
-            value={lat}
-            onChange={(e) => setLat(parseFloat(e.target.value))}
-          />
-
-          <label>Hosszúság (lng):</label>
-          <input
-            type="number"
-            value={lng}
-            onChange={(e) => setLng(parseFloat(e.target.value))}
-          />
-        </div>
       </div>
 
+      {/* --- GOMBOK --- */}
       <div className="form-actions">
         <button type="submit">Mentés</button>
         <button type="button" onClick={onCancel}>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { LocationsAPI } from "../../api/locations";
 import type { Location } from "../../types/location";
-import type { LocationFormData } from "../../types/locationForm";
 
 export function useLocations() {
   const [locations, setLocations] = useState<Location[]>([]);
@@ -44,7 +43,7 @@ export function useLocations() {
   };
 
   const update = async (id: number, form: FormData) => {
-    await LocationsAPI.update(id, form);
+    await LocationsAPI.patch(id, form);
     await load();
   };
 

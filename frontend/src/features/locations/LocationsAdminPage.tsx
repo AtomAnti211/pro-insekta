@@ -5,7 +5,7 @@ import LocationForm from "./LocationForm";
 import Modal from "../../components/Modal";
 import { useMemo } from "react";
 import { Map, Marker, Overlay } from "pigeon-maps";
-
+import "./LocationsAdminPage.css";
 
 export default function LocationsAdminPage() {
   const { locations, loading, error, search, create, update, remove } = useLocations();
@@ -110,9 +110,36 @@ const mapPoints = useMemo(() => {
             <p><b>Város:</b> {detailsItem.locationCity}</p>
             <p><b>Cím:</b> {detailsItem.locationAddress}</p>
             <p><b>Email:</b> {detailsItem.locationMail}</p>
-            <p><b>Kép:</b> {detailsItem.locationURL}</p>
-            <p><b>Szélesség</b> {detailsItem.locationLat}</p>
-            <p><b>Hosszúság</b> {detailsItem.locationLng}</p>  
+            {detailsItem.locationURL  && (
+              <div style={{ marginTop: "10px" }}>
+                <p><b>Kép:</b></p>
+                <img
+                  src={`http://localhost:8000${detailsItem.locationURL}`}
+                  alt="Location"
+                  style={{ width: "250px", borderRadius: "6px", cursor: "pointer" }}
+                 onClick={() =>
+                   window.open(`http://localhost:8000${detailsItem.locationURL}`, "_blank")
+                 }
+                />
+             </div>
+            )}
+
+            {detailsItem.locationLat && detailsItem.locationLng && (
+              <div style={{ marginTop: "20px" }}>
+                <p><b>Térkép:</b></p>
+
+                <Map
+                  height={300}
+                  defaultCenter={[detailsItem.locationLat, detailsItem.locationLng]}
+                  defaultZoom={14}
+                >
+                <Marker
+                  width={40}
+                  anchor={[detailsItem.locationLat, detailsItem.locationLng]}
+                />
+              </Map>
+            </div>
+          )}
 
           </div>
         </Modal>
@@ -127,6 +154,7 @@ const mapPoints = useMemo(() => {
           <tr>
             <th>ID</th>
             <th>Név</th>
+            <th>Cím</th>
             <th>Ügyfél</th>
             <th>Műveletek</th>
           </tr>
@@ -137,6 +165,7 @@ const mapPoints = useMemo(() => {
             <tr key={l.id}>
               <td>{l.id}</td>
               <td>{l.locationName}</td>
+              <td>{l.locationPostCode} {l.locationCity} {l.locationAddress}</td>
               <td>{l.locationCustomer?.customerName}</td>
               <td className="admin-actions">
 

@@ -5,7 +5,13 @@ export const api = axios.create({
   baseURL: API_URL,
   withCredentials: false,
 });
-
+// Location locationURL-hez
+export const patchForm = (url: string, form: FormData) =>
+  api.patch(url, form, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 // -----------------------------
 // JSON alapú kérések
 // -----------------------------
@@ -62,4 +68,6 @@ export const apiCore = {
   patch,
   postForm,
   putForm,
+  patchForm,   // Location locationURL
+
 };
