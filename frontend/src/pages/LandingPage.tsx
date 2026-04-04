@@ -72,7 +72,7 @@ export default function LandingPage() {
 
         <div className="hero-buttons">
           <a href="#contact" className="btn-primary">Kapcsolatfelvétel</a>
-          <Link to="/admin" className="btn-admin">Admin</Link>
+          <Link to="/login" className="btn-admin">Admin</Link>
         </div>
       </section>
 
