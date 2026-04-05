@@ -17,7 +17,7 @@ export default function LandingPage() {
   const [address, setAddress] = useState("");
   const [activityId, setActivityId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
-
+  const [toast, setToast] = useState<string | null>(null);
   // HTML TAGS STRIPPER FOR ACTIVITY DESCRIPTIONS
   const stripHtml = /<[^>]+>/g;
 
@@ -48,8 +48,12 @@ export default function LandingPage() {
 
     try {
       await sendContactMessage(payload);
-      alert("Üzenet elküldve!");
 
+      setToast("Üzenet elküldve!");
+      setTimeout(() => {
+        setToast(null);
+      }, 2000);
+      
       setName("");
       setEmail("");
       setPhone("");
@@ -64,6 +68,7 @@ export default function LandingPage() {
 
   return (
     <div className="landing">
+      {toast && <div className="toast">{toast}</div>}
 
       {/* HERO */}
       <section className="hero">

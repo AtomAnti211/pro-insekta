@@ -10,6 +10,7 @@ export default function OwnerAdminPage() {
 
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   if (loading) return <p>Betöltés...</p>;
   if (!owner) return <p>Nincs owner adat.</p>;
@@ -18,10 +19,9 @@ export default function OwnerAdminPage() {
     try {
       await update(form);
       setError(null);
-      setMessage("Sikeres mentés!");
-
+      setToast("Sikeres mentés!");
       setTimeout(() => {
-        setMessage(null);
+        setToast(null);
         navigate("/admin");
       }, 2000);
 
@@ -34,23 +34,20 @@ export default function OwnerAdminPage() {
 
   return (
     <div className="owner-page">
+      {toast && <div className="toast">{toast}</div>}
       <div className="owner-container">
 
-        {/* A KÁRTYA – a kép is BENNE van */}
         <div className="owner-card">
 
-          {/* FELSŐ KÉP */}
           <img
             className="owner-image"
             src="/images/owner-bg.jpg"
             alt="owner háttér"
           />
-
-          {/* TARTALOM */}
+       
           <div className="owner-card-content">
             <h2 className="owner-title">Owner - Admin</h2>
-
-            {/* SIKER MODAL */}
+         
             {message && (
               <div className="modal-overlay">
                 <div className="modal-window success">
@@ -60,7 +57,6 @@ export default function OwnerAdminPage() {
               </div>
             )}
 
-            {/* HIBA MODAL */}
             {error && (
               <div className="modal-overlay">
                 <div className="modal-window error">
@@ -70,7 +66,6 @@ export default function OwnerAdminPage() {
               </div>
             )}
 
-            {/* A FORM */}
             <OwnerForm initial={owner} onSubmit={handleSubmit} />
           </div>
 

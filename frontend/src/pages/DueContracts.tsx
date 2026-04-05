@@ -16,8 +16,7 @@ export default function DueContracts() {
   const [selected, setSelected] = useState<number[]>([]);
   const [pdfLoading, setPdfLoading] = useState<boolean>(false);
   const [toast, setToast] = useState<string | null>(null);
-
-    // --- Opciók előkészítése ---
+  
   const customerOptions = useMemo(() => {
     return [...new Set(contracts.map(c => c.customerName))]
       .map(name => ({ value: name, label: name }))
@@ -103,18 +102,13 @@ export default function DueContracts() {
         : b
     );
 
-    // 3) Sor kiemelése
     setHighlightRow(earliest.contractId);
 
-    // 4) Scroll a sorhoz
     setTimeout(() => {
       const el = document.getElementById(`row-${earliest.contractId}`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 50);
   }
-  // -----------------------------
-  // 2) PDF generálás
-  // -----------------------------
   async function handleGeneratePdf() {
     if (selected.length === 0) return;
 
@@ -139,9 +133,7 @@ export default function DueContracts() {
     setToast("A PDF elkészült!");
     setTimeout(() => setToast(null), 3000);
   }
-  // -----------------------------
-  // 3) Szerződések lekérése
-  // -----------------------------
+
   useEffect(() => {
     getDueFullContracts()
       .then((data: DueContract[]) => {
@@ -151,7 +143,6 @@ export default function DueContracts() {
             new Date(b.nextDueDate).getTime()
         );
         setContracts(sorted);
-        // --- DEFAULT: minden vevő és város kiválasztva ---
          const allCustomers = [...new Set(sorted.map(c => c.customerName))]
           .map(name => ({ value: name, label: name }))
           .sort((a, b) => a.label.localeCompare(b.label));
@@ -168,7 +159,7 @@ export default function DueContracts() {
   }, []);
 
   // -----------------------------
-  // 4) Szűrés (MEMOIZÁLVA)
+  // Szűrés (MEMOIZÁLVA)
   // -----------------------------
   const filtered = useMemo(() => {
     return contracts.filter(c => {
@@ -190,7 +181,7 @@ export default function DueContracts() {
 
 
 // -----------------------------
-// 5) MapPoints (MEMOIZÁLVA)
+// MapPoints (MEMOIZÁLVA)
 // -----------------------------
   const mapPoints = useMemo(() => {
     return filtered
@@ -205,7 +196,7 @@ export default function DueContracts() {
 
 
   // -----------------------------
-  // 6 Render
+  // Render
   // -----------------------------
   if (loading) return <p>Betöltés...</p>;
 
@@ -216,10 +207,8 @@ export default function DueContracts() {
 
       <h2>Esedékes szerződések (0–12 hónap)</h2>
 
-      {/* SZŰRŐK */}
       <div className="filters">
 
-        {/* VEVŐ */}
         <div className="dual-listbox">
           <div className="list selected">
             <label>Kiválasztott vevők</label>
@@ -252,7 +241,6 @@ export default function DueContracts() {
           </div>
         </div>
 
-        {/* VÁROS */}
         <div className="dual-listbox">
           <div className="list selected">
             <label>Kiválasztott városok</label>
@@ -285,7 +273,6 @@ export default function DueContracts() {
           </div>
         </div>
 
-        {/* HÓNAP */}
         <div className="dual-listbox">
           <div className="list selected">
             <label>Kiválasztott hónapok</label>
@@ -320,7 +307,6 @@ export default function DueContracts() {
 
       </div>
 
-      {/* --- GOMBOK BLOKKJA --- */}
       <div className="filter-buttons">
 
         <button
@@ -339,7 +325,6 @@ export default function DueContracts() {
 
       </div>
 
-      {/* TÉRKÉP */}
       <div style={{ marginTop: "20px" }}>
         <Map
           height={400} 
@@ -380,7 +365,6 @@ export default function DueContracts() {
         </Map>
       </div>
 
-      {/* PDF GOMB */}
       <button
         disabled={selected.length === 0 || pdfLoading}
         onClick={handleGeneratePdf}
@@ -390,7 +374,6 @@ export default function DueContracts() {
         {pdfLoading ? "PDF készül..." : "PDF munkalap készítése"}
       </button>
 
-      {/* TÁBLÁZAT */}
       <table className="data-table">
         <thead>
           <tr>
@@ -400,7 +383,7 @@ export default function DueContracts() {
             <th>Helyszín</th>
             <th>Szolgáltatás</th>
             <th>Következő esedékesség</th>
-            <th>Hátra lévő hónap</th>
+            <th>Hátralévő hónap</th>
           </tr>
         </thead>
         <tbody>

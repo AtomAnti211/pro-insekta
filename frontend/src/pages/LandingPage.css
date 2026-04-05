@@ -110,7 +110,7 @@
 
 .service-card {
   width: 100%;
-  height: 380px; /* FIX KÁRTYA MAGASSÁG */
+  height: 380px;  /*FIX KÁRTYA MAGASSÁG */
   display: flex;
   flex-direction: column;
   background: white;
@@ -130,7 +130,6 @@
   height: 180px; /* FIX KÉP MAGASSÁG */
   object-fit: cover;
   width: 100%;
-  aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
 }
