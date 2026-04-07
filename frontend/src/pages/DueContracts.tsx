@@ -6,14 +6,15 @@ import { useCallback } from "react";
 
 import "./Duecontracts.css";
 
-import { Map, Marker, Overlay } from "pigeon-maps";
+import { Map as PigeonMap, Marker, Overlay } from "pigeon-maps";
 
 type OptionType = { value: string | number; label: string };
 
 export default function DueContracts() {
   const [contracts, setContracts] = useState<DueContract[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selected, setSelected] = useState<number[]>([]);
+  //const [selected, setSelected] = useState<number[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
   const [pdfLoading, setPdfLoading] = useState<boolean>(false);
   const [toast, setToast] = useState<string | null>(null);
   
@@ -79,11 +80,11 @@ export default function DueContracts() {
   // -----------------------------
   // 1) Checkbox váltása
   // -----------------------------
-  function toggleSelect(id: number) {
+  function toggleSelect(rowKey: string) {
     setSelected(prev =>
-      prev.includes(id)
-        ? prev.filter(x => x !== id)
-        : [...prev, id]
+      prev.includes(rowKey)
+        ? prev.filter(x => x !== rowKey)
+        : [...prev, rowKey]
     );
   }
 
@@ -112,12 +113,19 @@ export default function DueContracts() {
   async function handleGeneratePdf() {
     if (selected.length === 0) return;
 
+    // 🔥 A rowKey-kből (pl. "24-0") visszaalakítjuk a contractId-kat (pl. 24)
+    const contractIds = Array.from(
+      new Set(
+        selected.map(key => Number(key.split("-")[0]))
+      )
+    );
+
     setPdfLoading(true);
 
     const response = await fetch("http://localhost:8000/api/contracts/workorder-pdf/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: selected })
+      body: JSON.stringify({ ids: contractIds })
     });
 
     const blob = await response.blob();
@@ -184,14 +192,28 @@ export default function DueContracts() {
 // MapPoints (MEMOIZÁLVA)
 // -----------------------------
   const mapPoints = useMemo(() => {
-    return filtered
+    const unique = new Map<string, {
+      id: string;
+      lat: number;
+      lng: number;
+      label: string;
+    }>();
+
+    filtered
       .filter(c => c.locationLat && c.locationLng)
-      .map(c => ({
-        id: c.contractId,
-        lat: c.locationLat!,
-        lng: c.locationLng!,
-        label: `${c.customerName} – ${c.locationCity}`
-      }));
+      .forEach(c => {
+        const key = `${c.locationLat}-${c.locationLng}`;
+        if (!unique.has(key)) {
+          unique.set(key, {
+            id: key,
+            lat: c.locationLat!,
+            lng: c.locationLng!,
+            label: `${c.customerName} – ${c.locationCity}`
+          });
+        }
+      });
+
+    return Array.from(unique.values());
   }, [filtered]);
 
 
@@ -326,7 +348,7 @@ export default function DueContracts() {
       </div>
 
       <div style={{ marginTop: "20px" }}>
-        <Map
+        <PigeonMap
           height={400} 
           defaultCenter={[47.53, 21.63]} 
           defaultZoom={7}  
@@ -362,7 +384,7 @@ export default function DueContracts() {
               </div>
             </Overlay>
           )}
-        </Map>
+        </PigeonMap>
       </div>
 
       <button
@@ -387,30 +409,32 @@ export default function DueContracts() {
           </tr>
         </thead>
         <tbody>
-          {filtered.map(c => (
-            <tr
-              key={c.contractId}
-              id={`row-${c.contractId}`}
-              className={highlightRow === c.contractId ? "highlight" : ""}
-            >
-              <td>
-                <input
-                  type="checkbox"
-                  checked={selected.includes(c.contractId)}
-                  onChange={() => toggleSelect(c.contractId)}
-                />
-              </td>
-              <td>{c.contractId}</td>
-              <td>{c.customerName}</td>
-              <td>{c.locationPostCode} – {c.locationCity} – {c.locationAddress}</td>
-              <td>{c.serviceName}</td>
-              <td>{c.nextDueDate}</td>
-              <td>{c.monthsUntilDue}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          {filtered.map(c => {
+            const rowKey = `${c.contractId}-${c.monthsUntilDue}`;
 
+            return (
+              <tr
+                key={rowKey}
+                className={highlightRow === c.contractId ? "highlight" : ""}
+              >
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(rowKey)}
+                    onChange={() => toggleSelect(rowKey)}
+                  />
+                </td>
+                <td>{c.contractId}</td>
+                <td>{c.customerName}</td>
+                <td>{c.locationPostCode} – {c.locationCity} – {c.locationAddress}</td>
+                <td>{c.serviceName}</td>
+                <td>{c.nextDueDate}</td>
+                <td>{c.monthsUntilDue}</td>
+              </tr>
+            );
+          })}
+        </tbody> 
+      </table>
     </div>
   );
 }
