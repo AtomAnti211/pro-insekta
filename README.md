@@ -1,27 +1,167 @@
-# pro-insekta
+# 🐞 PRO-INSECTA – Rovarirtó Admin Rendszer
 
-indítás windows-on: 
-start_project.bat futtatása
+A PRO-INSECTA egy Django + React alapú adminisztrációs rendszer, amely
+ügyfelek, helyszínek, szolgáltatások, szerződések, tevékenységek és PDF-ek kezelésére készült.
 
-manuálisan:
--backend:
-cd pro-insecta
+A projekt Windows környezetre optimalizált, és tartalmaz egy teljesen automatizált indító fájlt.
+
+---
+
+## 🚀 Funkciók
+
+- Ügyfélkezelés
+- Helyszínek térképes koordináta-választással
+- Szolgáltatások és tevékenységek adminisztrációja
+- Szerződés generálás (PDF)
+- Esedékes szerződések listázása
+- Munkalapok feltöltése (PDF)
+- Modern, reszponzív admin felület (React + Vite)
+- Django REST API backend
+
+---
+
+## 📦 Szükséges szoftverek
+
+- **Python 3.12**
+- **Node.js + npm**
+- **Git**
+- Ajánlott: Google Chrome
+
+---
+
+## 📥 Telepítés
+
+### 1. Projekt klónozása
+
+```bash
+git clone https://github.com/AtomAnti211/pro-insekta
+cd pro-insekta
+```
+
+---
+
+## ⚡ Ajánlott indítás – `start_project.bat`
+
+A projekt tartalmaz egy automatizált indító fájlt:
+
+```
+start_project.bat
+```
+
+Ez a script automatikusan:
+
+- létrehozza a virtuális környezetet (ha nincs)
+- telepíti a Python csomagokat
+- telepíti a Playwright-ot (ha szükséges)
+- lefuttatja a migrációkat
+- telepíti a frontend csomagokat (ha szükséges)
+- külön ablakban elindítja a backend-et
+- külön ablakban elindítja a frontend-et
+- automatikusan megnyitja a böngészőt
+
+### Indítás:
+
+```bash
+start_project.bat
+```
+
+### Elérhető szolgáltatások:
+
+- Backend: http://localhost:8000  
+- Frontend: http://localhost:5173  
+
+---
+
+## 🛠 Manuális indítás (opcionális)
+
+### 1. Backend telepítése
+
+```bash
 py -3.12 -m venv venv
-venv\Scripts\activate
+call venv\Scripts\activate
 pip install -r requirements.txt
+```
 
-# playwright -hoz szükslges , csak egyszer kell lefuttatni minden gépen, agol a progekt fut.
-playwright install chromium  
+### Playwright telepítése (csak egyszer szükséges)
 
+```bash
+playwright install chromium
+```
+
+### Django migrációk és indítás
+
+```bash
 cd backend
-python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver
+py manage.py makemigrations
+py manage.py migrate
+py manage.py runserver
+```
 
--frontend:
+Backend URL:  
+http://localhost:8000/
+
+---
+
+### 2. Frontend telepítése
+
+```bash
 cd frontend
 npm install
 npm run dev
+```
+
+Frontend URL:  
+http://localhost:5173/
+
+---
+
+## 🔑 Admin felhasználó létrehozása
+
+```bash
+cd backend
+py manage.py createsuperuser
+```
+
+---
+
+## 📋 Modulok
+
+- Notes
+- Activities
+- Customers
+- Locations (térképes koordináta választás)
+- Services
+- Contracts
+- Due-Contract (PDF generálás)
+- Jobs (PDF feltöltés)
+- Owner
+
+---
+
+## 📁 Projektstruktúra
+
+```
+pro-insekta/
+│
+├── backend/        # Django backend
+├── frontend/       # React + Vite frontend
+├── venv/           # Python virtuális környezet
+├── requirements.txt
+└── start_project.bat
+```
+
+---
+
+## ✔ A rendszer készen áll a használatra
+
+A `start_project.bat` futtatása után a teljes rendszer automatikusan elindul,
+és a böngészőben megnyílik a frontend felület.
+
+---
+
+## 📜 Licenc
+
+Ez a projekt oktatási célra készült.
 
 
 ### Publikus végpontok 
@@ -65,9 +205,6 @@ npm run dev
 - `PUT /jobs/<id>/` 
 - `DELETE /jobs/<id>/` 
 
-## Fejlesztés 
-
-A projekt Django REST Frameworkre épül, Python 3.12 ajánlott.
 
                    ┌────────────────┐
                    │     Owner      │
