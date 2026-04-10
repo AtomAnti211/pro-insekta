@@ -6,7 +6,7 @@ echo ==========================================
 echo.
 
 REM --- Projekt gyökér mappa ---
-set PROJECT_DIR=%~dp0
+set "PROJECT_DIR=%~dp0\"
 
 REM --- Python ellenőrzése ---
 echo Python ellenorzese...
