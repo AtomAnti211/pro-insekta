@@ -194,9 +194,9 @@ Az alábbi végpontok a `backend/insecta/urls.py` fájlban találhatók.
 
 ### 👤 Tulajdonos (Owner)
 
-| URL         | Metódus | Leírás                      |
-|-------------|---------|-----------------------------|
-| `/owner/`   | GET     | Tulajdonosi adatok lekérése |
+| URL         | Metódus  | Leírás                      |
+|-------------|----------|-----------------------------|
+| `/owner/`   | GET, PUT | Tulajdonosi adatok lekérése |
 
 ---
 
