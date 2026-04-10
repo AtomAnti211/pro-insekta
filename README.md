@@ -229,12 +229,12 @@ Az alábbi végpontok a `backend/insecta/urls.py` fájlban találhatók.
 
 ### 📄 Szerződések (Contracts)
 
-| URL                           | Metódus | Leírás                                |
-|-------------------------------|---------|---------------------------------------|
-| `/contracts/`                 | GET, POST | Szerződések listázása / létrehozása |
-| `/contracts/<id>/`            | GET, PUT, DELETE | Szerződés részletei          |
-| `/contracts/due-full/`        | GET     | Esedékes szerződések teljes listája   |
-| `/contracts/workorder-pdf/`   | POST    | Munkalap PDF generálása               |
+| URL                           | Metódus          | Leírás                              |
+|-------------------------------|------------------|-------------------------------------|
+| `/contracts/`                 | GET, POST        | Szerződések listázása / létrehozása |
+| `/contracts/<id>/`            | GET, PUT, DELETE | Szerződés részletei                 |
+| `/contracts/due-full/`        | GET              | Esedékes szerződések teljes listája |
+| `/contracts/workorder-pdf/`   | POST             | Munkalap PDF generálása             |
 
 ---
 
@@ -379,93 +379,6 @@ A PRO‑INSECTA adatmodellje modulokra bontva, kapcsolatokkal:
 
 ---
 
-```mermaid
-erDiagram
-
-    OWNER ||--o{ CUSTOMER : has
-    CUSTOMER ||--o{ LOCATION : has
-    LOCATION ||--o{ CONTRACT : has
-    CONTRACT }o--|| SERVICE : "refers to"
-
-    LOCATION ||--o{ JOB : has
-    SERVICE ||--o{ JOB : "job type"
-
-    ACTIVITY ||--o{ NOTE : "activity notes"
-
-    ACTIVITY ||--o{ CONTACTMESSAGE : "optional"
-    CONTACTMESSAGE ||--o{ NOTE : "auto-generated"
-
-    OWNER {
-        int id
-        string ownerName
-        string ownerMail
-        string ownerPhone
-        string ownerAddress
-    }
-
-    CUSTOMER {
-        int id
-        string customerName
-        string customerEmail
-        string customerPhone
-        string customerAddress
-    }
-
-    LOCATION {
-        int id
-        string locationName
-        string locationAddress
-        float locationLat
-        float locationLng
-        string locationUrl
-    }
-
-    CONTRACT {
-        int id
-        string contractName
-        date contractStart
-        date contractEnd
-        string contractCustomerName
-    }
-
-    SERVICE {
-        int id
-        string serviceName
-        string serviceDescr
-    }
-
-    JOB {
-        int id
-        date jobDate
-        string jobRemark
-        string jobUrl
-    }
-
-    ACTIVITY {
-        int id
-        string activityName
-        string activityDescr
-        string activityUrl
-    }
-
-    NOTE {
-        int id
-        string noteText
-        date noteCreated
-    }
-
-    CONTACTMESSAGE {
-        int id
-        string name
-        string email
-        string phone
-        string address
-        string message
-        date created_at
-    }
-```
-
-
 ## ✔ A rendszer készen áll a használatra
 
 A `start_project.bat` futtatása után a teljes rendszer automatikusan elindul,
@@ -475,7 +388,5 @@ A `start_project.bat` futtatása után a teljes rendszer automatikusan elindul,
 
 ## 📜 Licenc
 
-Ez a projekt oktatási célra készült.
-
-
-
+A projekt vizsgamunkaként készült, azonban a forráskód és a dokumentáció szerzői jogvédelem alatt áll.  
+A felhasználás kizárólag a szerző engedélyével történhet.
