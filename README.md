@@ -15,6 +15,8 @@ A projekt Windows környezetre optimalizált, és tartalmaz egy teljesen automat
 - Szerződés generálás (PDF)
 - Esedékes szerződések listázása
 - Munkalapok feltöltése (PDF)
+- Kapcsolatfelvételi üzenetek kezelése (Contact Messages)
+- Automatikus Note generálás ContactMessage alapján
 - Modern, reszponzív admin felület (React + Vite)
 - Django REST API backend
 
@@ -135,6 +137,7 @@ py manage.py createsuperuser
 - Due-Contract (PDF generálás)
 - Jobs (PDF feltöltés)
 - Owner
+- Contact Messages (kapcsolatfelvételi űrlap, automatikus Note generálás)
 
 ---
 
@@ -143,14 +146,325 @@ py manage.py createsuperuser
 ```
 pro-insekta/
 │
-├── backend/        # Django backend
-├── frontend/       # React + Vite frontend
-├── venv/           # Python virtuális környezet
-├── requirements.txt
-└── start_project.bat
-```
+├── backend/
+│   ├── config/              # Django projekt beállítások
+│   ├── insecta/             # Fő alkalmazás
+│   │   ├── models.py        # Modellek
+│   │   ├── views/           # API végpontok
+│   │   ├── migrations/      # Adatbázis változások
+│   │   ├── static/          # Statikus fájlok
+│   │   ├── templates/       # HTML sablonok (PDF)
+│   │   ├── tests/           # Automatizált tesztek
+│   │   ├── serializers.py   # Serializer-ek
+│   │   ├── signals.py       # Automatikus folyamatok (pl. ContactMessage → Note)
+│   │   └── urls.py
+│   │
+│   └── media/               # Feltöltött képek, PDF-ek
+│
+└── frontend/
+    ├── public/              # Nyilvános statikus fájlok
+    └── src/
+        ├── App.tsx          # Fő komponens, routing
+        ├── api/             # Backend API hívások
+        ├── components/      # UI elemek
+        ├── features/        # Modulok (customers, jobs, notes, stb.)
+        ├── pages/           # Oldalak
+        ├── layout/          # Oldalstruktúra
+        ├── styles/          # Globális CSS
+        └── types/           # TypeScript típusok
 
 ---
+## 📡 Backend API végpontok (Django REST)
+
+Az alábbi végpontok a `backend/insecta/urls.py` fájlban találhatók.
+
+---
+
+### 🔓 Publikus végpontok
+
+| URL                     | Metódus           | Leírás                                       |
+|-------------------------|-------------------|----------------------------------------------|
+| `/activities/`          | GET, POST         | Aktivitások listázása / létrehozása          |
+| `/activities/<id>/`     | GET, PUT, DELETE  | Aktivitás részletei                          |
+| `/notes/`               | GET, POST         | Jegyzetek listázása / létrehozása            |
+| `/notes/<id>/`          | GET, PUT, DELETE  | Jegyzet részletei                            |
+| `/contact/`             | POST              | Kapcsolatfelvételi üzenet küldése            |
+
+---
+
+### 👤 Tulajdonos (Owner)
+
+| URL         | Metódus | Leírás                      |
+|-------------|---------|-----------------------------|
+| `/owner/`   | GET     | Tulajdonosi adatok lekérése |
+
+---
+
+### 👥 Ügyfelek (Customers)
+
+| URL                     | Metódus           | Leírás                                       |
+|-------------------------|-------------------|----------------------------------------------|
+| `/customers/`           | GET, POST         | Ügyfelek listázása / létrehozása             |
+| `/customers/<id>/`      | GET, PUT, DELETE  | Ügyfél részletei                             |
+
+---
+
+### 📍 Helyszínek (Locations)
+
+| URL                     | Metódus           | Leírás                                       |
+|-------------------------|-------------------|----------------------------------------------|
+| `/locations/`           | GET, POST         | Helyszínek listázása / létrehozása           |
+| `/locations/<id>/`      | GET, PUT, DELETE  | Helyszín részletei                           |
+
+---
+
+### 🛠 Szolgáltatások (Services)
+
+| URL                     | Metódus           | Leírás                                       |
+|-------------------------|-------------------|----------------------------------------------|
+| `/services/`            | GET, POST         | Szolgáltatások listázása / létrehozása       |
+| `/services/<id>/`       | GET, PUT, DELETE  | Szolgáltatás részletei                       |
+
+---
+
+### 📄 Szerződések (Contracts)
+
+| URL                           | Metódus | Leírás                                |
+|-------------------------------|---------|---------------------------------------|
+| `/contracts/`                 | GET, POST | Szerződések listázása / létrehozása |
+| `/contracts/<id>/`            | GET, PUT, DELETE | Szerződés részletei          |
+| `/contracts/due-full/`        | GET     | Esedékes szerződések teljes listája   |
+| `/contracts/workorder-pdf/`   | POST    | Munkalap PDF generálása               |
+
+---
+
+### 🧹 Munkák (Jobs)
+
+| URL                     | Metódus           | Leírás                                       |
+|-------------------------|-------------------|----------------------------------------------|
+| `/jobs/`                | GET, POST         | Munkák listázása / létrehozása               |
+| `/jobs/<id>/`           | GET, PUT, DELETE  | Munka részletei                              |
+
+---
+
+## 🧭 Frontend útvonalak (React Router)
+
+Az alábbi útvonalak a `frontend/src/App.tsx` fájlban találhatók.
+
+---
+
+### 🔓 Publikus oldalak
+
+| Útvonal             | Komponens              | Leírás                      |
+|---------------------|------------------------|-----------------------------|
+| `/`                 | `LandingPage`          | Nyitóoldal                  |
+| `/activities/:id`   | `ActivityDetailPage`   | Aktivitás részletező        |
+| `/login`            | `Login`                | Bejelentkezés               |
+
+---
+
+### 🔐 Admin felület (védett útvonalak)
+
+Minden admin oldal `ProtectedRoute` alatt fut, csak bejelentkezett felhasználó érheti el.
+
+| Útvonal                   | Komponens                | Leírás                         |
+|---------------------------|--------------------------|--------------------------------|
+| `/admin/dashboard`        | `Dashboard`              | Admin főoldal                  |
+| `/admin/notes`            | `NotesAdminPage`         | Jegyzetek kezelése             |
+| `/admin/activities`       | `ActivitiesAdminPage`    | Aktivitások kezelése           |
+| `/admin/owner`            | `OwnerAdminPage`         | Tulajdonosi adatok             |
+| `/admin/services`         | `ServicesAdminPage`      | Szolgáltatások                 |
+| `/admin/customers`        | `CustomersAdminPage`     | Ügyfelek                       |
+| `/admin/locations`        | `LocationsAdminPage`     | Helyszínek                     |
+| `/admin/contracts`        | `ContractsAdminPage`     | Szerződések                    |
+| `/admin/jobs`             | `JobsAdminPage`          | Munkák                         |
+| `/admin/due-contracts`    | `DueContracts`           | Esedékes szerződések           |
+
+---
+
+## 🤖 Automatikus Note generálás (ContactMessage → Note)
+
+A rendszer minden beérkező kapcsolatfelvételi üzenetből (`/contact/`) automatikusan létrehoz egy Note bejegyzést:
+
+- név  
+- email  
+- telefon  
+- üzenet  
+- kapcsolódó Activity  
+- időbélyeg  
+
+Ez a funkció a `signals.py` fájlban valósul meg.
+
+---
+
+## 🧩 Rendszerarchitektúra – UML‑szerű modell diagram
+
+A PRO‑INSECTA adatmodellje modulokra bontva, kapcsolatokkal:
+
+──────────────────────────────────────────────────────────────
+
+                   ┌──────────────────────────┐
+                   │          Owner           │
+                   │   (a cég adatai, 1 db)   │
+                   └──────────────┬───────────┘
+                                  │
+                                  ▼
+
+┌──────────────────────────┐       ┌──────────────────────────┐
+│        Customer          │ 1 ─∞  │         Location         │
+│ (ügyfél, kapcsolattartó) │       │ (helyszín,cím,koordináta)│
+└──────────────────────────┘       └──────────────┬───────────┘
+                                                  │
+                                                  │ 1 helyszínhez több szerződés
+                                                  ▼
+
+                                         ┌──────────────────────────┐
+                                         │         Contract         │
+                                         │ (szerződés, PDF, dátumok)│
+                                         └──────────────┬───────────┘
+                                                        │
+                                                        │ minden szerződés egy szolgáltatásra szól
+                                                        ▼
+
+                                         ┌──────────────────────────┐
+                                         │         Service          │
+                                         │   (szolgáltatás típusa)  │
+                                         └──────────────────────────┘
+
+
+──────────────────────────────────────────────────────────────
+
+   ┌──────────────────────────┐
+   │           Job            │
+   │ (elvégzett munka, PDF)   │
+   └──────────────┬───────────┘
+                  │
+                  │ minden munka egy helyszínhez és egy szolgáltatáshoz tartozik
+                  ▼
+            (Location + Service)
+
+
+──────────────────────────────────────────────────────────────
+
+   ┌──────────────────────────┐
+   │         Activity         │
+   │       (tevékenység)      │
+   └──────────────┬───────────┘
+                  │
+                  │ több Note hivatkozhat rá
+                  ▼
+
+   ┌──────────────────────────┐
+   │           Note           │
+   │ (bejegyzés, feladat)     │
+   └──────────────────────────┘
+
+
+──────────────────────────────────────────────────────────────
+
+   ┌──────────────────────────┐
+   │     ContactMessage       │
+   │(kapcsolatfelvételi űrlap)│
+   └──────────────┬───────────┘
+                  │
+                  │ minden ContactMessage → automatikus Note generálás
+                  ▼
+
+   ┌──────────────────────────┐
+   │           Note           │
+   │ (automatikusan létrejön) │
+   └──────────────────────────┘
+
+──────────────────────────────────────────────────────────────
+
+---
+
+```mermaid
+erDiagram
+
+    OWNER ||--o{ CUSTOMER : has
+    CUSTOMER ||--o{ LOCATION : has
+    LOCATION ||--o{ CONTRACT : has
+    CONTRACT }o--|| SERVICE : "refers to"
+
+    LOCATION ||--o{ JOB : has
+    SERVICE ||--o{ JOB : "job type"
+
+    ACTIVITY ||--o{ NOTE : "activity notes"
+
+    ACTIVITY ||--o{ CONTACTMESSAGE : "optional"
+    CONTACTMESSAGE ||--o{ NOTE : "auto-generated"
+
+    OWNER {
+        int id
+        string ownerName
+        string ownerMail
+        string ownerPhone
+        string ownerAddress
+    }
+
+    CUSTOMER {
+        int id
+        string customerName
+        string customerEmail
+        string customerPhone
+        string customerAddress
+    }
+
+    LOCATION {
+        int id
+        string locationName
+        string locationAddress
+        float locationLat
+        float locationLng
+        string locationUrl
+    }
+
+    CONTRACT {
+        int id
+        string contractName
+        date contractStart
+        date contractEnd
+        string contractCustomerName
+    }
+
+    SERVICE {
+        int id
+        string serviceName
+        string serviceDescr
+    }
+
+    JOB {
+        int id
+        date jobDate
+        string jobRemark
+        string jobUrl
+    }
+
+    ACTIVITY {
+        int id
+        string activityName
+        string activityDescr
+        string activityUrl
+    }
+
+    NOTE {
+        int id
+        string noteText
+        date noteCreated
+    }
+
+    CONTACTMESSAGE {
+        int id
+        string name
+        string email
+        string phone
+        string address
+        string message
+        date created_at
+    }
+```
+
 
 ## ✔ A rendszer készen áll a használatra
 
@@ -164,98 +478,4 @@ A `start_project.bat` futtatása után a teljes rendszer automatikusan elindul,
 Ez a projekt oktatási célra készült.
 
 
-### Publikus végpontok 
-- `GET /activities/` 
-- `POST /activities/` 
-- `GET /activities/<id>/` 
-- `PUT /activities/<id>/` 
-- `DELETE /activities/<id>/`
-- `GET /notes/` 
-- `POST /notes/` 
-- `GET /notes/<id>/` 
-- `PUT /notes/<id>/` 
-- `DELETE /notes/<id>/` 
 
-### Admin végpontok
-- `GET /owner/` 
-- `PUT /owner/` 
-- `GET /customers/` 
-- `POST /customers/` 
-- `GET /customers/<id>/` 
-- `PUT /customers/<id>/` 
-- `DELETE /customers/<id>/` 
-- `GET /locations/` 
-- `POST /locations/` 
-- `GET /locations/<id>/` 
-- `PUT /locations/<id>/` 
-- `DELETE /locations/<id>/` 
-- `GET /services/` 
-- `POST /services/` 
-- `GET /services/<id>/` 
-- `PUT /services/<id>/` 
-- `DELETE /services/<id>/` 
-- `GET /contracts/` 
-- `POST /contracts/` 
-- `GET /contracts/<id>/` 
-- `PUT /contracts/<id>/` 
-- `DELETE /contracts/<id>/` 
-- `GET /jobs/` 
-- `POST /jobs/` 
-- `GET /jobs/<id>/` 
-- `PUT /jobs/<id>/` 
-- `DELETE /jobs/<id>/` 
-
-
-                   ┌────────────────┐
-                   │     Owner      │
-                   │  (a cég adatai)│
-                   └───────┬────────┘
-                           │
-                           │ 1 db van összesen
-                           ▼
-
-┌────────────────┐       ┌────────────────┐
-│   Customer     │ 1---∞ │    Location    │
-│ (ügyfél)       │       │ (helyszín)     │
-└────────────────┘       └────────────────┘
-                               │
-                               │ 1 helyszínhez több szerződés
-                               ▼
-
-                       ┌────────────────┐
-                       │    Contract    │
-                       │ (szerződés)    │
-                       └───────┬────────┘
-                               │
-                               │ minden szerződés egy szolgáltatásra szól
-                               ▼
-
-                       ┌────────────────┐
-                       │    Service     │
-                       │ (szolgáltatás) │
-                       └────────────────┘
-
-
-   ┌────────────────┐
-   │     Job        │
-   │ (elvégzett munka)
-   └───────┬────────┘
-           │
-           │ minden munka egy helyszínhez és egy szolgáltatáshoz tartozik
-           ▼
-      (Location + Service)
-
-
-   ┌────────────────┐
-   │    Activity    │
-   │ (tevékenység)  │
-   └───────┬────────┘
-           │
-           │ több Note hivatkozhat rá
-           ▼
-
-   ┌────────────────┐
-   │      Note      │
-   │ (bejegyzés,    │
-   │  feladat)      │
-   └────────────────┘
