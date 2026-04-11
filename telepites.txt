@@ -1,0 +1,111 @@
+==========================================
+TELEPÍTÉSI ÉS INDÍTÁSI ÚTMUTATÓ
+==========================================
+
+A rendszer két részből áll:
+- Backend: Django (Python)
+- Frontend: React + Vite
+
+A projekt Windows környezetre optimalizált.
+
+------------------------------------------
+1. Szükséges szoftverek
+------------------------------------------
+- Python 3.12
+- Node.js + npm
+- Git
+- Ajánlott: Google Chrome
+
+------------------------------------------
+2. Projekt klónozása
+------------------------------------------
+git clone https://github.com/AtomAnti211/pro-insekta
+cd pro-insekta
+
+------------------------------------------
+3. Automatikus indítás (AJÁNLOTT)
+------------------------------------------
+A projekt tartalmaz egy indító fájlt:
+
+start_project.bat
+
+Ez a script automatikusan:
+- létrehozza a virtuális környezetet (ha nincs)
+- telepíti a Python csomagokat
+- telepíti a Playwright-ot (ha szükséges)
+- lefuttatja a migrációkat
+- telepíti a frontend csomagokat (ha szükséges)
+- külön ablakban elindítja a backend-et
+- külön ablakban elindítja a frontend-et
+- automatikusan megnyitja a böngészőt a frontend URL-lel
+
+Használat:
+start_project.bat
+
+Backend elérhető:
+http://localhost:8000/
+
+Frontend elérhető:
+http://localhost:5173/
+
+------------------------------------------
+4. Manuális indítás (opcionális)
+------------------------------------------
+
+4.1 Backend telepítése
+----------------------
+py -3.12 -m venv venv
+call venv\Scripts\activate
+pip install -r requirements.txt
+
+cd backend
+py manage.py makemigrations
+py manage.py migrate
+py manage.py runserver
+
+Backend URL:
+http://localhost:8000/
+
+4.2 Frontend telepítése
+-----------------------
+cd frontend
+npm install
+npm run dev
+
+Frontend URL:
+http://localhost:5173/
+
+------------------------------------------
+5. További indítások (manuális)
+------------------------------------------
+Backend:
+cd pro-insekta
+call venv\Scripts\activate
+cd backend
+py manage.py runserver
+
+Frontend:
+cd pro-insekta\frontend
+npm run dev
+
+------------------------------------------
+6. Admin felhasználó létrehozása (opcionális)
+------------------------------------------
+cd backend
+py manage.py createsuperuser
+
+------------------------------------------
+7. Modulok ellenőrzése
+------------------------------------------
+- Notes
+- Activities
+- Customers
+- Locations (térképes koordináta választás)
+- Services
+- Contracts
+- Due-Contract (PDF generálás)
+- Jobs (PDF feltöltés)
+
+==========================================
+A rendszer készen áll a használatra.
+==========================================
