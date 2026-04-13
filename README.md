@@ -1,4 +1,4 @@
-# 🐞 PRO-INSECTA – Rovarirtó Admin Rendszer
+# 🐞 PRO-INSECTA – Kártevőirtó Admin Rendszer
 
 A PRO-INSECTA egy Django + React alapú adminisztrációs rendszer, amely
 ügyfelek, helyszínek, szolgáltatások, szerződések, tevékenységek és PDF-ek kezelésére készült.
