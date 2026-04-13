@@ -159,20 +159,6 @@ docker-compose up -d
 
 ---
 
-## ✔ Összegzés
-
-A Dockeres indítás:
-
-- platformfüggetlen  
-- nem igényel Python 3.12‑t vagy Node‑ot  
-- vizsgán is garantáltan működik  
-- éles környezetben is stabil  
-- egyszerűen újraindítható és hordozható  
-
-A rendszer így bárhol futtatható, ahol Docker elérhető.
-
----
-
 ## 🛠 Manuális indítás (opcionális)
 
 ### 1. Backend telepítése
