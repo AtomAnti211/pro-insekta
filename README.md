@@ -74,6 +74,105 @@ start_project.bat
 
 ---
 
+## 🐳 Docker alapú indítás
+
+A PRO‑INSECTA rendszer teljes egészében futtatható Dockerben, így nincs szükség
+Pythonra, Node.js‑re vagy bármilyen helyi környezeti beállításra.  
+Csak a **Docker Desktop** szükséges.
+
+---
+
+## 📥 1. Docker telepítése
+
+Töltsd le és telepítsd a Docker Desktopot:
+
+https://www.docker.com/products/docker-desktop/
+
+Telepítés után indítsd el a Docker Desktopot, majd ellenőrizd:
+
+```bash
+docker --version
+docker-compose --version
+```
+
+---
+
+## 📦 2. Konténerek buildelése és indítása
+
+A projekt gyökérkönyvtárában futtasd:
+
+```bash
+docker-compose up --build
+```
+
+Ez automatikusan:
+
+- felépíti a **backend** (Python 3.12 + Django + Playwright) konténert  
+- felépíti a **frontend** (Node + Vite) konténert  
+- elindítja mindkettőt  
+- létrehozza a szükséges volume‑okat  
+- lefuttatja a migrációkat  
+
+---
+
+## 🌐 3. Elérhető szolgáltatások
+
+- Backend: **http://localhost:8000**  
+- Frontend: **http://localhost:5173**
+
+A rendszer teljesen működőképes, nincs szükség semmilyen helyi Python/Node telepítésre.
+
+---
+
+## ▶️ 4. Automatikus indítás Windows alatt
+
+Használhatod a mellékelt indító fájlt:
+
+```
+start_docker.bat
+```
+
+Ez:
+
+- ellenőrzi, hogy a Docker fut‑e  
+- buildeli a konténereket  
+- elindítja a rendszert  
+- automatikusan megnyitja a frontendet böngészőben  
+
+---
+
+## 🛑 5. Leállítás
+
+A konténerek leállítása:
+
+```bash
+docker-compose down
+```
+
+---
+
+## 🔄 6. Újraindítás (gyors)
+
+```bash
+docker-compose up -d
+```
+
+---
+
+## ✔ Összegzés
+
+A Dockeres indítás:
+
+- platformfüggetlen  
+- nem igényel Python 3.12‑t vagy Node‑ot  
+- vizsgán is garantáltan működik  
+- éles környezetben is stabil  
+- egyszerűen újraindítható és hordozható  
+
+A rendszer így bárhol futtatható, ahol Docker elérhető.
+
+---
+
 ## 🛠 Manuális indítás (opcionális)
 
 ### 1. Backend telepítése
