@@ -72,10 +72,13 @@ export default function LandingPage() {
 
       {/* HERO */}
       <section className="hero">
-        <h1>Kártevőirtás gyorsan és biztonságosan</h1>
+        <h1 className="hero-title">  
+          Kártevőirtás gyorsan és biztonságosan
+          <img src="/images/logo_pro.png" className="h1-watermark" alt="" />
+        </h1>
         <p>Professzionális rovar- és rágcsálóirtás lakossági és üzleti ügyfeleknek.</p>
 
-        <div className="hero-buttons">
+            <div className="hero-buttons">
           <a href="#contact" className="btn-primary">Kapcsolatfelvétel</a>
           <Link to="/login" className="btn-admin">Admin</Link>
         </div>

@@ -25,7 +25,44 @@
   font-size: 3rem;
   margin-bottom: 15px;
 }
+.hero-title {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
 
+.h1-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 480px;
+  opacity: 0.12;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: -1;
+  animation: pulseRotate 6s ease-in-out infinite;
+}
+
+/* Pulzálás + enyhe forgás */
+@keyframes pulseRotate {
+  0%   { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  50%  { transform: translate(-50%, -50%) scale(0.92) rotate(2deg); }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+}
+
+/* 📱 Mobil nézet */
+@media (max-width: 768px) {
+  .h1-watermark {
+    width: 350px; /* mobil méret */
+    animation: pulseRotateMobile 7s ease-in-out infinite;
+  }
+
+  @keyframes pulseRotateMobile {
+    0%   { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    50%  { transform: translate(-50%, -50%) scale(0.94) rotate(2deg); }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  }
+}
 .hero p {
   font-size: 1.3rem;
   margin-bottom: 35px;

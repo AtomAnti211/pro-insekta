@@ -32,7 +32,8 @@ def workorder_pdf(request):
     formatted_date = f"{today.year}. {HONAPOK[today.month]}"
 
     # LOGO FILE PATH (Playwright támogatja a file:// hivatkozást)
-    logo_path = os.path.join(settings.BASE_DIR, "insecta/static/images/logo.jpg")
+    # logo_path = os.path.join(settings.BASE_DIR, "insecta/static/images/logo.jpg")
+    logo_path = os.path.join(settings.BASE_DIR, "insecta/static/images/logo_pro.png")
     logo_url = f"file:///{logo_path}"
 
     # FONT FILE PATH
